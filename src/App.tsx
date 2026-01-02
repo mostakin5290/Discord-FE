@@ -1,13 +1,7 @@
-import { Button } from "@/components/ui/button";
+import LandingPage from "@/components/LandingPage";
 
 const App = () => {
-  return (
-    <div>
-      <Button className="text-red-400 bg-neutral-900">
-        Hello World
-      </Button>
-    </div>
-  )
+  return <LandingPage />;
 }
 
 export default App;
