@@ -6,6 +6,7 @@ import AuthSuccessPage from "./pages/authentication/AuthSuccessPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
+import CreateServer from "./pages/server/create-server";
 
 const AppComponent = () => {
   return (
@@ -22,6 +23,7 @@ const AppComponent = () => {
         {/* Protected Routes (Accessible only if logged in) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/channels/@me" element={<DashboardPage />} />
+          <Route path="/server/create/new" element={<CreateServer />}></Route>
         </Route>
       </Routes>
     </header>
