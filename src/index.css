@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/discord-ui.css";
 
 @plugin "tailwindcss-animate";
 /* @plugin "tw-animate-css"; */
@@ -132,4 +133,35 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1f22;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3035;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default button styles */
+button:not(.btn) {
+  border: none;
+  background: none;
+  cursor: pointer;
 }

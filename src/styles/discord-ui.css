@@ -1,0 +1,188 @@
+/* Custom scrollbar styles for webkit browsers */
+@layer utilities {
+
+    /* Scrollbar Styles */
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #1e1f22;
+        border-radius: 4px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #2b2d31;
+    }
+
+    .scrollbar-track-transparent::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Discord-like animations */
+    .discord-hover {
+        @apply transition-all duration-200 ease-in-out;
+    }
+
+    .server-icon-hover {
+        @apply hover:rounded-[16px] transition-all duration-200;
+    }
+
+    /* Message hover effect */
+    .message-hover {
+        @apply hover:bg-[#2e3035] transition-colors duration-100;
+    }
+
+    /* Channel active state */
+    .channel-active {
+        @apply bg-[#404249] text-white;
+    }
+
+    .channel-inactive {
+        @apply text-gray-400 hover:bg-[#35363c] hover:text-gray-300;
+    }
+
+    /* Fade in animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Slide in from left */
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-slide-in-left {
+        animation: slideInLeft 0.4s ease-out;
+    }
+
+    /* Scale in animation */
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Pulse animation for online status */
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.95);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 0.7;
+        }
+
+        100% {
+            transform: scale(0.95);
+            opacity: 1;
+        }
+    }
+
+    .online-pulse {
+        animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    /* Slow pulse for decorative elements */
+    @keyframes pulse-slow {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.8;
+        }
+    }
+
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
+    }
+
+    /* Glow effect */
+    .glow-on-hover {
+        transition: all 0.3s ease;
+    }
+
+    .glow-on-hover:hover {
+        box-shadow: 0 0 20px rgba(88, 101, 242, 0.5), 0 0 40px rgba(88, 101, 242, 0.3);
+    }
+
+    /* Smooth scale hover */
+    .scale-hover {
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .scale-hover:hover {
+        transform: scale(1.05);
+    }
+
+    .scale-hover:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Global Discord-like styles */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1e1f22 transparent;
+}
+
+/* Selection color */
+::selection {
+    background-color: #5865f2;
+    color: white;
+}
+
+/* Focus styles */
+*:focus-visible {
+    outline: 2px solid #5865f2;
+    outline-offset: 2px;
+}
+
+/* Input autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #383a40 inset;
+    -webkit-text-fill-color: white;
+    transition: background-color 5000s ease-in-out 0s;
+}

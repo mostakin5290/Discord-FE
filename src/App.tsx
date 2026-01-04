@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import LoginPage from "./pages/authentication/Login-page";
 import SignupPage from "./pages/authentication/Signup-page";
 import AuthSuccessPage from "./pages/authentication/AuthSuccessPage";
-import DashboardPage from "./pages/dashboard/DashboardPage";
+import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateServer from "./pages/server/create-server";
@@ -27,18 +27,15 @@ const AppComponent = () => {
         </Route>
       </Routes>
     </header>
-  )
+  );
 };
-
-
-
 
 const App = () => {
   return (
     <BrowserRouter>
       <AppComponent />
     </BrowserRouter>
-  )
-}
+  );
+};
 
 export default App;
