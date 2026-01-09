@@ -23,13 +23,14 @@ const AppComponent = () => {
           <Route path="/server/:id" element={<DashboardPage />} />
 
           {/* New Dashboard with layout */}
-          {/* <Route element={<DashboardLayout />}>
+          <Route element={<DashboardLayout />}>
             <Route path="/server/:id" element={<DashboardPage />} />
-          </Route> */}
+          </Route>
         </Route>
 
         {/* Protected Routes (Accessible only if logged in) */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/channels/@me" element={<DashboardPage />} />
           <Route path="/server/create/new" element={<CreateServer />}></Route>
         </Route>
       </Routes>
