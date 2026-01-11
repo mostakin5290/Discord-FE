@@ -22,9 +22,10 @@ const AppComponent = () => {
           <Route path="/auth/success" element={<AuthSuccessPage />} />
 
           {/* New Dashboard with layout */}
-          {/* <Route element={<DashboardLayout />}>
+          <Route element={<DashboardLayout />}>
             <Route path="/server/:id" element={<DashboardPage />} />
             </Route> */}
+          </Route>
         </Route>
 
         {/* Protected Routes (Accessible only if logged in) */}
