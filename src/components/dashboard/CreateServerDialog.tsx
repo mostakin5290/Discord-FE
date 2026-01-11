@@ -323,11 +323,10 @@ const CreateServerDialog = ({
                   ) : (
                     <div
                       {...getRootProps()}
-                      className={`w-20 h-20 rounded-full border-2 border-dashed ${
-                        isDragActive
+                      className={`w-20 h-20 rounded-full border-2 border-dashed ${isDragActive
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-300"
-                      } flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors`}
+                        } flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors`}
                     >
                       <input {...getInputProps()} />
                       <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mb-1">

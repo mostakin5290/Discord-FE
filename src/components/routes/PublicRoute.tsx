@@ -6,7 +6,7 @@ const PublicRoute = () => {
   const { token } = useSelector((state: RootState) => state.auth);
 
   if (token) {
-    return <Navigate to="/channels/@me" replace />;
+    return <Navigate to="/server/@me" replace />;
   }
 
   return <Outlet />;

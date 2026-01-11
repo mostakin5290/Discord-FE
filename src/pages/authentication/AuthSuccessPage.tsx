@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
-import { setCredentials } from "@/store/slices/authSlice";
+import { fetchMe } from "@/store/slices/authSlice";
 
 const AuthSuccessPage = () => {
   const [searchParams] = useSearchParams();
@@ -12,15 +12,20 @@ const AuthSuccessPage = () => {
   useEffect(() => {
     const token = searchParams.get("token");
     if (token) {
-      // NOTE: In a real app we might want to decode the token to get the user or fetch it
-      // For now, we reuse the existing local storage pattern or partial data if available.
-      // Since social login doesn't give us the user object in the URL params usually (just token),
-      // we might need a separate 'fetchMe' thunk. 
-      // For this step, we'll blindly set the token.
+      // First, store the token in localStorage
+      localStorage.setItem("token", token);
       
-      const user = { id: "", email: "", username: "" }; // Placeholder until we fetch profile
-      dispatch(setCredentials({ user, token })); 
-      navigate("/channels/@me");
+      // Then fetch the user profile using the token
+      dispatch(fetchMe(token))
+        .unwrap()
+        .then(() => {
+          navigate("/server/@me");
+        })
+        .catch((error) => {
+          console.error("Failed to fetch user profile:", error);
+          localStorage.removeItem("token");
+          navigate("/login?error=auth_failed");
+        });
     } else {
       navigate("/login?error=auth_failed");
     }
