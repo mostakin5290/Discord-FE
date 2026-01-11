@@ -44,15 +44,15 @@ export function SignupForm({
       toast.error("Passwords do not match");
       return;
     }
-    
+
     try {
       // Exclude confirmPassword from sending to API
       const { confirmPassword, ...signupData } = formData;
       const resultAction = await dispatch(signupUser(signupData));
-      
+
       if (signupUser.fulfilled.match(resultAction)) {
         toast.success("Account created successfully!");
-        navigate("/channels/@me");
+        navigate("/servre/@me");
       } else {
         if (resultAction.payload) {
           toast.error(resultAction.payload as string);
@@ -83,16 +83,16 @@ export function SignupForm({
               </div>
 
               <Field className="grid grid-cols-2 gap-4">
-                 <Field>
-                    <FieldLabel htmlFor="firstName">First Name</FieldLabel>
-                    <Input id="firstName" required value={formData.firstName} onChange={handleChange} />
-                 </Field>
-                 <Field>
-                    <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
-                    <Input id="lastName" required value={formData.lastName} onChange={handleChange} />
-                 </Field>
+                <Field>
+                  <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+                  <Input id="firstName" required value={formData.firstName} onChange={handleChange} />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                  <Input id="lastName" required value={formData.lastName} onChange={handleChange} />
+                </Field>
               </Field>
-              
+
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input id="username" required value={formData.username} onChange={handleChange} />
@@ -105,7 +105,7 @@ export function SignupForm({
                   type="email"
                   placeholder="m@example.com"
                   required
-                  value={formData.email} 
+                  value={formData.email}
                   onChange={handleChange}
                 />
               </Field>
@@ -128,7 +128,7 @@ export function SignupForm({
               </Field>
               <Field>
                 <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Creating Account..." : "Create Account"}
+                  {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">

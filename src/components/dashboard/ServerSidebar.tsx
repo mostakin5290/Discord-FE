@@ -33,7 +33,7 @@ const ServerSidebar = ({
           <TooltipTrigger asChild>
             <button
               className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-200"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               <Home size={24} className="text-white" />
             </button>
@@ -56,10 +56,9 @@ const ServerSidebar = ({
                   flex items-center justify-center w-12 h-12 rounded-[24px] 
                   hover:rounded-[16px] transition-all duration-200 overflow-hidden
                   scale-hover shadow-md hover:shadow-xl
-                  ${
-                    currentServerId === server.id
-                      ? "rounded-[16px] bg-[#5865f2] shadow-lg"
-                      : "bg-[#313338] hover:bg-[#5865f2]"
+                  ${currentServerId === server.id
+                    ? "rounded-[16px] bg-[#5865f2] shadow-lg"
+                    : "bg-[#313338] hover:bg-[#5865f2]"
                   }
                 `}
               >

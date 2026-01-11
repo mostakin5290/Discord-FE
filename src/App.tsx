@@ -8,7 +8,7 @@ import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateServer from "./pages/server/create-server";
-import DashboardLayout from "./pages/dashboard/dashboard-layout";
+// import DashboardLayout from "./pages/dashboard/dashboard-layout";
 
 const AppComponent = () => {
   return (
@@ -20,17 +20,17 @@ const AppComponent = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/auth/success" element={<AuthSuccessPage />} />
-          <Route path="/server/:id" element={<DashboardPage />} />
 
           {/* New Dashboard with layout */}
           <Route element={<DashboardLayout />}>
             <Route path="/server/:id" element={<DashboardPage />} />
+            </Route> */}
           </Route>
         </Route>
 
         {/* Protected Routes (Accessible only if logged in) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/channels/@me" element={<DashboardPage />} />
+          <Route path="/server/:id" element={<DashboardPage />} />
           <Route path="/server/create/new" element={<CreateServer />}></Route>
         </Route>
       </Routes>

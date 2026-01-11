@@ -31,6 +31,7 @@ export const loginUser = createAsyncThunk(
   async (credentials: any, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post("/auth/login", credentials);
+      console.log(response);
       return response.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
@@ -50,6 +51,24 @@ export const signupUser = createAsyncThunk(
   }
 );
 
+// Fetch current authenticated user profile
+export const fetchMe = createAsyncThunk(
+  "auth/fetchMe",
+  async (token: string, { rejectWithValue }) => {
+    try {
+      // Temporarily set the token in axios headers for this request
+      const response = await axiosClient.get("/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || "Failed to fetch user");
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -64,6 +83,7 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{ user: User; token: string }>
     ) => {
+      console.log(action)
       state.user = action.payload.user;
       state.token = action.payload.token;
       localStorage.setItem("user", JSON.stringify(action.payload.user));
@@ -78,6 +98,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log(action)
         state.isLoading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
@@ -103,6 +124,27 @@ const authSlice = createSlice({
       .addCase(signupUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      // Fetch Me (for social login)
+      .addCase(fetchMe.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchMe.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        // The token was passed as argument and already stored in localStorage by AuthSuccessPage
+        // We need to also set it in Redux state
+        state.token = action.meta.arg; // action.meta.arg contains the token passed to fetchMe
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+      })
+      .addCase(fetchMe.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        // If fetching user fails, clear the token too
+        state.token = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       });
   },
 });

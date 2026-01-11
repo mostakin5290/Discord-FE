@@ -40,7 +40,7 @@ export function LoginForm({
       const resultAction = await dispatch(loginUser(formData));
       if (loginUser.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
-        navigate("/channels/@me");
+        navigate("/server/@me");
       } else {
         if (resultAction.payload) {
           toast.error(resultAction.payload as string);
