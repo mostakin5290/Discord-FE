@@ -63,12 +63,12 @@ const ChannelSidebar = ({
     }
   };
 
-  const textChannels = server.channels.filter((c) => c.type === "TEXT");
-  const voiceChannels = server.channels.filter(
+  const textChannels = (server.channels || []).filter((c) => c.type === "TEXT");
+  const voiceChannels = (server.channels || []).filter(
     (c) => c.type === "AUDIO" || c.type === "VIDEO"
   );
 
-  const userMember = server.members.find((m) => m.user.id === user?.id);
+  const userMember = (server.members || []).find((m) => m.user?.id === user?.id);
   const isAdmin = userMember?.role === "ADMIN";
 
   return (
@@ -77,9 +77,7 @@ const ChannelSidebar = ({
       <ServerDropdown
         serverName={server.name}
         isAdmin={isAdmin}
-        onInvite={() => console.log("Invite")}
         onSettings={() => console.log("Settings")}
-        onCreateChannel={() => console.log("Create Channel")}
       />
 
       {/* Channels List */}

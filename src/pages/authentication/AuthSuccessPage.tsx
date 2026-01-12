@@ -19,7 +19,7 @@ const AuthSuccessPage = () => {
       dispatch(fetchMe(token))
         .unwrap()
         .then(() => {
-          navigate("/server/@me");
+          navigate("/");
         })
         .catch((error) => {
           console.error("Failed to fetch user profile:", error);

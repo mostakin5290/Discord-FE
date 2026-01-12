@@ -158,10 +158,3 @@
 html {
   scroll-behavior: smooth;
 }
-
-/* Remove default button styles */
-button:not(.btn) {
-  border: none;
-  background: none;
-  cursor: pointer;
-}

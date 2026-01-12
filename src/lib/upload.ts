@@ -1,7 +1,7 @@
 import axiosClient from "./axios";
 
 export const cloudinarySignatureSign = async () => {
-    const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/v1/upload/cloudinary-signature`);
+    const response = await axiosClient.get(`${import.meta.env.VITE_API_URL}/upload/cloudinary-signature`);
 
     return response.data;
 }
