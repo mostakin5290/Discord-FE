@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, type FormEvent } from "react";
+import { redirect, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
 import { createNewServer } from "@/store/slices/serverSlice";
@@ -26,7 +26,10 @@ import {
   ChevronLeft,
   X,
   Upload,
+  Trash,
 } from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { Textarea } from "../ui/textarea";
 
 interface CreateServerDialogProps {
   open: boolean;
@@ -45,17 +48,11 @@ const CreateServerDialog = ({
   const [serverType, setServerType] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [showJoinDialog, setShowJoinDialog] = useState(false);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { "image/*": [] },
-    multiple: false,
-    maxFiles: 1,
-    onDrop: (files) => setFile(files[0]),
-  });
 
   const templates = [
     { id: "gaming", label: "Gaming", icon: Gamepad2, color: "bg-green-500" },
@@ -83,41 +80,47 @@ const CreateServerDialog = ({
     setStep("customize");
   };
 
-  const uploadServerImage = async () => {
-    if (!file) return;
+  const { getRootProps, getInputProps, isDragActive, isDragReject } =
+    useDropzone({
+      accept: {
+        "image/*": [],
+      },
+      multiple: false,
+      maxFiles: 1,
+      onDrop: (files) => {
+        setFile(files[0]);
+      },
+    });
+
+  const uploadServerCoverImg = async () => {
     setLoading(true);
-    try {
-      const res = await uploadToCloudinary(file);
-      setImage(res?.secure_url ?? "");
-      setFile(null);
-    } catch (error) {
-      toast.error("Failed to upload image");
-    } finally {
-      setLoading(false);
-    }
+    const res = await uploadToCloudinary(file!);
+    setImage(res?.secure_url ?? "");
+    setFile(null);
+    setLoading(false);
   };
 
-  const handleCreate = async () => {
-    if (!name.trim()) {
-      toast.error("Server name is required");
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!name.trim() || !image) {
+      toast.error("Server name and image are required");
       return;
     }
 
     setSubmitLoading(true);
     try {
-      await dispatch(
+      const newServer = await dispatch(
         createNewServer({
-          name: name.trim(),
-          imageUrl:
-            image ||
-            `https://ui-avatars.com/api/?name=${name}&background=5865f2&color=fff&size=256`,
-          bio: `A ${serverType || "custom"} server`,
+          name: name,
+          imageUrl: image,
+          bio: desc,
         })
       ).unwrap();
 
       toast.success("Server created successfully!");
       handleClose();
-      navigate("/channels/@me");
+      navigate(`/server/${newServer?.id}`);
     } catch (error: any) {
       toast.error(error || "Failed to create server");
     } finally {
@@ -281,7 +284,7 @@ const CreateServerDialog = ({
 
         {/* Customize Step */}
         {step === "customize" && (
-          <div className="p-6">
+          <form onSubmit={handleSubmit} className="p-6">
             <button
               onClick={handleClose}
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100"
@@ -299,81 +302,83 @@ const CreateServerDialog = ({
               </p>
             </DialogHeader>
 
-            <div className="space-y-4">
-              {/* Image Upload */}
-              <div className="flex justify-center">
-                <div className="relative">
-                  {image || file ? (
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 group">
-                      <img
-                        src={file ? URL.createObjectURL(file) : image}
-                        alt="Server"
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        onClick={() => {
-                          setImage("");
-                          setFile(null);
-                        }}
-                        className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-6 h-6 text-white" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div
-                      {...getRootProps()}
-                      className={`w-20 h-20 rounded-full border-2 border-dashed ${isDragActive
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-300"
-                        } flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors`}
-                    >
-                      <input {...getInputProps()} />
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mb-1">
-                        <Upload className="w-5 h-5 text-white" />
-                      </div>
-                      <span className="text-[10px] text-blue-600 font-bold uppercase">
-                        Upload
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {file && !image && (
-                <Button
-                  onClick={uploadServerImage}
-                  disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                >
-                  {loading ? "Uploading..." : "Upload Image"}
-                </Button>
-              )}
-
-              {/* Server Name */}
-              <div>
-                <Label
-                  htmlFor="serverName"
-                  className="text-xs font-bold text-gray-700 uppercase mb-2"
-                >
-                  Server Name <span className="text-red-500">*</span>
-                </Label>
+            <div className="grid gap-4 pt-5 text-neutral-800">
+              <div className="grid gap-3">
+                <Label htmlFor="name">Server Name</Label>
                 <Input
-                  id="serverName"
+                  id="name"
+                  name="name"
                   value={name}
+                  className="bg-white placeholder:text-neutral-800"
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={`${serverType || "My"} Server`}
-                  className="bg-gray-100 border-gray-300 focus:border-blue-500 text-gray-900"
+                  placeholder="Name your server here!"
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="description">Server Description</Label>
+                <Textarea
+                  className="h-30 bg-white placeholder:text-neutral-800"
+                  id="description"
+                  name="description"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                  placeholder="Describe your server here!"
                 />
               </div>
 
-              <p className="text-xs text-gray-500">
-                By creating a server, you agree to Discord's{" "}
-                <a href="#" className="text-blue-600 hover:underline">
-                  Community Guidelines
-                </a>
-                .
-              </p>
+              {image ? (
+                <div className="grid gap-3 relative">
+                  <Label htmlFor="description">Server Image</Label>
+                  <img src={image} className="rounded-[10px]" />
+                  <Button
+                    type="button"
+                    onClick={() => setImage("")}
+                    className="bg-red-500 hover:bg-red-600 absolute top-10 right-5 px-10"
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid gap-3">
+                  <Label htmlFor="description">Server Image</Label>
+                  <div
+                    {...getRootProps()}
+                    className={`
+        flex flex-col relative items-center justify-center
+        rounded-xl border-2 border-dashed
+        p-10 text-center cursor-pointer
+        transition-all duration-200 h-50 ease-in-out
+        ${isDragActive
+                        ? "border-blue-500 bg-blue-500/10 scale-[1.02]"
+                        : "border-zinc-300 hover:border-zinc-400"
+                      }
+        ${isDragReject ? "border-red-500 bg-red-500/10" : ""}
+      `}
+                  >
+                    <input {...getInputProps()} />
+                    {isDragActive
+                      ? "Drop files here..."
+                      : "Drag & drop files here, or click to select"}
+                  </div>
+                  {loading ? (
+                    <Button
+                      type="button"
+                      className="absolute bottom-26 left-47 px-10"
+                    >
+                      <Spinner className="text-white" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={uploadServerCoverImg}
+                      className="absolute bottom-26 left-36 px-10 bg-blue-500 text-white"
+                      disabled={!file || loading}
+                    >
+                      upload
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="mt-6 flex items-center justify-between">
@@ -386,14 +391,14 @@ const CreateServerDialog = ({
                 Back
               </Button>
               <Button
-                onClick={handleCreate}
+                type="submit"
                 disabled={submitLoading || !name.trim()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                className="hover:bg-blue-700 bg-blue-500 text-black px-8 text-white"
               >
                 {submitLoading ? "Creating..." : "Create"}
               </Button>
             </div>
-          </div>
+          </form>
         )}
       </DialogContent>
 

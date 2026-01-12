@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import type { AppDispatch } from "@/store/store";
 import {
   joinServerWithCode,
@@ -25,6 +26,7 @@ interface JoinServerDialogProps {
 
 const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [inviteCode, setInviteCode] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,11 +38,15 @@ const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
 
     setLoading(true);
     try {
-      await dispatch(joinServerWithCode(inviteCode.trim())).unwrap();
+      const result = await dispatch(joinServerWithCode(inviteCode.trim())).unwrap();
       toast.success("Successfully joined the server!");
       await dispatch(fetchUserServers());
       onOpenChange(false);
       setInviteCode("");
+      // Navigate to the joined server
+      if (result?.server?.id) {
+        navigate(`/server/${result.server.id}`);
+      }
     } catch (error: any) {
       toast.error(error || "Failed to join server");
     } finally {

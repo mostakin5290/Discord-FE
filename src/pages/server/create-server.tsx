@@ -74,7 +74,7 @@ const CreateServer = () => {
       ).unwrap();
 
       toast.success("Server created successfully!");
-      navigate("/channels/@me");
+      navigate("/server/@me");
     } catch (error: any) {
       toast.error(error || "Failed to create server");
     } finally {
@@ -139,11 +139,10 @@ const CreateServer = () => {
         rounded-xl border-2 border-dashed
         p-10 text-center cursor-pointer
         transition-all duration-200 h-50 ease-in-out
-        ${
-          isDragActive
-            ? "border-blue-500 bg-blue-500/10 scale-[1.02]"
-            : "border-zinc-300 hover:border-zinc-400"
-        }
+        ${isDragActive
+                        ? "border-blue-500 bg-blue-500/10 scale-[1.02]"
+                        : "border-zinc-300 hover:border-zinc-400"
+                      }
         ${isDragReject ? "border-red-500 bg-red-500/10" : ""}
       `}
                   >

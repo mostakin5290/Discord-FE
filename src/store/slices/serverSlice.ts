@@ -106,6 +106,34 @@ export const joinServerWithCode = createAsyncThunk(
   }
 );
 
+export const leaveServer = createAsyncThunk(
+  "server/leaveServer",
+  async (serverId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/server/leave/${serverId}`);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to leave server"
+      );
+    }
+  }
+);
+
+export const createChannel = createAsyncThunk(
+  "server/createChannel",
+  async ({ serverId, name, type }: { serverId: string; name: string; type: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/server/${serverId}/channels`, { name, type });
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to create channel"
+      );
+    }
+  }
+);
+
 const serverSlice = createSlice({
   name: "server",
   initialState,
@@ -178,7 +206,31 @@ const serverSlice = createSlice({
       .addCase(joinServerWithCode.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
-      });
+      })
+      // leave Server
+      .addCase(leaveServer.pending, (state) => {
+        state.isLoading = true;
+        state.error = null
+      })
+      .addCase(leaveServer.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(leaveServer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      // create Channel
+      .addCase(createChannel.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createChannel.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(createChannel.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
   },
 });
 

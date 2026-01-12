@@ -16,7 +16,10 @@ interface MemberListProps {
   members: Member[];
 }
 
-const MemberList = ({ members }: MemberListProps) => {
+const MemberList = ({ members = [] }: MemberListProps) => {
+  // Filter out members with undefined user data
+  const validMembers = members.filter((m) => m.user);
+
   const getRoleIcon = (role: string) => {
     switch (role) {
       case "ADMIN":
@@ -39,9 +42,9 @@ const MemberList = ({ members }: MemberListProps) => {
     }
   };
 
-  const admins = members.filter((m) => m.role === "ADMIN");
-  const moderators = members.filter((m) => m.role === "MODERATOR");
-  const guests = members.filter((m) => m.role === "GUEST");
+  const admins = validMembers.filter((m) => m.role === "ADMIN");
+  const moderators = validMembers.filter((m) => m.role === "MODERATOR");
+  const guests = validMembers.filter((m) => m.role === "GUEST");
 
   const renderMembers = (memberList: Member[], roleLabel: string) => {
     if (memberList.length === 0) return null;

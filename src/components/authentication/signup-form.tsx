@@ -52,7 +52,7 @@ export function SignupForm({
 
       if (signupUser.fulfilled.match(resultAction)) {
         toast.success("Account created successfully!");
-        navigate("/servre/@me");
+        navigate("/");
       } else {
         if (resultAction.payload) {
           toast.error(resultAction.payload as string);

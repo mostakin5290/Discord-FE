@@ -8,6 +8,7 @@ import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateServer from "./pages/server/create-server";
+import InvitePage from "./pages/server/invite-page";
 // import DashboardLayout from "./pages/dashboard/dashboard-layout";
 
 const AppComponent = () => {
@@ -31,7 +32,8 @@ const AppComponent = () => {
         {/* Protected Routes (Accessible only if logged in) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/server/:id" element={<DashboardPage />} />
-          <Route path="/server/create/new" element={<CreateServer />}></Route>
+          <Route path="/server/:serverId/invite/:invitecode" element={<InvitePage />} />
+          <Route path="/server/create/new" element={<CreateServer />} />
         </Route>
       </Routes>
     </header>
