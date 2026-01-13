@@ -49,16 +49,18 @@ export default function LandingPage() {
     return (
         <PageLayout className="overflow-hidden _2025 bg-[#1a2081]">
             {/* Home Hero Section */}
-            <section className="mt-0 pt-16 md:pt-32 xl:pt-32 2xl:pt-36 3xl:pt-32 pb-0 sm:pb-[2.4375rem] md:pb-[3.5rem] xl:pb-[7.8125rem] h-auto lg:h-screen 2xl:h-auto max-h-none lg:max-h-[700px] xl:max-h-[900px] 2xl:max-h-none 3xl:max-h-[1080px] relative bg-home-hero-bg-image bg-no-repeat bg-[50%_-80%] md:bg-[65%_-25%] xl:bg-[50%_-15%] 2xl:bg-[100%_-33%] 3xl:bg-[60%_-33%] bg-250p sm:bg-90p 2xl:bg-95.5p 3xl:bg-96p bg-scroll">
+            <section className="mt-0 pt-16 md:pt-32 xl:pt-36 2xl:pt-40 3xl:pt-44 pb-8 sm:pb-12 md:pb-16 xl:pb-[7.8125rem] h-auto lg:h-auto 2xl:h-auto max-h-none relative bg-home-hero-bg-image bg-no-repeat bg-[50%_-80%] md:bg-[65%_-25%] xl:bg-[50%_-15%] 2xl:bg-[100%_-33%] 3xl:bg-[60%_-33%] bg-250p sm:bg-90p 2xl:bg-95.5p 3xl:bg-96p bg-scroll">
                 <div className="px-6 md:px-10 2xl:px-0 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
                     <div className="mx-auto w-full sm:w-[90%] 2xl:w-full max-w-[1080px] 2xl:max-w-[1240px] 3xl:max-w-[1320px] relative z-[3]">
-                        <div className="mx-auto mb-4 md:mb-8 lg:mb-4 xl:mx-0 xl:mb-6 2xl:mb-10 3xl:mb-16 px-[2%] sm:px-0 pb-0 w-full max-w-[840px] xl:max-w-none relative flex flex-col md:flex-col-reverse lg:flex-row flex-wrap lg:flex-nowrap justify-start items-start gap-0 lg:gap-[2.1625rem] 3xl:gap-[4.25rem] z-[1]">
-                            <div className="mt-0 md:mt-12 lg:mt-16 xl:mt-16 2xl:mt-[5.5rem] 3xl:mt-40 mb-auto max-w-none lg:max-w-[21rem] xl:max-w-[28rem] 2xl:max-w-[30.7rem] static lg:relative 2xl:left-0 flex-1 lg:flex-none self-center text-app-white text-center lg:text-left z-[3]">
+                        
+                        <div className="mx-auto mb-8 md:mb-12 lg:mb-8 xl:mx-0 xl:mb-10 2xl:mb-14 3xl:mb-20 px-[2%] sm:px-0 pb-0 w-full max-w-[840px] xl:max-w-none relative flex flex-col md:flex-col-reverse lg:flex-row flex-wrap lg:flex-nowrap justify-start items-start gap-0 lg:gap-[2.1625rem] 3xl:gap-[4.25rem] z-[1]">
+
+                            <div className="mt-0 md:mt-8 lg:mt-12 xl:mt-20 2xl:mt-24 3xl:mt-32 mb-auto max-w-none lg:max-w-[26rem] xl:max-w-[32rem] 2xl:max-w-[36rem] 3xl:max-w-[40rem] static lg:relative 2xl:left-0 flex-1 lg:flex-none self-center lg:self-start text-app-white text-center lg:text-left z-[3]">
                                 <div className="mt-[-2.7rem] sm:mt-[-4.4rem] md:-mt-28 lg:-mt-40 xl:-mt-36 2xl:-mt-40 3xl:-mt-52 ml-[10.4rem] sm:ml-[17.5rem] md:ml-[23.8rem] lg:ml-56 xl:ml-64 2xl:ml-[24.8rem] 3xl:ml-[10.9rem] w-full xl:w-40 2xl:w-48 3xl:w-56 max-w-[5.25rem] md:max-w-32 lg:max-w-40 2xl:max-w-48 3xl:max-w-56 h-[5.25rem] md:h-32 lg:h-40 2xl:h-48 3xl:h-56 absolute inset-[0%_auto_auto_0%] left-auto right-auto bg-home-crown-bg-image bg-no-repeat bg-cover bg-[50%] pointer-events-none md:animate-rotate-20-smooth md:transform-3d md:will-change-transform blur-[2px] z-[3]"></div>
-                                <div className="mx-auto xl:mx-0 pb-1.5 pr-0 lg:pr-8 2xl:pr-0 max-w-[325px] md:max-w-[400px] lg:max-w-[unset] relative">
-                                    <h1 className="heading--h1 is_2025">Group chat that’s all fun&nbsp;& games</h1>
+                                <div className="mx-auto xl:mx-0 pb-1.5 pr-0 lg:pr-8 2xl:pr-0 max-w-[325px] md:max-w-[450px] lg:max-w-[unset] relative">
+                                    <h1 className="heading--h1 is_2025">Group chat that's all fun&nbsp;& games</h1>
                                 </div>
-                                <div className="mx-auto mt-0 lg:mt-1 2xl:mt-2 max-w-[325px] sm:max-w-[unset] overflow-hidden">
+                                <div className="mx-auto mt-4 lg:mt-5 2xl:mt-6 max-w-[325px] sm:max-w-[450px] lg:max-w-[unset] overflow-hidden">
                                     <p className="pr-4 2xl:pr-0 w-full font-abcgintodiscord font-normal text-base md:text-[18px] xl:text-[20px] leading-[1.3] tracking-[.02rem] text-center lg:text-left">Discord is great for playing games and chilling&nbsp;with friends, or even building a worldwide community. Customize your own&nbsp;space to talk, play, and hang out.</p>
                                 </div>
                             </div>
@@ -216,6 +218,7 @@ export default function LandingPage() {
                     <img src="/images/home/star_sm.svg" width={6} height={6} alt="" className="star-hero-home _2-6 star-sm" />
                 </div>
             </section>
+
             <section className="mt-[-1px] 2xl:py-[5.9375rem] 3xl:py-[9.375rem] pt-[7.1875rem] xl:pt-28 pb-[6.875rem] md:pb-[8.125rem] xl:pb-[9.625rem] max-h-none lg:max-h-[991px] 3xl:max-h-none relative bg-home-texture-3-bg-image bg-[25%_0] xl:bg-[0_0] 2xl:bg-[50%] bg-auto-100p xl:bg-110p md:bg-1200px bg-no-repeat z-[5] lg:z-[4]">
                 <div className="px-6 sm:px-8 md:px-10 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
                     <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[2]">
@@ -273,6 +276,7 @@ export default function LandingPage() {
                     <img src="/images/home/star_sm.svg" width={6} height={6} alt="" className="star-hero-home _2-6 star-sm" />
                 </div>
             </section>
+
             <section className="mt-[-1px] pt-[8.125rem] md:pt-[8.125rem] xl:pt-[9.625rem] 2xl:pt-[5.9375rem] 3xl:pt-[9.375rem] pb-20 md:pb-[11.25rem] xl:pb-[12.3125rem] 2xl:pb-[11.875rem] 3xl:pb-[15.625rem] max-h-[1030px] 3xl:max-h-none relative bg-home-texture-4-bg-image bg-[50%_2%] md:bg-[0_0] bg-1200px md:bg-cover bg-repeat sm:bg-no-repeat">
                 <div className="px-6 sm:px-8 md:px-10 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
                     <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[3]">
@@ -327,6 +331,7 @@ export default function LandingPage() {
                     <img src="/images/home/star_sm.svg" width={6} height={6} alt="" className="star-hero-home _2-6 star-sm" />
                 </div>
             </section>
+
             <section className="hidden md:block relative overflow-hidden z-[6]">
                 <div className="py-0 h-[6.5625rem] lg:h-[8.75rem] 3xl:h-[11.56rem] relative hidden md:flex justify-start items-center md:gap-[2.25rem] bg-home-line-bg-image bg-[50%] bg-cover bg-no-repeat z-[3]">
                     <div ref={homeLineTextRef} className="flex justify-start items-center gap-[2.25rem] 3xl:gap-20 md:transform-3d md:will-change-transform select-none">
@@ -345,39 +350,49 @@ export default function LandingPage() {
                     </div>
                 </div>
             </section>
-            <section className="mt-[-1px] pt-36 md:pt-[9.625rem] xl:pt-[14.6875rem] 2xl:pt-[11.875rem] 3xl:pt-[15.625rem] pb-[6.625rem] md:pb-[8.125rem] xl:pb-[10.3125rem] 2xl:pb-[8.5rem] 3xl:pb-[9.375rem] max-h-none relative bg-home-texture-5-bg-image bg-[50%_15%] sm:bg-[50%_0] md:bg-[0_0] 2xl:bg-[50%_0] bg-1200px md:bg-cover bg-repeat md:bg-no-repeat z-[5]">
+
+
+            <section className="mt-[-1px] 2xl:py-[5.9375rem] 3xl:py-[9.375rem] pt-[7.1875rem] xl:pt-28 pb-[6.875rem] md:pb-[8.125rem] xl:pb-[9.625rem] max-h-none lg:max-h-[991px] 3xl:max-h-none relative bg-home-texture-3-bg-image bg-[25%_0] xl:bg-[0_0] 2xl:bg-[50%] bg-auto-100p xl:bg-110p md:bg-1200px bg-no-repeat z-[5] lg:z-[4]">
                 <div className="px-6 sm:px-8 md:px-10 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
-                    <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[3]">
+                    <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[2]">
                         <div className="_3d-animation">
-                            <div className="home--block-group is-reverse _2025">
-                                <div className="home--2col_layout block-2 is_2025">
+                            <div className="home--block-group is-reverse home-new _2025">
+                                <div className="home--2col_layout block-2">
                                     <div className="home--text-wr is-mobile-first is_2025">
-                                        <div className="3xl:max-w-[400px]">
-                                            <h2 className="heading--h2 m-90 is_2025">See who{'\''}s around to chill</h2>
-                                        </div>
+                                        <h2 className="heading--h2 is_2025">See who{'\''}s around to chill</h2>
                                         <p className="body-text--xl new-home is_2025 stream">See who{'\''}s around, playing games, or&nbsp;just hanging out. For supported games, you can see what modes or characters your friends are playing and directly join up.</p>
                                     </div>
-                                    <div className="home--image-wr is-reverse is_2025">
-                                        <div className="home--group-chat-img-wr">
-                                            <CustomVideo
-                                                backgroundImage="/images/video/Discord_Refresh_StatusHover_EN-poster-00001.jpg"
-                                                sources={[
-                                                    {
-                                                        src: "/video/home/Discord_Refresh_StatusHover_EN-transcode.mp4",
-                                                        type: "video/mp4",
-                                                    },
-                                                    {
-                                                        src: "/video/home/Discord_Refresh_StatusHover_EN-transcode.webm",
-                                                        type: "video/webm",
-                                                    },
-                                                ]}
-                                                divClassName="home--group-chat-img video _2025 w-background-video w-background-video-atom"
-                                            />
+                                    <div className="home--image-wr is-reverse">
+                                        <div className="home--image-wr video is_2025">
+                                            <div className="home--group-chat-img-wr">
+                                                <CustomVideo
+                                                    backgroundImage="/images/video/Discord_Refresh_StatusHover_EN-poster-00001.jpg"
+                                                    sources={[
+                                                        {
+                                                            src: "/video/home/Discord_Refresh_StatusHover_EN-transcode.mp4",
+                                                            type: "video/mp4",
+                                                        },
+                                                        {
+                                                            src: "/video/home/Discord_Refresh_StatusHover_EN-transcode.webm",
+                                                            type: "video/webm",
+                                                        },
+                                                    ]}
+                                                    divClassName="home--group-chat-img video _2025 w-background-video w-background-video-atom"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <img
+                            ref={homeCyldeImageRef}
+                            src="/images/home/home_clyde_cube.webp"
+                            alt=""
+                            width={300}
+                            height={306}
+                            className="mb-[-130px] md:-mb-40 ml-[5px] md:ml-16 2xl:ml-20 3xl:ml-[190px] w-full max-w-[172px] md:max-w-[218px] 2xl:max-w-[270px] 3xl:max-w-[300px] absolute inset-[auto_auto_0%_0%] select-none"
+                        />
                     </div>
                 </div>
                 {/* Background Stars */}
@@ -394,6 +409,7 @@ export default function LandingPage() {
                     <img src="/images/home/star_sm.svg" width={6} height={6} alt="" className="star-hero-home _2-6 star-sm" />
                 </div>
             </section>
+
             <section className="mt-[-1px] 3xl:py-[9.375rem] pt-[8.125rem] xl:pt-[10.3125rem] 2xl:pt-[8.5rem] pb-[6.75rem] md:pb-20 xl:pb-[10.25rem] 2xl:pb-[9.4375rem] max-h-none lg:max-h-[1030px] 3xl:max-h-none relative bg-home-texture-6-bg-image bg-[0_0] 2xl:bg-[100%_-5%] 3xl:bg-[0_30%] bg-auto-100p sm:bg-1000px md:bg-95p 3xl:bg-91p bg-no-repeat z-[4]">
                 <div className="px-6 sm:px-8 md:px-10 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
                     <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[3]">
@@ -482,6 +498,7 @@ export default function LandingPage() {
                     <img src="/images/home/star_sm.svg" width={6} height={6} alt="" className="star-hero-home _2-6 star-sm" />
                 </div>
             </section>
+
             <section className="mt-[-1px] pt-[7.5rem] md:pt-20 xl:pt-[10.25rem] 2xl:pt-[9.4375rem] 3xl:pt-[9.375rem] pb-[16.4375rem] md:pb-[9.125rem] 2xl:pb-[11.875rem] 3xl:pb-[18.75rem] max-h-none lg:max-h-[1030px] 3xl:max-h-none relative bg-home-texture-7-bg-image bg-[0_0] bg-93p bg-no-repeat">
                 <div className="px-6 sm:px-8 md:px-10 w-full min-h-[148px] sm:min-h-[unset] 3xl:static">
                     <div className="mx-auto w-full max-w-[55.125rem] xl:max-w-[81.25rem] 2xl:max-w-[77.5rem] 3xl:max-w-[93.75rem] relative z-[4]">

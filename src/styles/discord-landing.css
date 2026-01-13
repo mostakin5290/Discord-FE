@@ -401,10 +401,14 @@
   }
 
   body {
-    @apply min-h-screen flex flex-col bg-background dark:bg-app-bg-secondary text-primary font-primary font-normal text-[16px] leading-[150%];
+    @apply min-h-screen flex flex-col bg-background text-primary font-primary font-normal text-[16px] leading-[150%];
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+  
+  .dark body {
+    background-color: rgba(var(--app-bg-secondary));
   }
 
   a {
@@ -2254,7 +2258,9 @@
 
 /* Auth Form */
 .authForm {
-  @apply p-[20px_16px] sm:p-8 w-full sm:w-[480px] max-w-[480px] min-h-screen sm:min-h-[unset] lg:max-w-none bg-app-bg-base-lower text-app-text-muted-3 text-[18px] rounded-lg shadow-[0_2px_10px_0] shadow-black/20 animate-fade-in-down select-none
+  @apply p-[20px_16px] sm:p-8 w-full sm:w-[480px] max-w-[480px] min-h-screen sm:min-h-[unset] lg:max-w-none text-[18px] rounded-lg shadow-[0_2px_10px_0] shadow-black/20 animate-fade-in-down select-none;
+  background-color: var(--app-background-base-lower);
+  color: var(--app-text-muted-3);
 }
 
 /* Home Stars */
@@ -5104,11 +5110,13 @@
 
 /* React Phone Input 2 */
 .react-tel-input .country-list .country.highlight {
-  @apply !bg-app-bg-secondary-alt
+  background-color: var(--app-bg-secondary-alt) !important;
 }
 
 .react-tel-input .country-list .country:hover {
-  @apply dark:bg-app-bg-tertiary
+  background-color: rgba(var(--app-bg-tertiary));
 }
 
-@import "~@uploadthing/react/styles.css";
+.dark .react-tel-input .country-list .country:hover {
+  background-color: rgba(var(--app-bg-tertiary));
+}

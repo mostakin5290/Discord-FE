@@ -1,8 +1,10 @@
 @import "tailwindcss";
+
 @import "./styles/discord-landing.css";
 @import "./styles/discord-ui.css";
 
-@plugin "tailwindcss-animate";
+
+@plugin "tailwindcss-animate"; 
 
 /* Font Faces */
 @font-face {
@@ -478,6 +480,52 @@
 
   .neon-border {
     box-shadow: 0 0 10px rgba(124, 58, 237, 0.2), inset 0 0 10px rgba(124, 58, 237, 0.1);
+  }
+
+  /* Custom background size utilities */
+  .bg-250p {
+    background-size: 250%;
+  }
+  .bg-90p {
+    background-size: 90%;
+  }
+  .bg-91p {
+    background-size: 91%;
+  }
+  .bg-93p {
+    background-size: 93%;
+  }
+  .bg-95p {
+    background-size: 95%;
+  }
+  .bg-95\.5p {
+    background-size: 95.5%;
+  }
+  .bg-96p {
+    background-size: 96%;
+  }
+  .bg-110p {
+    background-size: 110%;
+  }
+  .bg-1000px {
+    background-size: 1000px;
+  }
+  .bg-1200px {
+    background-size: 1200px;
+  }
+  .bg-auto-100p {
+    background-size: auto 100%;
+  }
+  .bg-24px {
+    background-size: 24px;
+  }
+  .bg-32px {
+    background-size: 32px;
+  }
+
+  /* Custom duration utility */
+  .\!duration-7s {
+    animation-duration: 7s !important;
   }
 }
 
