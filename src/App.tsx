@@ -1,5 +1,6 @@
 import LandingPage from "@/pages/home/LandingPage";
 import { BrowserRouter, Routes, Route } from "react-router";
+import { MediaQueryProvider } from "@/context/media-query-context";
 import LoginPage from "./pages/authentication/Login-page";
 import SignupPage from "./pages/authentication/Signup-page";
 import AuthSuccessPage from "./pages/authentication/AuthSuccessPage";
@@ -13,30 +14,32 @@ import InvitePage from "./pages/server/invite-page";
 
 const AppComponent = () => {
   return (
-    <header>
-      <Routes>
-        {/* Public Routes (Accessible only if NOT logged in) */}
-        <Route element={<PublicRoute />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/auth/success" element={<AuthSuccessPage />} />
+    <MediaQueryProvider>
+      <header>
+        <Routes>
+          {/* Public Routes (Accessible only if NOT logged in) */}
+          <Route element={<PublicRoute />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/auth/success" element={<AuthSuccessPage />} />
 
-          {/* New Dashboard with layout */}
-          {/* <Route element={<DashboardLayout />}>
+            {/* New Dashboard with layout */}
+            {/* <Route element={<DashboardLayout />}>
+              <Route path="/server/:id" element={<DashboardPage />} />
+              </Route>
+            </Route> */}
+          </Route>
+
+          {/* Protected Routes (Accessible only if logged in) */}
+          <Route element={<ProtectedRoute />}>
             <Route path="/server/:id" element={<DashboardPage />} />
-            </Route>
-          </Route> */}
-        </Route>
-
-        {/* Protected Routes (Accessible only if logged in) */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/server/:id" element={<DashboardPage />} />
-          <Route path="/server/:serverId/invite/:invitecode" element={<InvitePage />} />
-          <Route path="/server/create/new" element={<CreateServer />} />
-        </Route>
-      </Routes>
-    </header>
+            <Route path="/server/:serverId/invite/:invitecode" element={<InvitePage />} />
+            <Route path="/server/create/new" element={<CreateServer />} />
+          </Route>
+        </Routes>
+      </header>
+    </MediaQueryProvider>
   );
 };
 

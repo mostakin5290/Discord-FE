@@ -1,8 +1,70 @@
 @import "tailwindcss";
+@import "./styles/discord-landing.css";
 @import "./styles/discord-ui.css";
 
 @plugin "tailwindcss-animate";
-/* @plugin "tw-animate-css"; */
+
+/* Font Faces */
+@font-face {
+  font-family: "Abcgintodiscord";
+  src: url("/fonts/Abcgintodiscord/ABCGintoDiscord-Regular.woff2") format("woff2"),
+    url("/fonts/Abcgintodiscord/ABCGintoDiscord-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Abcgintodiscord";
+  src: url("/fonts/Abcgintodiscord/ABCGintoDiscord-Medium.woff2") format("woff2"),
+    url("/fonts/Abcgintodiscord/ABCGintoDiscord-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Abcgintonormal-Bold";
+  src: url("/fonts/Abcgintodiscord/ABCGintoNormal-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Abcgintodiscordnord";
+  src: url("/fonts/Abcgintodiscordnord/ABCGintoDiscordNord-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Abcgintonord 800";
+  src: url("/fonts/Abcgintodiscordnord/abcgintonord-800-extrabold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ggsans";
+  src: url("/fonts/ggsans/ggsans-Normal.woff2") format("woff2"),
+    url("/fonts/ggsans/ggsans-Normal.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ggsans";
+  src: url("/fonts/ggsans/ggsans-Bold.woff2") format("woff2"),
+    url("/fonts/ggsans/ggsans-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ABC Ginto Normal";
+  src: url("/fonts/Abcgintodiscord/ABCGintoDiscord-Regular.woff2") format("woff2");
+  /* Fallback/Approximate */
+  font-weight: normal;
+  font-style: normal;
+}
 
 @theme {
   --color-border: hsl(var(--border));
@@ -39,6 +101,366 @@
 
   --font-logo: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+
+  /* Discord Custom Theme Extensions */
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1920px;
+
+  /* Fonts */
+  --font-primary: "ABC Ginto Normal", var(--font-primary), sans-serif;
+  --font-display: "Abcgintodiscord", var(--font-display), sans-serif;
+  --font-code: var(--font-code);
+  --font-headline: "Abcgintodiscord", var(--font-headline), sans-serif;
+  --font-abcgintonormal: "ABC Ginto Normal", sans-serif;
+  --font-abcgintonormalbold: "Abcgintonormal-Bold", sans-serif;
+  --font-abcgintodiscord: "Abcgintodiscord", sans-serif;
+  --font-abcgintodiscordnord: "Abcgintodiscordnord", sans-serif;
+  --font-abcgintonordextrabold: "Abcgintonord 800", sans-serif;
+  --font-ggsans: "Ggsans", sans-serif;
+
+  /* Colors */
+  --color-app-not-quite-black: rgba(var(--app-not-quite-black));
+  --color-app-blurple: rgba(var(--app-blurple));
+  --color-app-blurple-hover: rgba(var(--app-blurple-hover));
+  --color-app-black: rgba(var(--app-black));
+  --color-app-white: rgba(var(--app-white));
+  --color-app-dark-charcoal: rgba(var(--app-dark-charcoal));
+  --color-app-dark-button-hover: rgba(var(--app-dark-button-hover));
+  --color-app-button-hover: rgba(var(--app-button-hover));
+  --color-app-greyple: rgba(var(--app-greyple));
+  --color-app-spring-green: rgba(var(--app-spring-green));
+  --color-app-dim-grey: rgba(var(--app-dim-grey));
+  --color-app-off-white: rgba(var(--app-off-white));
+  --color-app-dark-off-white: rgba(var(--app-dark-off-white));
+  --color-app-dark-blurple: rgba(var(--app-dark-blurple));
+  --color-app-fuchsia: rgba(var(--app-fuchsia));
+  --color-app-yellow: rgba(var(--app-yellow));
+  --color-app-mint-green: rgba(var(--app-mint-green));
+  --color-app-red: rgba(var(--app-red));
+  --color-app-ekko-red: rgba(var(--app-ekko-red));
+  --color-app-vivid-cerulean: rgba(var(--app-vivid-cerulean));
+  --color-app-orange: rgba(var(--app-orange));
+  --color-app-pink: rgba(var(--app-pink));
+  --color-app-pinc-2: rgba(var(--app-pinc-2));
+  --color-app-green: rgba(var(--app-green));
+  --color-app-purple: rgba(var(--app-purple));
+  --color-app-refresh-blue: rgba(var(--app-refresh-blue));
+  --color-app-navy-blue: rgba(var(--app-navy-blue));
+  --color-app-always-white: rgba(var(--app-always-white));
+  --color-app-always-black: #000000;
+
+  --color-app-bg-primary: rgba(var(--app-bg-primary));
+  --color-app-bg-secondary: rgba(var(--app-bg-secondary));
+  --color-app-bg-tertiary: rgba(var(--app-bg-tertiary));
+
+  --color-brand-experiment: var(--brand-experiment);
+  --color-brand-experiment-560: var(--brand-experiment-560);
+
+  /* Background Images */
+  --background-image-home-image: url('/images/home/home_hero_image.webp');
+  --background-image-home-hero-bg-image: url('/images/background/home_hero_bg.webp');
+  --background-image-home-crown-bg-image: url('/images/background/home_crown_bg_2025.webp');
+  --background-image-home-trophy-bg-image: url('/images/background/home_trophy_bg_2025.webp');
+  --background-image-home-texture-2-bg-image: url('/images/background/home_texture_bg_2.webp');
+  --background-image-home-texture-3-bg-image: url('/images/background/home_texture_bg_3.webp');
+  --background-image-home-texture-4-bg-image: url('/images/background/home_texture_bg_4.webp');
+  --background-image-home-texture-5-bg-image: url('/images/background/home_texture_bg_5.webp');
+  --background-image-home-texture-6-bg-image: url('/images/background/home_texture_bg_6.webp');
+  --background-image-home-texture-7-bg-image: url('/images/background/home_texture_bg_7.webp');
+  --background-image-home-line-bg-image: url('/images/background/home_line_bg_2025.png');
+  --background-image-footer-bg-image: url('/images/background/footer_bg.png');
+  --background-image-download-bg-image: url('/images/background/BG-downloads.webp');
+  --background-image-download-banner-bg-image: url('/images/background/Background_(3).png');
+  --background-image-nitro-bg-image: linear-gradient(#0000, #ec91f5 86%, #ec91f5), url('/images/background/nitro_Section.svg');
+  --background-image-nitro-banner-bg-image: url('/images/background/nitro_Group 482478.svg'), linear-gradient(135deg, #8547c6 10%, #b845c1 50%, #ab5d8a);
+
+  --background-size-250p: 250%;
+  --background-size-90p: 90%;
+  --background-size-95-5p: 95.5%;
+  --background-size-96p: 96%;
+  --background-size-1200px: 1200px;
+  --background-size-1000px: 1000px;
+
+  /* Custom Grids */
+  --grid-template-columns-footer-grid-cols: 1fr 1fr 1fr auto auto auto auto;
+  --grid-template-columns-footer-grid-cols-lg: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  --grid-template-columns-footer-grid-cols-2xl: 1fr 1fr 1fr 1fr 90px 90px 90px 90px 90px 90px 90px 90px;
+
+  /* Border Radius */
+  --radius-lg: 0.75rem;
+  /* var(--radius) */
+  --radius-md: calc(0.75rem - 2px);
+  --radius-sm: calc(0.75rem - 4px);
+
+  /* Shadows */
+  --shadow-app-high: 0px 12px 24px 0px var(--app-shadow-high);
+
+  /* Animations & Keyframes */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in-up-custom: fadeInUpCustom 0.75s ease-in-out forwards;
+  --animate-fade-in-down: fadeInDown 0.170s ease-in-out;
+  --animate-rotate-20: rotate20 5s ease-in-out infinite;
+  --animate-rotate-20-smooth: rotate20Smooth 25s ease-in-out infinite;
+  --animate-rotate-20-smooth-reverse: rotate20SmoothReverse 25s ease-in-out infinite;
+  --animate-transform-y-pulse: transformYPulse 5s ease-in-out infinite;
+  --animate-width-pulse: widthPulse 5s ease-in-out infinite;
+  --animate-expand-down: expand-down 0.5s ease-in-out forwards;
+  --animate-expand-up: expand-up 0.5s ease-in-out forwards;
+  --animate-opacity-in: opacityIn 0.5s ease-out forwards;
+  --animate-opacity-out: opacityOut 0s ease-out forwards;
+  --animate-shake: shake 0.5s;
+  --animate-spinner-wandering-cubes: spinnerWanderingCubes 1.8s ease-in-out infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes fadeInUpCustom {
+    0% {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    75% {
+      opacity: 1;
+      transform: translateY(-10px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px) translateZ(-20px) scaleZ(2);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0px) translateZ(0px) scaleZ(1);
+    }
+  }
+
+  @keyframes opacityIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes opacityOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes rotate20 {
+
+    0%,
+    100% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+    }
+
+    50% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1.1, 1.1, 1) rotateX(0deg) rotateY(0deg) rotateZ(10deg) skew(0deg, 10deg);
+    }
+  }
+
+  @keyframes rotate20Smooth {
+    0% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateZ(0deg);
+    }
+
+    25% {
+      transform: translate3d(-19px, -5px, 0px) scale3d(1.1, 1.1, 1) rotateZ(12deg);
+    }
+
+    50% {
+      transform: translate3d(0px, 8px, 0px) scale3d(0.9, 0.9, 1) rotateZ(23deg);
+    }
+
+    65% {
+      transform: translate3d(-5px, 15px, 0px) scale3d(1, 1, 1) rotateZ(15deg);
+    }
+
+    85% {
+      transform: translate3d(0px, 8px, 0px) scale3d(1, 1, 1) rotateZ(6deg);
+    }
+
+    100% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateZ(0deg);
+    }
+  }
+
+  @keyframes rotate20SmoothReverse {
+    0% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateZ(0deg);
+    }
+
+    20% {
+      transform: translate3d(5px, -10px, 0px) scale3d(1, 1, 1) rotateZ(-12deg);
+    }
+
+    45% {
+      transform: translate3d(10px, -20px, 0px) scale3d(1.2, 1.2, 1) rotateZ(-23deg);
+    }
+
+    60% {
+      transform: translate3d(10px, -20px, 0px) scale3d(1.15, 1.15, 1) rotateZ(-15deg);
+    }
+
+    80% {
+      transform: translate3d(5px, -10px, 0px) scale3d(1.1, 1.1, 1) rotateZ(-6deg);
+    }
+
+    100% {
+      transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateZ(0deg);
+    }
+  }
+
+  @keyframes transformYPulse {
+    0% {
+      transform: translate3d(0px, 0px, 0px);
+    }
+
+    50% {
+      transform: translate3d(0px, -10px, 0px);
+    }
+
+    100% {
+      transform: translate3d(0px, 0px, 0px);
+    }
+  }
+
+  @keyframes widthPulse {
+    0% {
+      width: 100%;
+      filter: blur(0px);
+    }
+
+    30% {
+      width: 50%;
+      filter: blur(0.5px);
+    }
+
+    70% {
+      width: 105%;
+      filter: blur(0.5px);
+    }
+
+    100% {
+      width: 100%;
+      filter: blur(0px);
+    }
+  }
+
+  @keyframes expand-down {
+    0% {
+      height: 0px;
+      opacity: 0;
+    }
+
+    5% {
+      opacity: 1;
+    }
+
+    100% {
+      height: var(--expand-height);
+      opacity: 1;
+    }
+  }
+
+  @keyframes expand-up {
+    0% {
+      height: var(--expand-height);
+      opacity: 1;
+    }
+
+    90% {
+      opacity: 1;
+    }
+
+    91% {
+      opacity: 0;
+    }
+
+    100% {
+      height: 0px;
+      opacity: 0;
+    }
+  }
+
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-5px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes spinnerWanderingCubes {
+    25% {
+      transform: translateX(22px) rotate(-90deg) scale(0.5);
+    }
+
+    50% {
+      transform: translateX(22px) translateY(22px) rotate(-180deg);
+    }
+
+    75% {
+      transform: translateX(0) translateY(22px) rotate(-270deg) scale(0.5);
+    }
+
+    to {
+      transform: rotate(-1turn);
+    }
+  }
 }
 
 @layer utilities {
