@@ -228,7 +228,8 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#313338] text-white overflow-hidden">
+    //just add min-h-screen
+    <div className="flex min-h-screen bg-[#313338] text-white overflow-hidden">
       {/* Server List Sidebar (Left) */}
       <ServerSidebar
         servers={servers}
