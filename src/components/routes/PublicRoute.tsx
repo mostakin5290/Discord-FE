@@ -1,38 +1,58 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
-import { useEffect } from "react";
+import type { RootState, AppDispatch } from "@/store/store";
+import { useEffect, useState } from "react";
 import { fetchUserServers } from "@/store/slices/serverSlice";
-import type { AnyAction } from "@reduxjs/toolkit";
+import { logout } from "@/store/slices/authSlice";
 import LoadingSpinner from "../dashboard/LoadingSpinner";
+import { isTokenValid, clearAuthData } from "@/utils/authGuard";
 
 const PublicRoute = () => {
-  const dispatch = useDispatch();
-  const { token } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
+  const { token, user } = useSelector((state: RootState) => state.auth);
   const { servers, isLoading } = useSelector(
     (state: RootState) => state.server
   );
+  const [validatingToken, setValidatingToken] = useState(true);
 
   useEffect(() => {
+    // Validate token on mount and route change
     if (token) {
-      dispatch(fetchUserServers() as unknown as AnyAction);
-    }
-  }, [dispatch, token]);
+      if (!isTokenValid(token)) {
+        // Token is invalid or expired, clear auth data
+        clearAuthData();
+        dispatch(logout());
+        setValidatingToken(false);
+        return;
+      }
 
-  // Show loading while fetching servers for authenticated user
-  if (token && isLoading) {
+      // Token is valid, fetch user servers
+      dispatch(fetchUserServers());
+    }
+    setValidatingToken(false);
+  }, [dispatch, token, location.pathname]);
+
+  // Show loading while validating token or fetching servers
+  if (validatingToken || (token && isLoading)) {
     return (
       <div className="flex h-screen bg-[#313338]">
-        <LoadingSpinner message="Loading your servers..." />
+        <LoadingSpinner message="Validating session..." />
       </div>
     );
   }
 
-  // Redirect authenticated users to their first server
-  if (token && servers && servers.length > 0) {
-    return <Navigate to={`/server/${servers[0].id}`} replace />;
+  // If token is valid and user is authenticated, redirect to dashboard
+  if (token && user && isTokenValid(token)) {
+    // If user has servers, redirect to first server
+    if (servers && servers.length > 0) {
+      return <Navigate to={`/server/${servers[0].id}`} replace />;
+    }
+    // If no servers, redirect to direct messages
+    return <Navigate to="/channels/@me" replace />;
   }
 
+  // Allow access to public routes
   return <Outlet />;
 };
 

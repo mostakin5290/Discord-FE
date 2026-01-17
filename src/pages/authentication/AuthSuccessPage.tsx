@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
 import { fetchMe } from "@/store/slices/authSlice";
+import { afterSignInUrl } from "@/data";
 
 const AuthSuccessPage = () => {
   const [searchParams] = useSearchParams();
@@ -14,12 +15,12 @@ const AuthSuccessPage = () => {
     if (token) {
       // First, store the token in localStorage
       localStorage.setItem("token", token);
-      
+
       // Then fetch the user profile using the token
       dispatch(fetchMe(token))
         .unwrap()
         .then(() => {
-          navigate("/");
+          navigate(afterSignInUrl);
         })
         .catch((error) => {
           console.error("Failed to fetch user profile:", error);

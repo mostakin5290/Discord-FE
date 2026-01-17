@@ -36,9 +36,12 @@ const ServerSidebar = ({
           <TooltipTrigger asChild>
             <button
               className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-200 group"
-              onClick={() => navigate("/friends")}
+              onClick={() => navigate("/channels/@me")}
             >
-              <Home size={28} className="text-[#dbdee1] group-hover:text-white transition-colors" />
+              <Home
+                size={28}
+                className="text-[#dbdee1] group-hover:text-white transition-colors"
+              />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">
@@ -92,7 +95,10 @@ const ServerSidebar = ({
               onClick={onCreateServer}
               className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200 group"
             >
-              <Plus size={24} className="text-[#23a559] group-hover:text-white" />
+              <Plus
+                size={24}
+                className="text-[#23a559] group-hover:text-white"
+              />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">

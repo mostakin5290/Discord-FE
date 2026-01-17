@@ -38,7 +38,7 @@ const DirectMessagesPage = () => {
   const handleSelectFriends = () => {
     setSelectedView("friends");
     setSelectedDMUserId(null);
-    navigate("/friends");
+    navigate("/channels/@me");
   };
 
   const handleSelectDM = (dmUserId: string) => {
@@ -78,18 +78,19 @@ const DirectMessagesPage = () => {
         <FriendsPanel />
       ) : (
         selectedDMUserId && (
-            <DirectMessageChat 
-                userId={selectedDMUserId} 
-                onToggleProfile={() => setShowProfile(!showProfile)} 
-            />
+          <DirectMessageChat
+            userId={selectedDMUserId}
+            onToggleProfile={() => setShowProfile(!showProfile)}
+          />
         )
       )}
 
       {/* Right Sidebar - Active Now OR User Profile */}
       {selectedView === "friends" ? (
-        <ActiveNow /> 
+        <ActiveNow />
       ) : (
-        selectedDMUserId && showProfile && <UserProfileSidebar userId={selectedDMUserId} />
+        selectedDMUserId &&
+        showProfile && <UserProfileSidebar userId={selectedDMUserId} />
       )}
 
       {/* Create Server Dialog */}
