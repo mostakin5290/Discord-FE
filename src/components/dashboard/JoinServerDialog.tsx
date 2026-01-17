@@ -81,8 +81,8 @@ const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
 
             <div className="space-y-6 px-6 py-4">
             <div className="flex justify-center">
-                <div className="w-20 h-20 rounded-full bg-[#2B2D31] flex items-center justify-center border-2 border-dashed border-gray-600 shadow-inner">
-                   <Compass className="w-10 h-10 text-[#23A559]" />
+                <div className="w-20 h-20 rounded-full bg-[#2b2d31] flex items-center justify-center border-2 border-dashed border-gray-600 shadow-inner">
+                   <Compass className="w-10 h-10 text-[#23a559]" />
                 </div>
             </div>
 
@@ -98,7 +98,7 @@ const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 placeholder="https://discord.gg/hTKzmak"
-                className="bg-[#1E1F22] border-none text-white focus:bg-black/40 focus-visible:ring-0 focus-visible:ring-offset-0 h-[40px] shadow-inner font-medium placeholder:text-gray-500"
+                className="bg-[#1e1f22] border-none text-white focus:bg-black/40 focus-visible:ring-0 focus-visible:ring-offset-0 h-[40px] shadow-inner font-medium placeholder:text-gray-500"
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
                     handleJoin();
@@ -112,7 +112,7 @@ const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
             </div>
             </div>
 
-            <div className="bg-[#2B2D31] p-4 flex justify-between items-center mt-2 shadow-inner">
+            <div className="bg-[#2b2d31] p-4 flex justify-between items-center mt-2 shadow-inner">
             <Button
                 variant="ghost"
                 onClick={() => {
@@ -126,7 +126,7 @@ const JoinServerDialog = ({ open, onOpenChange }: JoinServerDialogProps) => {
             <Button
                 onClick={handleJoin}
                 disabled={loading || !inviteCode.trim()}
-                className="bg-[#5865F2] hover:bg-[#4752C4] text-white px-6 h-[38px] transition-all shadow-md hover:shadow-lg font-medium"
+                className="bg-[#5865f2] hover:bg-[#4752c4] text-white px-6 h-[38px] transition-all shadow-md hover:shadow-lg font-medium"
             >
                 {loading ? "Joining..." : "Join Server"}
             </Button>

@@ -16,12 +16,15 @@ import { useNavigate, useParams } from "react-router";
 import { InvitecodeModal } from "@/components/dashboard/Invitecode-modal";
 import { LeaveServerModal } from "@/components/dashboard/leave-server-modal";
 import { CreateChannelModal } from "@/components/dashboard/create-channel-modal";
+import SettingsModal from "@/components/dashboard/settings/SettingsModal";
+import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 
 type ServerAccessStatus = "loading" | "valid" | "not_found" | "not_member";
 
 const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
   const { id: serverIdFromUrl } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -300,6 +303,11 @@ const DashboardPage = () => {
           serverId={serverIdFromUrl || ""}
         />
       }
+
+      <SettingsModal 
+        open={settingsModalOpen} 
+        onOpenChange={() => dispatch(setSettingsModalOpen())} 
+      />
     </div>
   );
 };

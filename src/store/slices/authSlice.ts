@@ -9,6 +9,10 @@ interface User {
   firstName?: string;
   lastName?: string;
   imageUrl?: string;
+  bannerUrl?: string;
+  bio?: string;
+  provider?: string;
+  password?: string;
 }
 
 interface AuthState {
@@ -36,7 +40,7 @@ export const loginUser = createAsyncThunk(
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
-  }
+  },
 );
 
 export const signupUser = createAsyncThunk(
@@ -48,7 +52,7 @@ export const signupUser = createAsyncThunk(
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Signup failed");
     }
-  }
+  },
 );
 
 // Fetch current authenticated user profile
@@ -64,9 +68,75 @@ export const fetchMe = createAsyncThunk(
       });
       return response.data;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch user");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user",
+      );
     }
-  }
+  },
+);
+
+// Update user profile
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (data: Partial<User>, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put("/auth/profile", data);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update profile",
+      );
+    }
+  },
+);
+
+// Update user password
+export const updatePassword = createAsyncThunk(
+  "auth/updatePassword",
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put("/auth/password", data);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update password",
+      );
+    }
+  },
+);
+
+// Delete account
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (password: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.delete("/auth/account", {
+        data: { password },
+      });
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete account",
+      );
+    }
+  },
+);
+
+// Disable account
+export const disableAccount = createAsyncThunk(
+  "auth/disableAccount",
+  async (password: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post("/auth/account/disable", {
+        password,
+      });
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to disable account",
+      );
+    }
+  },
 );
 
 const authSlice = createSlice({
@@ -81,7 +151,7 @@ const authSlice = createSlice({
     },
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; token: string }>
+      action: PayloadAction<{ user: User; token: string }>,
     ) => {
       // console.log(action)
       state.user = action.payload.user;
@@ -145,6 +215,19 @@ const authSlice = createSlice({
         state.token = null;
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+      })
+      // Update Profile
+      .addCase(updateUserProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        // Update localStorage
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
       });
   },
 });

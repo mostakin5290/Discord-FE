@@ -29,16 +29,17 @@ import {
 } from "@/store/slices/friendSlice";
 import { useNavigate } from "react-router-dom";
 
-type TabType = "all" | "pending" | "blocked";
+type TabType = "online" | "all" | "pending" | "blocked";
 
 const FriendsPanel = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { friends, pendingRequests, sentRequests, isLoading } = useSelector(
-    (state: RootState) => state.friends
+    (state: RootState) => state.friends,
   );
   const { user } = useSelector((state: RootState) => state.auth);
-  const [activeTab, setActiveTab] = useState<TabType>("all");
+  // Default to "online" tab to match screenshots
+  const [activeTab, setActiveTab] = useState<TabType>("online");
   const [searchQuery, setSearchQuery] = useState("");
   const [addFriendUsername, setAddFriendUsername] = useState("");
   const [showAddFriend, setShowAddFriend] = useState(false);
@@ -61,7 +62,7 @@ const FriendsPanel = () => {
 
     // 2. Check if already friends
     const isAlreadyFriend = friends.find(
-      (f) => f.friend?.username === username
+      (f) => f.friend?.username === username,
     );
     if (isAlreadyFriend) {
       toast.error(`${username} is already your friend.`);
@@ -70,7 +71,7 @@ const FriendsPanel = () => {
 
     // 3. Check if already sent request
     const isRequestSent = sentRequests.find(
-      (r) => r.receiver?.username === username
+      (r) => r.receiver?.username === username,
     );
     if (isRequestSent) {
       toast.error(`You have already sent a friend request to ${username}.`);
@@ -79,10 +80,12 @@ const FriendsPanel = () => {
 
     // 4. Check if request received (pending)
     const isRequestReceived = pendingRequests.find(
-      (r) => r.sender?.username === username
+      (r) => r.sender?.username === username,
     );
     if (isRequestReceived) {
-      toast.info(`${username} has already sent you a request. Accept it in the Pending tab!`);
+      toast.info(
+        `${username} has already sent you a request. Accept it in the Pending tab!`,
+      );
       return;
     }
 
@@ -117,7 +120,14 @@ const FriendsPanel = () => {
     navigate(`/dm/${userId}`);
   };
 
+  // Mock online count for now since we don't have real-time presence fully hooked up everywhere,
+  // but we'll use the 'status' field from friend object if available.
+  const onlineFriends = friends.filter(
+    (f) => f.friend?.status && f.friend.status !== "offline",
+  );
+
   const tabs = [
+    { id: "online" as TabType, label: "Online", count: onlineFriends.length },
     { id: "all" as TabType, label: "All", count: friends.length },
     {
       id: "pending" as TabType,
@@ -144,11 +154,135 @@ const FriendsPanel = () => {
     return name.charAt(0).toUpperCase();
   };
 
-  const filteredFriends = friends.filter((friend) =>
-    friend?.friend?.username && friend.friend.username.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFriends = friends.filter(
+    (friend) =>
+      friend?.friend?.username &&
+      friend.friend.username.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const renderContent = () => {
+    if (activeTab === "online") {
+      const onlineFriendsList = friends.filter(
+        (friend) =>
+          friend.friend?.status &&
+          friend.friend.status !== "offline" &&
+          friend.friend.username
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
+      );
+
+      return (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-xs font-semibold text-[#949ba4] uppercase">
+              Online — {onlineFriendsList.length}
+            </h4>
+          </div>
+
+          {onlineFriendsList.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-[#949ba4]">
+              <div className="w-105 h-55 mb-8 opacity-100 grayscale-0">
+                {/* Using the image from screenshot 1 conceptually - Wumpus waiting */}
+                <div className="w-full h-full bg-[#36393f] rounded-md flex items-center justify-center">
+                  <span className="text-sm">
+                    No one's around to play with Wumpus.
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            onlineFriendsList.map((friendData) => {
+              const friend = friendData.friend;
+              return (
+                <div
+                  key={friendData.id}
+                  className="flex items-center justify-between p-3 rounded-lg border-t border-[#3f4147] hover:bg-[#393c41] hover:border-transparent transition-all duration-300 hover:scale-[1.02] hover:shadow-lg group cursor-pointer animate-in fade-in slide-in-from-bottom duration-500"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="relative shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center">
+                        {friend.imageUrl ? (
+                          <img
+                            src={friend.imageUrl}
+                            alt={friend.username}
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-white text-sm font-semibold">
+                            {getInitials(friend.firstName || friend.username)}
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 ${getStatusColor(
+                          friend.status,
+                        )} border-[3px] border-[#313338] rounded-full animate-pulse`}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-white truncate">
+                        {friend.firstName && friend.lastName
+                          ? `${friend.firstName} ${friend.lastName}`
+                          : friend.username}
+                      </div>
+                      <div className="text-xs text-[#949ba4] truncate">
+                        {friend.status || "Online"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <button
+                      onClick={() => handleMessageFriend(friend.id)}
+                      className="w-9 h-9 rounded-full bg-[#2b2d31] hover:bg-[#1e1f22] flex items-center justify-center text-[#949ba4] hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 tooltip shadow-md hover:shadow-xl"
+                      title="Message"
+                    >
+                      <MessageCircle size={20} />
+                    </button>
+
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <button className="w-9 h-9 rounded-full bg-[#2b2d31] hover:bg-[#1e1f22] flex items-center justify-center text-[#949ba4] hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none shadow-md hover:shadow-xl">
+                          <MoreHorizontal size={20} />
+                        </button>
+                      </DropdownMenu.Trigger>
+
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content
+                          className="min-w-[188px] bg-[#111214] rounded-md p-1.5 shadow-[0_8px_16px_rgba(0,0,0,0.24)] animate-in fade-in zoom-in-95 duration-100 z-50 border border-[#1e1f22]"
+                          sideOffset={5}
+                          align="end"
+                        >
+                          <DropdownMenu.Item className="flex items-center px-2 py-2 text-sm text-[#b5bac1] hover:bg-[#4752c4] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2">
+                            <Video size={16} />
+                            Start Video Call
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item className="flex items-center px-2 py-2 text-sm text-[#b5bac1] hover:bg-[#4752c4] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2">
+                            <Phone size={16} />
+                            Start Voice Call
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Separator className="h-px bg-[#1e1f22] my-1" />
+                          <DropdownMenu.Item
+                            onClick={() =>
+                              handleRemoveFriend(friendData.friendId)
+                            }
+                            className="flex items-center px-2 py-2 text-sm text-[#da373c] hover:bg-[#da373c] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2"
+                          >
+                            <UserMinus size={16} />
+                            Remove Friend
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      );
+    }
+
     if (activeTab === "all") {
       return (
         <div className="space-y-2">
@@ -192,7 +326,7 @@ const FriendsPanel = () => {
                       </div>
                       <div
                         className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 ${getStatusColor(
-                          friend.status
+                          friend.status,
                         )} border-[3px] border-[#313338] rounded-full`}
                       />
                     </div>
@@ -216,7 +350,7 @@ const FriendsPanel = () => {
                     >
                       <MessageCircle size={20} />
                     </button>
-                    
+
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild>
                         <button className="w-9 h-9 rounded-full bg-[#2b2d31] hover:bg-[#1e1f22] flex items-center justify-center text-[#949ba4] hover:text-white transition-colors focus:outline-none">
@@ -230,7 +364,7 @@ const FriendsPanel = () => {
                           sideOffset={5}
                           align="end"
                         >
-                           <DropdownMenu.Item className="flex items-center px-2 py-2 text-sm text-[#b5bac1] hover:bg-[#4752c4] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2">
+                          <DropdownMenu.Item className="flex items-center px-2 py-2 text-sm text-[#b5bac1] hover:bg-[#4752c4] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2">
                             <Video size={16} />
                             Start Video Call
                           </DropdownMenu.Item>
@@ -240,7 +374,9 @@ const FriendsPanel = () => {
                           </DropdownMenu.Item>
                           <DropdownMenu.Separator className="h-px bg-[#1e1f22] my-1" />
                           <DropdownMenu.Item
-                            onClick={() => handleRemoveFriend(friendData.friendId)}
+                            onClick={() =>
+                              handleRemoveFriend(friendData.friendId)
+                            }
                             className="flex items-center px-2 py-2 text-sm text-[#da373c] hover:bg-[#da373c] hover:text-white rounded cursor-pointer outline-none transition-colors gap-2"
                           >
                             <UserMinus size={16} />
@@ -280,53 +416,53 @@ const FriendsPanel = () => {
             pendingRequests.map((request) => {
               if (!request.sender) return null;
               return (
-              <div
-                key={request.id}
-                className="flex items-center justify-between p-3 rounded-lg border-t border-white/5 hover:bg-white/5 hover:border-transparent transition-colors group"
-              >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="relative shrink-0">
-                    <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center">
-                      {request.sender.imageUrl ? (
-                        <img
-                          src={request.sender.imageUrl}
-                          alt={request.sender.username}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-white text-sm font-semibold">
-                          {getInitials(request.sender.username)}
-                        </span>
-                      )}
+                <div
+                  key={request.id}
+                  className="flex items-center justify-between p-3 rounded-lg border-t border-white/5 hover:bg-white/5 hover:border-transparent transition-colors group"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="relative shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center">
+                        {request.sender.imageUrl ? (
+                          <img
+                            src={request.sender.imageUrl}
+                            alt={request.sender.username}
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-white text-sm font-semibold">
+                            {getInitials(request.sender.username)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-white truncate">
+                        {request.sender.firstName && request.sender.lastName
+                          ? `${request.sender.firstName} ${request.sender.lastName}`
+                          : request.sender.username}
+                      </div>
+                      <div className="text-xs text-[#949ba4] truncate">
+                        Incoming Friend Request
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-white truncate">
-                      {request.sender.firstName && request.sender.lastName
-                        ? `${request.sender.firstName} ${request.sender.lastName}`
-                        : request.sender.username}
-                    </div>
-                    <div className="text-xs text-[#949ba4] truncate">
-                      Incoming Friend Request
-                    </div>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleAcceptRequest(request.id)}
-                    className="w-9 h-9 rounded-full bg-[#248046] hover:bg-[#1a6334] flex items-center justify-center text-white transition-colors"
-                  >
-                    <Check size={18} />
-                  </button>
-                  <button
-                    onClick={() => handleRejectRequest(request.id)}
-                    className="w-9 h-9 rounded-full bg-[#da373c] hover:bg-[#a12d30] flex items-center justify-center text-white transition-colors"
-                  >
-                    <X size={18} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleAcceptRequest(request.id)}
+                      className="w-9 h-9 rounded-full bg-[#248046] hover:bg-[#1a6334] flex items-center justify-center text-white transition-colors"
+                    >
+                      <Check size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleRejectRequest(request.id)}
+                      className="w-9 h-9 rounded-full bg-[#da373c] hover:bg-[#a12d30] flex items-center justify-center text-white transition-colors"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
                 </div>
-              </div>
               );
             })
           )}
@@ -342,45 +478,45 @@ const FriendsPanel = () => {
               {sentRequests.map((request) => {
                 if (!request.receiver) return null;
                 return (
-                <div
-                  key={request.id}
-                  className="flex items-center justify-between p-3 rounded-lg border-t border-white/5 hover:bg-white/5 hover:border-transparent transition-colors group"
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="relative shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center">
-                        {request.receiver?.imageUrl ? (
-                          <img
-                            src={request.receiver.imageUrl}
-                            alt={request.receiver.username}
-                            className="w-full h-full rounded-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-white text-sm font-semibold">
-                            {getInitials(request.receiver?.username || "U")}
-                          </span>
-                        )}
+                  <div
+                    key={request.id}
+                    className="flex items-center justify-between p-3 rounded-lg border-t border-white/5 hover:bg-white/5 hover:border-transparent transition-colors group"
+                  >
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="relative shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center">
+                          {request.receiver?.imageUrl ? (
+                            <img
+                              src={request.receiver.imageUrl}
+                              alt={request.receiver.username}
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-white text-sm font-semibold">
+                              {getInitials(request.receiver?.username || "U")}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-white truncate">
+                          {request.receiver?.username}
+                        </div>
+                        <div className="text-xs text-[#949ba4] truncate">
+                          Outgoing Friend Request
+                        </div>
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-white truncate">
-                        {request.receiver?.username}
-                      </div>
-                      <div className="text-xs text-[#949ba4] truncate">
-                        Outgoing Friend Request
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleCancelRequest(request.id)}
-                      className="w-9 h-9 rounded-full bg-[#da373c] hover:bg-[#a12d30] flex items-center justify-center text-white transition-colors"
-                    >
-                      <X size={18} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleCancelRequest(request.id)}
+                        className="w-9 h-9 rounded-full bg-[#da373c] hover:bg-[#a12d30] flex items-center justify-center text-white transition-colors"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
                   </div>
-                </div>
                 );
               })}
             </>

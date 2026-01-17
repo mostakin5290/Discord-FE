@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { fetchConversations } from "@/store/slices/dmSlice";
 import { logout } from "@/store/slices/authSlice";
+import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 import FindConversationDialog from "./FindConversationDialog";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -262,7 +263,10 @@ const DMSidebar = ({
               side="top"
               sideOffset={8}
             >
-              <DropdownMenuItem className="text-[#b5bac1] hover:bg-[#4752c4] hover:text-white focus:bg-[#4752c4] focus:text-white cursor-pointer">
+              <DropdownMenuItem 
+                className="text-[#b5bac1] hover:bg-[#4752c4] hover:text-white focus:bg-[#4752c4] focus:text-white cursor-pointer"
+                onClick={() => dispatch(setSettingsModalOpen())}
+              >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>User Settings</span>
               </DropdownMenuItem>

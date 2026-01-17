@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
+import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 import {
   MoreHorizontal,
   Reply,
@@ -60,10 +61,23 @@ const MessageItem = ({
   isDM = false,
 }: MessageItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const isOwnMessage =
     message.senderId === currentUserId || message.userId === currentUserId;
   const sender = message.sender || message.user;
+
+  // Check if message is a single emoji (or 2-3 emojis)
+  const isSingleEmoji = (text: string) => {
+    if (!text) return false;
+    const emojiRegex = /^[\p{Emoji}\u200d]+$/u;
+    const trimmed = text.trim();
+    // Check if it's 1-3 emojis
+    const emojiCount = [...trimmed].filter((char) =>
+      /\p{Emoji}/u.test(char),
+    ).length;
+    return emojiRegex.test(trimmed) && emojiCount <= 3;
+  };
 
   // Helper to check if current user reacted with a specific emoji
   const hasReacted = (emoji: string) => {
@@ -76,10 +90,28 @@ const MessageItem = ({
     if (!onReaction) return;
 
     try {
+      // Check if user already reacted with a different emoji
+      const userExistingReaction = message.reactions
+        ? Object.keys(message.reactions).find(
+            (e) => message.reactions[e]?.includes(currentUserId) && e !== emoji,
+          )
+        : null;
+
+      // If user has a different reaction, remove it first
+      if (userExistingReaction) {
+        await onReaction(message.id, userExistingReaction, false);
+      }
+
+      // Toggle the clicked reaction
       await onReaction(message.id, emoji, !hasReacted(emoji));
+      setShowEmojiPicker(false);
     } catch (error) {
       toast.error("Failed to react to message");
     }
+  };
+
+  const handleEmojiSelect = (emojiData: any) => {
+    handleReaction(emojiData.emoji);
   };
 
   const handlePin = async () => {
@@ -115,9 +147,9 @@ const MessageItem = ({
 
   return (
     <div
-      className={`group flex flex-col hover:bg-[#26272d] -mx-4 px-4 py-0.5 rounded-[4px] relative transition-colors ${
+      className={`group flex flex-col hover:bg-[#26272d] -mx-4 px-4 py-0.5 rounded-[4px] relative transition-all duration-150 animate-in fade-in slide-in-from-bottom-2 ${
         isHovered ? "bg-[#26272d]" : ""
-      } ${message.pinned ? "bg-[#33353b]" : ""}`}
+      } ${message.pinned ? "bg-[#33353b] border-l-4 border-[#5865f2] pl-3.5" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -145,7 +177,7 @@ const MessageItem = ({
       <div className="flex gap-4 items-start">
         {/* Avatar */}
         {!showGrouping && (
-          <div className="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center shrink-0 cursor-pointer transition-opacity hover:opacity-80 mt-1">
+          <div className="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center shrink-0 cursor-pointer transition-all duration-200 hover:opacity-80 hover:scale-110 hover:ring-2 hover:ring-[#5865f2]/50 mt-1">
             {sender?.imageUrl ? (
               <img
                 src={sender.imageUrl}
@@ -195,8 +227,12 @@ const MessageItem = ({
             <>
               {message.content && (
                 <p
-                  className={`text-[#dbdee1] ${!showGrouping ? "mt-1" : ""} break-words leading-relaxed ${
-                    message.pinned ? "font-medium" : ""
+                  className={`${
+                    isSingleEmoji(message.content)
+                      ? "text-7xl leading-none my-2 animate-in zoom-in-50 duration-300"
+                      : `text-[#dbdee1] ${!showGrouping ? "mt-1" : ""} break-words leading-relaxed ${
+                          message.pinned ? "font-medium text-[#e3e5e8]" : ""
+                        }`
                   }`}
                 >
                   {message.content}
@@ -223,20 +259,21 @@ const MessageItem = ({
                       key={emoji}
                       onClick={() => handleReaction(emoji)}
                       className={`
-                    flex items-center gap-1.5 px-1.5 py-0.5 rounded-[4px] border
-                    transition-colors text-sm
+                    flex items-center gap-1.5 px-2 py-1 rounded-lg border
+                    transition-all duration-200 text-sm cursor-pointer
                     ${
                       userIds.includes(currentUserId)
-                        ? "bg-[#3b405a] border-[#5865f2] hover:bg-[#3b405a]/80"
-                        : "bg-[#2b2d31] border-transparent hover:border-[#4e5058]"
+                        ? "bg-[#5865f2]/20 border-[#5865f2] hover:bg-[#5865f2]/30 scale-105 shadow-md shadow-[#5865f2]/20"
+                        : "bg-[#2b2d31] border-transparent hover:border-[#5865f2]/40 hover:scale-105"
                     }
+                    active:scale-95
                   `}
                     >
-                      <span>{emoji}</span>
+                      <span className="text-base">{emoji}</span>
                       <span
                         className={`font-semibold text-xs ${
                           userIds.includes(currentUserId)
-                            ? "text-[#dee0fc]"
+                            ? "text-[#5865f2]"
                             : "text-[#b5bac1]"
                         }`}
                       >
@@ -253,23 +290,51 @@ const MessageItem = ({
       {/* Message Actions Toolbar */}
       {!message.deleted && (
         <div
-          className={`absolute right-4 -top-2 bg-[#1e1f22] border border-[#2b2d31] shadow-sm rounded-lg flex items-center p-0.5 transition-opacity duration-200 z-10 ${
-            isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
+          className={`absolute right-4 -top-2 bg-[#1e1f22] border border-[#2b2d31] shadow-2xl rounded-lg flex items-center p-0.5 transition-all duration-150 z-10 ${
+            isHovered || showEmojiPicker
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95 pointer-events-none"
           }`}
+          onMouseEnter={() => setIsHovered(true)}
         >
           {onReaction && (
-            <button
-              onClick={() => handleReaction("👍")}
-              className="p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded"
-              title="Add Reaction"
-            >
-              <SmilePlus size={20} />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className={`p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  showEmojiPicker ? "bg-[#5865f2] text-white" : ""
+                }`}
+                title="Add Reaction"
+              >
+                <SmilePlus size={20} />
+              </button>
+              {showEmojiPicker && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-150"
+                    onClick={() => setShowEmojiPicker(false)}
+                  />
+                  <div className="absolute top-full right-0 mt-2 z-50 animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200">
+                    <div className="shadow-2xl rounded-xl overflow-hidden ring-2 ring-[#2b2d31]">
+                      <EmojiPicker
+                        theme={EmojiTheme.DARK}
+                        onEmojiClick={handleEmojiSelect}
+                        width={320}
+                        height={400}
+                        searchDisabled
+                        skinTonesDisabled
+                        previewConfig={{ showPreview: false }}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           )}
           {onReply && (
             <button
               onClick={() => onReply(message)}
-              className="p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded"
+              className="p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded transition-all duration-200 hover:scale-110 active:scale-95"
               title="Reply"
             >
               <Reply size={20} />
@@ -278,7 +343,7 @@ const MessageItem = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded">
+              <button className="p-1.5 text-[#b5bac1] hover:text-white hover:bg-[#404249] rounded transition-all duration-200 hover:scale-110 active:scale-95">
                 <MoreHorizontal size={20} />
               </button>
             </DropdownMenuTrigger>
