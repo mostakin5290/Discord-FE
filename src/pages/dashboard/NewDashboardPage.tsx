@@ -30,19 +30,9 @@ const DashboardPage = () => {
     (state: RootState) => state.server
   );
 
-  const getRole = (userMemberRole: string) => {
-    switch (userMemberRole) {
-      case "ADMIN":
-        return "ADMIN";
-      case "MODERATOR":
-        return "MODERATOR";
-      default:
-        return "GUEST";
-    }
-  };
 
   const userMember = currentServer?.members?.find((m) => m.user?.id === user?.id);
-  const isAdminOrModerator = userMember?.role === "ADMIN" || userMember?.role === "MODERATOR";
+
 
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
   const [showCreateServer, setShowCreateServer] = useState(false);

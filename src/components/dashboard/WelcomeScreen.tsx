@@ -7,7 +7,7 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 
 interface ChecklistItem {
   id: string;

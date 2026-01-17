@@ -18,7 +18,7 @@ export function Header({
     navStyle = "advanced",
 }: HeaderProps) {
     // Mock authentication - always signed in for development
-    const isSignedIn = true
+
     const authButtonUrl = afterSignInUrl
     const authButtonText = "Open Discord"
 

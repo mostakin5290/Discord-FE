@@ -10,7 +10,7 @@ import { AppLogo } from "@/components/main/app-logo"
 
 export function Footer({ footerStyle = "advanced", className = "" }: FooterProps) {
     // Mock authentication - always signed in for development
-    const isSignedIn = true
+
 
     if (footerStyle === "basic") {
         const authButtonUrl = afterSignInUrl

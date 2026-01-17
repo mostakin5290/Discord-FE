@@ -4,8 +4,8 @@ import { Plus } from "lucide-react";
 import React from "react";
 
 const DashboardMobileSidebar = () => {
-    const [activeItem, setActiveItem] = React.useState(data.navMain[0])
-    const [mails, setMails] = React.useState(data.mails);
+    const [, setActiveItem] = React.useState(data.navMain[0])
+    const [, setMails] = React.useState(data.mails);
 
     return (
         <aside className="w-15 border-r-1 border-neutral-800 flex flex-col items-center py-3 gap-3 md:hidden sticky left-0 top-0">

@@ -1,4 +1,5 @@
 import { Plus, Home } from "lucide-react";
+import { useNavigate } from "react-router";
 import {
   Tooltip,
   TooltipContent,
@@ -25,17 +26,19 @@ const ServerSidebar = ({
   onServerSelect,
   onCreateServer,
 }: ServerSidebarProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col items-center w-[72px] bg-[#1e1f22] py-3 gap-2">
+    <div className="flex flex-col items-center w-[72px] bg-[#0b0c0e] py-3 gap-2 shrink-0">
       <TooltipProvider>
         {/* Home/DM Button */}
         <Tooltip>
           <TooltipTrigger asChild>
             <button
-              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-200"
-              onClick={() => servers.length > 0 && onServerSelect(servers[0].id)}
+              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-200 group"
+              onClick={() => navigate("/friends")}
             >
-              <Home size={24} className="text-white" />
+              <Home size={28} className="text-[#dbdee1] group-hover:text-white transition-colors" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">
@@ -56,9 +59,10 @@ const ServerSidebar = ({
                   flex items-center justify-center w-12 h-12 rounded-[24px] 
                   hover:rounded-[16px] transition-all duration-200 overflow-hidden
                   scale-hover shadow-md hover:shadow-xl
-                  ${currentServerId === server.id
-                    ? "rounded-[16px] bg-[#5865f2] shadow-lg"
-                    : "bg-[#313338] hover:bg-[#5865f2]"
+                  ${
+                    currentServerId === server.id
+                      ? "rounded-[16px] bg-[#5865f2] shadow-lg"
+                      : "bg-[#1e1f22] hover:bg-[#5865f2]"
                   }
                 `}
               >
@@ -86,9 +90,9 @@ const ServerSidebar = ({
           <TooltipTrigger asChild>
             <button
               onClick={onCreateServer}
-              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200"
+              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200 group"
             >
-              <Plus size={24} className="text-[#23a559] hover:text-white" />
+              <Plus size={24} className="text-[#23a559] group-hover:text-white" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">

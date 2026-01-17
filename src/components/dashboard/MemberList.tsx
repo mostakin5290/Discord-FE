@@ -1,4 +1,4 @@
-import { Crown, Shield, User } from "lucide-react";
+import { Crown, Shield } from "lucide-react";
 
 interface Member {
   id: string;
