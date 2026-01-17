@@ -7,6 +7,7 @@ import type { RootState } from "@/store/store";
 interface DMState {
   conversations: Conversation[];
   messages: { [conversationId: string]: DirectMessage[] };
+  hasMore: { [conversationId: string]: boolean };
   activeConversationId: string | null;
   unreadCount: number;
   isLoading: boolean;
@@ -16,6 +17,7 @@ interface DMState {
 const initialState: DMState = {
   conversations: [],
   messages: {},
+  hasMore: {},
   activeConversationId: null,
   unreadCount: 0,
   isLoading: false,
@@ -423,8 +425,10 @@ const dmSlice = createSlice({
           messages.forEach(m => messageMap.set(m.id, m));
           
           // Convert back to array and sort by creation time (descending)
-          state.messages[conversationId] = Array.from(messageMap.values())
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+           state.messages[conversationId] = Array.from(messageMap.values())
+            .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+          
+          state.hasMore[conversationId] = !!action.payload.nextCursor;
         }
       )
       .addCase(fetchConversationMessages.rejected, (state, action) => {
@@ -451,7 +455,7 @@ const dmSlice = createSlice({
           if (!exists) {
               state.messages[conversationId].push(message);
               // Re-sort to be safe
-               state.messages[conversationId].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+               state.messages[conversationId].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
           }
 
           // Update conversation

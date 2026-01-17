@@ -34,15 +34,35 @@ const ServerSidebar = ({
         {/* Home/DM Button */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <button
-              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-200 group"
-              onClick={() => navigate("/channels/@me")}
-            >
-              <Home
-                size={28}
-                className="text-[#dbdee1] group-hover:text-white transition-colors"
+            <div className="relative flex items-center justify-center w-full mb-2 group">
+              {/* Active/Hover Indicator Pill */}
+              <div
+                className={`absolute left-0 w-[4px] bg-white rounded-r-full transition-all duration-200 origin-left
+                  ${
+                    !currentServerId
+                      ? "h-[40px] opacity-100"
+                      : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
+                  }
+                `}
               />
-            </button>
+              <button
+                className={`
+                  flex items-center justify-center w-12 h-12 rounded-[24px] 
+                  transition-all duration-200 group-hover:rounded-[16px]
+                  ${
+                    !currentServerId
+                      ? "bg-[#5865f2] rounded-[16px]"
+                      : "bg-[#1a1b1e] hover:bg-[#5865f2]"
+                  }
+                `}
+                onClick={() => navigate("/channels/@me")}
+              >
+                <Home
+                  size={28}
+                  className="text-[#dbdee1] group-hover:text-white transition-colors"
+                />
+              </button>
+            </div>
           </TooltipTrigger>
           <TooltipContent side="right">
             <p>Direct Messages</p>
@@ -56,31 +76,44 @@ const ServerSidebar = ({
         {servers.map((server) => (
           <Tooltip key={server.id}>
             <TooltipTrigger asChild>
-              <button
-                onClick={() => onServerSelect(server.id)}
-                className={`
-                  flex items-center justify-center w-12 h-12 rounded-[24px] 
-                  hover:rounded-[16px] transition-all duration-200 overflow-hidden
-                  scale-hover shadow-md hover:shadow-xl
-                  ${
-                    currentServerId === server.id
-                      ? "rounded-[16px] bg-[#5865f2] shadow-lg"
-                      : "bg-[#1e1f22] hover:bg-[#5865f2]"
-                  }
-                `}
-              >
-                {server.imageUrl ? (
-                  <img
-                    src={server.imageUrl}
-                    alt={server.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white font-semibold text-lg">
-                    {server.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </button>
+              <div className="relative flex items-center justify-center w-full my-[2px] group">
+                {/* Active/Hover Indicator Pill */}
+                <div
+                  className={`absolute left-0 w-[4px] bg-white rounded-r-full transition-all duration-200 origin-left
+                    ${
+                      currentServerId === server.id
+                        ? "h-[40px] opacity-100"
+                        : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
+                    }
+                  `}
+                />
+
+                <button
+                  onClick={() => onServerSelect(server.id)}
+                  className={`
+                    relative flex items-center justify-center w-12 h-12 rounded-[24px] 
+                    transition-all duration-200 overflow-hidden
+                    group-hover:rounded-[16px] group-hover:bg-[#5865f2]
+                    ${
+                      currentServerId === server.id
+                        ? "rounded-[16px] bg-[#5865f2] shadow-lg"
+                        : "bg-[#1a1b1e] hover:shadow-xl"
+                    }
+                  `}
+                >
+                  {server.imageUrl ? (
+                    <img
+                      src={server.imageUrl}
+                      alt={server.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-[#dbdee1] group-hover:text-white font-medium text-sm transition-colors duration-200">
+                      {server.name.substring(0, 2).toUpperCase()}
+                    </span>
+                  )}
+                </button>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">
               <p>{server.name}</p>
@@ -93,11 +126,11 @@ const ServerSidebar = ({
           <TooltipTrigger asChild>
             <button
               onClick={onCreateServer}
-              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#313338] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200 group"
+              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200 group mt-2"
             >
               <Plus
                 size={24}
-                className="text-[#23a559] group-hover:text-white"
+                className="text-[#23a559] group-hover:text-white transition-colors duration-200"
               />
             </button>
           </TooltipTrigger>

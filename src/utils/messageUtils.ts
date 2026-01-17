@@ -84,10 +84,10 @@ export const shouldGroupMessage = (
   if (!previousMessage) return false;
 
   // Different sender
-  if (
-    previousMessage.senderId !== currentMessage.senderId &&
-    previousMessage.userId !== currentMessage.userId
-  ) {
+  const prevSenderId = previousMessage.senderId || previousMessage.userId;
+  const currSenderId = currentMessage.senderId || currentMessage.userId;
+
+  if (prevSenderId !== currSenderId) {
     return false;
   }
 

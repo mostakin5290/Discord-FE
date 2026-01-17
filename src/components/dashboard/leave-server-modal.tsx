@@ -37,7 +37,7 @@ export function LeaveServerModal({ serverId, isAdmin }: { serverId: string, isAd
                 toast.success("You have left the server successfully");
                 dispatch(setLeaveServerModelOpen());
                 setTimeout(() => {
-                    navigate(`/server/create/new`);
+                    navigate(`/`);
                 }, 3000);
             })
             .catch((error: any) => {

@@ -115,9 +115,9 @@ const MessageItem = ({
 
   return (
     <div
-      className={`group flex flex-col hover:bg-[#2e3035]/50 -mx-4 px-4 py-1 rounded relative transition-colors ${
-        isHovered ? "bg-[#2e3035]/50" : ""
-      } ${message.pinned ? "bg-[#3b3d44]/30" : ""}`}
+      className={`group flex flex-col hover:bg-[#26272d] -mx-4 px-4 py-0.5 rounded-[4px] relative transition-colors ${
+        isHovered ? "bg-[#26272d]" : ""
+      } ${message.pinned ? "bg-[#33353b]" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -253,7 +253,7 @@ const MessageItem = ({
       {/* Message Actions Toolbar */}
       {!message.deleted && (
         <div
-          className={`absolute right-4 -top-2 bg-[#313338] border border-[#26272d] shadow-sm rounded-lg flex items-center p-0.5 transition-opacity duration-200 z-10 ${
+          className={`absolute right-4 -top-2 bg-[#1e1f22] border border-[#2b2d31] shadow-sm rounded-lg flex items-center p-0.5 transition-opacity duration-200 z-10 ${
             isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >

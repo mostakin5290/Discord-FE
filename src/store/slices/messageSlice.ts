@@ -106,16 +106,24 @@ const messageSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
+    // Clear messages only for a specific channel if needed, or clear all
     clearMessages: (state) => {
       state.messagesByChannel = {};
       state.hasMore = {};
+    },
+    // Add logic to clear specific channel messages if we want to force refresh
+    clearChannelMessages: (state, action: PayloadAction<string>) => {
+      delete state.messagesByChannel[action.payload];
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       const channelId = action.payload.channelId;
       if (!state.messagesByChannel[channelId]) {
         state.messagesByChannel[channelId] = [];
       }
-      state.messagesByChannel[channelId].push(action.payload);
+      // Check if message already exists to prevent duplicates
+      if (!state.messagesByChannel[channelId].some(m => m.id === action.payload.id)) {
+        state.messagesByChannel[channelId].push(action.payload);
+      }
     },
   },
   extraReducers: (builder) => {

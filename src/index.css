@@ -479,11 +479,11 @@
   }
 
   .glass-panel {
-    @apply bg-black/50 backdrop-blur-md border border-white/5;
+    @apply bg-[#1a1b1e] border border-white/5;
   }
 
   .glass-sidebar {
-    @apply bg-black/60 backdrop-blur-xl border-r border-white/5;
+    @apply bg-[#111214] border-r border-white/5;
   }
 
   .glass-button {

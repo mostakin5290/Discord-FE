@@ -9,7 +9,7 @@ import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import DirectMessagesPage from "./pages/dashboard/DirectMessagesPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
-import CreateServer from "./pages/server/create-server";
+
 import InvitePage from "./pages/server/invite-page";
 import NotFoundPage from "./pages/NotFoundPage";
 // import DashboardLayout from "./pages/dashboard/dashboard-layout";
@@ -150,7 +150,7 @@ const AppComponent = () => {
               path="/server/:serverId/invite/:invitecode"
               element={<InvitePage />}
             />
-            <Route path="/server/create/new" element={<CreateServer />} />
+
             <Route path="/channels/@me" element={<DirectMessagesPage />} />
             <Route path="/dm/:userId" element={<DirectMessagesPage />} />
           </Route>

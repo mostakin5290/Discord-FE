@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/store";
 import { sendNewMessage } from "@/store/slices/messageSlice";
-import { Hash } from "lucide-react";
+import { Hash, Bell, Pin, Users, Search, HelpCircle, Inbox } from "lucide-react";
 import { toast } from "sonner";
 import MessageItem from "@/components/chat/MessageItem";
 import MessageInput from "@/components/chat/MessageInput";
@@ -75,9 +75,32 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
   return (
     <div className="flex-1 flex flex-col glass-panel">
       {/* Channel Header */}
-      <div className="h-12 px-4 flex items-center border-b border-white/5 shadow-sm">
-        <Hash size={24} className="text-gray-400 mr-2" />
-        <h3 className="font-semibold text-white">{channelName}</h3>
+      <div className="h-12 px-4 flex items-center justify-between border-b border-[#202225] shadow-sm bg-[#1a1b1e]">
+        <div className="flex items-center">
+          <Hash size={24} className="text-[#949ba4] mr-2" />
+          <h3 className="font-bold text-white text-base">{channelName}</h3>
+          {/* Optional: Add topic description text here later */}
+        </div>
+        
+        {/* Header Toolbar */}
+        <div className="flex items-center gap-4 text-[#b5bac1]">
+          <Bell size={24} className="cursor-pointer hover:text-[#dbdee1] transition-colors" />
+          <Pin size={24} className="cursor-pointer hover:text-[#dbdee1] transition-colors" />
+          <Users size={24} className="cursor-pointer hover:text-[#dbdee1] transition-colors" />
+          
+          {/* Search Bar - Mock */}
+          <div className="relative hidden md:block">
+            <input 
+              type="text" 
+              placeholder="Search" 
+              className="bg-[#1e1f22] text-sm text-[#dbdee1] rounded px-2 py-1 w-36 outline-none transition-all focus:w-60 focus:bg-[#0b0c0e]"
+            />
+            <Search size={16} className="absolute right-2 top-1.5 text-[#949ba4]" />
+          </div>
+
+          <Inbox size={24} className="cursor-pointer hover:text-[#dbdee1] transition-colors" />
+          <HelpCircle size={24} className="cursor-pointer hover:text-[#dbdee1] transition-colors" />
+        </div>
       </div>
 
       {/* Messages Area */}
@@ -92,8 +115,8 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
           </div>
         ) : (
           <div className="space-y-0">
-            {messages.map((message, index) => {
-              const prevMessage = index > 0 ? messages[index - 1] : null;
+            {messages.map((message, index, arr) => {
+              const prevMessage = index > 0 ? arr[index - 1] : null;
               const showGrouping = shouldGroupMessage(message, prevMessage);
 
               return (

@@ -12,6 +12,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import {
+  fetchConversations,
   fetchConversationMessages,
   sendMessage,
   markAsRead,
@@ -40,18 +41,24 @@ const DirectMessageChat = ({
   onToggleProfile,
 }: DirectMessageChatProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { conversations, messages: allMessages } = useSelector(
+  const { conversations, messages: allMessages, isLoading } = useSelector(
     (state: RootState) => state.dm,
   );
   const { friends } = useSelector((state: RootState) => state.friends);
   const { user: currentUser } = useSelector((state: RootState) => state.auth);
   const [replyingTo, setReplyingTo] = useState<any | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fetchAttempted = useRef(false);
 
   // Find the conversation with this user
   const conversation = conversations.find(
     (conv) => conv.participantId === userId,
   );
+
+  // Reset fetch attempt when userId changes
+  useEffect(() => {
+    fetchAttempted.current = false;
+  }, [userId]);
 
   // Get recipient user data
   // 1. Try conversation participant
@@ -59,14 +66,9 @@ const DirectMessageChat = ({
   // 3. Fallback to basic info
   const friendData = friends.find((f) => f.friendId === userId)?.friend;
 
-  const recipientUser = conversation?.participant ||
-    friendData || {
-      id: userId,
-      username: "Loading...",
-      email: "",
-      imageUrl: undefined,
-      status: undefined,
-    };
+  const recipientUser = conversation?.participant || friendData;
+
+
 
   useEffect(() => {
     // If we don't have the user details, fetch friends to try and find them
@@ -74,6 +76,15 @@ const DirectMessageChat = ({
       dispatch(fetchFriends());
     }
   }, [dispatch, conversation, friendData]);
+
+  // If conversation is missing (not in list yet) but we have a user, ensure we have latest conversations
+  // This handles the case where we navigate to a DM but the conversation hasn't been loaded in the list yet
+  useEffect(() => {
+      if (!conversation && !isLoading && !fetchAttempted.current) {
+           dispatch(fetchConversations());
+           fetchAttempted.current = true;
+      }
+  }, [dispatch, conversation, isLoading, userId]);
 
   useEffect(() => {
     if (conversation?.id) {
@@ -86,11 +97,18 @@ const DirectMessageChat = ({
   const displayMessages = conversation
     ? allMessages[conversation.id] || []
     : [];
+
   const messages = displayMessages;
 
+
+  // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messages.length > 0) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+      }, 100);
+    }
+  }, [messages.length, conversation?.id]);
 
   const handleSendMessage = async (content: string, fileUrl?: string) => {
     try {
@@ -139,6 +157,40 @@ const DirectMessageChat = ({
   ) => {
     await dispatch(deleteMessageAction({ messageId, deleteType })).unwrap();
   };
+
+  if (!recipientUser || (isLoading && (!messages || messages.length === 0))) {
+     return (
+        <div className="flex-1 flex flex-col bg-[#1e1f22]">
+            {/* Header Skeleton */}
+            <div className="h-12 px-4 flex items-center justify-between border-b border-[#111214] shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-[#313338] animate-pulse" />
+                    <div className="h-4 w-24 bg-[#313338] rounded animate-pulse" />
+                </div>
+            </div>
+            {/* Messages Skeleton */}
+            <div className="flex-1 p-4 space-y-4 overflow-hidden">
+                {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="flex gap-4 items-start opacity-50">
+                        <div className="w-10 h-10 rounded-full bg-[#313338] shrink-0" />
+                        <div className="flex-1 space-y-2">
+                             <div className="flex items-center gap-2">
+                                <div className="h-4 w-20 bg-[#313338] rounded" />
+                                <div className="h-3 w-12 bg-[#313338] rounded" />
+                             </div>
+                             <div className="h-4 w-3/4 bg-[#313338] rounded" />
+                             <div className="h-4 w-1/2 bg-[#313338] rounded" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+            {/* Input Skeleton */}
+            <div className="p-4">
+                 <div className="h-11 bg-[#313338] rounded-lg w-full animate-pulse" />
+            </div>
+        </div>
+     );
+  }
 
   return (
     <div className="flex-1 flex flex-col bg-[#1e1f22]">
@@ -212,99 +264,35 @@ const DirectMessageChat = ({
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-start mt-12 px-4">
-            {/* Large Avatar */}
-            <div className="w-[80px] h-[80px] rounded-full bg-[#5865f2] flex items-center justify-center mb-4">
-              {recipientUser.imageUrl ? (
-                <img
-                  src={recipientUser.imageUrl}
-                  alt={recipientUser.username}
-                  className="w-full h-full rounded-full object-cover"
+        {/* Welcome / Start of History */}
+
+
+        {/* Messages List */}
+        <div className="space-y-0 pb-4">
+          {messages
+            .filter(
+              (m) =>
+                !m.deletedBy || !m.deletedBy.includes(currentUser?.id || ""),
+            )
+            .map((message, index, arr) => {
+              const prevMessage = index > 0 ? arr[index - 1] : null;
+              const showGrouping = shouldGroupMessage(message, prevMessage);
+
+              return (
+                <MessageItem
+                  key={message.id}
+                  message={message}
+                  currentUserId={currentUser?.id || ""}
+                  onReply={(msg) => setReplyingTo(msg)}
+                  onPin={handlePin}
+                  onDelete={handleDelete}
+                  onReaction={handleReaction}
+                  showGrouping={showGrouping}
+                  isDM={true}
                 />
-              ) : (
-                <span className="text-white text-4xl font-semibold">
-                  {getInitials(recipientUser.username)}
-                </span>
-              )}
-            </div>
-
-            <h1 className="text-[32px] font-bold text-white mb-2">
-              {recipientUser.username}
-            </h1>
-            <h3 className="text-[24px] font-medium text-[#dbdee1] mb-4">
-              {recipientUser.username}
-            </h3>
-
-            <p className="text-[#b5bac1] text-md mb-6 max-w-md">
-              This is the beginning of your direct message history with{" "}
-              <span className="font-semibold text-[#dbdee1]">
-                {recipientUser.username}
-              </span>
-              .
-            </p>
-
-            {/* Mutual Server & Buttons */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center gap-2 text-[#b5bac1] text-sm">
-                {/* Tiny Icon */}
-                <div className="w-4 h-4 rounded-full bg-[#dbdee1] flex items-center justify-center text-[8px] font-bold text-black opacity-40">
-                  D
-                </div>
-                1 Mutual Server
-              </div>
-
-              <div className="flex gap-2">
-                <button className="px-3 py-1.5 bg-[#248046] hover:bg-[#1a6334] text-white rounded text-sm font-medium transition-colors">
-                  Add Friend
-                </button>
-                <button className="px-3 py-1.5 bg-[#4e5058] hover:bg-[#6d6f78] text-white rounded text-sm font-medium transition-colors">
-                  Block
-                </button>
-              </div>
-            </div>
-
-            {/* Wumpus & Wave */}
-            <div className="flex flex-col items-start">
-              {/* Placeholder Wumpus - using a generic image or SVG if unavailable, standard discord wumpus usually */}
-              <img
-                src="https://assets-global.website-files.com/6257adef93867e56f84d310a/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.png"
-                alt="Wumpus"
-                className="w-[100px] h-[100px] object-contain mb-4 opacity-70 grayscale"
-              />
-
-              <button className="px-4 py-2 bg-[#5865f2] hover:bg-[#4752c4] text-white rounded font-medium transition-colors w-full sm:w-auto">
-                Wave to {recipientUser.username}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-0">
-            {messages
-              .filter(
-                (m) =>
-                  !m.deletedBy || !m.deletedBy.includes(currentUser?.id || ""),
-              )
-              .map((message, index) => {
-                const prevMessage = index > 0 ? messages[index - 1] : null;
-                const showGrouping = shouldGroupMessage(message, prevMessage);
-
-                return (
-                  <MessageItem
-                    key={message.id}
-                    message={message}
-                    currentUserId={currentUser?.id || ""}
-                    onReply={(msg) => setReplyingTo(msg)}
-                    onPin={handlePin}
-                    onDelete={handleDelete}
-                    onReaction={handleReaction}
-                    showGrouping={showGrouping}
-                    isDM={true}
-                  />
-                );
-              })}
-          </div>
-        )}
+              );
+            })}
+        </div>
         <div ref={messagesEndRef} />
       </div>
 

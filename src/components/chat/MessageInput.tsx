@@ -1,5 +1,5 @@
 import { useState, useRef, forwardRef } from "react";
-import { Plus, Smile, Gift, Send, Trash2 } from "lucide-react";
+import { Plus, Smile, Gift, Send, Trash2, Sticker } from "lucide-react";
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 import { validateMessage } from "@/utils/messageUtils";
 import { toast } from "sonner";
@@ -86,7 +86,7 @@ const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
         <form onSubmit={handleSubmit} className="relative">
           {/* Reply Banner */}
           {replyingTo && onCancelReply && (
-            <div className="flex items-center justify-between bg-[#2b2d31] px-4 py-2 rounded-t-lg border-b border-[#202225] text-sm text-[#b5bac1]">
+            <div className="flex items-center justify-between bg-[#1e1f22] px-4 py-2 rounded-t-lg border-b border-[#202225] text-sm text-[#b5bac1]">
               <div className="flex items-center gap-2">
                 <span className="text-[#949ba4]">Replying to</span>
                 <span className="font-semibold text-white">
@@ -107,7 +107,7 @@ const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
           )}
 
           <div
-            className={`flex items-center bg-[#383a40] px-4 py-3 hover:bg-[#404249] transition-all duration-200 focus-within:bg-[#404249] ${
+            className={`flex items-center bg-[#2b2d31] px-4 py-3 hover:bg-[#313338] transition-all duration-200 focus-within:bg-[#313338] ${
               replyingTo ? "rounded-b-lg" : "rounded-lg"
             }`}
           >
@@ -148,6 +148,14 @@ const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
               className="text-[#b5bac1] hover:text-[#dcddde] ml-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Gift size={24} />
+            </button>
+            
+            <button
+              type="button"
+              disabled={disabled}
+              className="text-[#b5bac1] hover:text-[#dcddde] ml-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Sticker size={24} />
             </button>
 
             {/* Emoji Picker */}

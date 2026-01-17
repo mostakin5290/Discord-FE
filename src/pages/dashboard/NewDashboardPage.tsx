@@ -10,7 +10,6 @@ import ServerSidebar from "@/components/dashboard/ServerSidebar";
 import ChannelSidebar from "@/components/dashboard/ChannelSidebar";
 import ChatArea from "@/components/dashboard/ChatArea";
 import MemberList from "@/components/dashboard/MemberList";
-import LoadingSpinner from "@/components/dashboard/LoadingSpinner";
 import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
 import ServerErrorScreen from "@/components/dashboard/ServerErrorScreen";
 import { useNavigate, useParams } from "react-router";
@@ -162,16 +161,25 @@ const DashboardPage = () => {
   const isServerMismatch = currentServer && currentServer.id !== serverIdFromUrl;
   if ((initialLoadRef.current && isLoading) || accessStatus === "loading" || isServerMismatch) {
     return (
-      <div className="flex h-screen bg-[#313338]">
+      <div className="flex h-screen bg-[#0b0c0e] overflow-hidden">
+        {/* Render Sidebar if we have servers, otherwise skeleton? */}
         <ServerSidebar
           servers={servers}
           currentServerId={serverIdFromUrl || null}
           onServerSelect={handleServerSelect}
           onCreateServer={handleCreateServer}
         />
-        <div className="flex-1 flex items-center justify-center">
-          <LoadingSpinner message="Loading server..." />
+        {/* Loading Content Area */}
+        <div className="flex-1 flex flex-col relative bg-[#1a1b1e]">
+             {/* Fake Header */}
+            <div className="h-12 border-b border-[#202225] bg-[#1a1b1e] w-full" />
+            
+            <div className="flex-1 flex items-center justify-center flex-col gap-4">
+                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2]" />
+                 <p className="text-[#949ba4] text-sm font-medium animate-pulse">Loading Discord...</p>
+            </div>
         </div>
+        
         <CreateServerDialog
           open={showCreateServer}
           onOpenChange={setShowCreateServer}
@@ -183,7 +191,7 @@ const DashboardPage = () => {
   // Error states
   if (accessStatus === "not_found") {
     return (
-      <div className="flex h-screen bg-[#313338] text-white overflow-hidden">
+      <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
         <ServerSidebar
           servers={servers}
           currentServerId={null}
@@ -201,7 +209,7 @@ const DashboardPage = () => {
 
   if (accessStatus === "not_member") {
     return (
-      <div className="flex h-screen bg-[#313338] text-white overflow-hidden">
+      <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
         <ServerSidebar
           servers={servers}
           currentServerId={null}
@@ -218,7 +226,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-[#313338] text-white overflow-hidden">
+    <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
       {/* Server List Sidebar (Left) */}
       <ServerSidebar
         servers={servers}
@@ -247,7 +255,7 @@ const DashboardPage = () => {
             }
           />
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400 bg-[#313338]">
+          <div className="flex-1 flex items-center justify-center text-gray-400 bg-[#1a1b1e]">
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-2">
                 Welcome to {currentServer.name}!
@@ -257,8 +265,9 @@ const DashboardPage = () => {
           </div>
         )
       ) : (
-        <div className="flex-1 flex items-center justify-center bg-[#313338]">
-          <LoadingSpinner message="Loading server..." />
+        <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
+            <p className="text-[#949ba4] text-sm font-medium">Loading server data...</p>
         </div>
       )}
 

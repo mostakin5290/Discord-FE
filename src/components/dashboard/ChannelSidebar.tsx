@@ -94,28 +94,31 @@ const ChannelSidebar = ({
   return (
     <div className="flex flex-col w-60 glass-sidebar">
       {/* Server Header with Dropdown */}
-      <ServerDropdown
-        serverName={server.name}
-        isAdmin={isAdmin}
-        onSettings={() => console.log("Settings")}
-      />
+      {/* Server Header with Dropdown */}
+      <div className="h-12 flex items-center px-4 font-semibold text-white shadow-sm border-b border-[#202225] hover:bg-[#35373c] transition-colors cursor-pointer text-[15px]">
+        <ServerDropdown
+          serverName={server.name}
+          isAdmin={isAdmin}
+          onSettings={() => console.log("Settings")}
+        />
+      </div>
 
       {/* Channels List */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1e1f22] scrollbar-track-transparent">
         {/* Text Channels */}
-        <div className="pt-4">
+        <div className="pt-4 px-2">
           <div
-            className="flex items-center justify-between px-2 py-1 text-xs font-semibold text-gray-400 hover:text-gray-300 cursor-pointer"
+            className="flex items-center justify-between px-2 py-1 mb-1 text-[11px] font-bold tracking-wider text-[#949ba4] hover:text-[#dbdee1] cursor-pointer group"
             onClick={() => setShowChannels(!showChannels)}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <ChevronDown
                 size={12}
-                className={showChannels ? "" : "-rotate-90"}
+                className={`transition-transform duration-200 ${showChannels ? "" : "-rotate-90"}`}
               />
               <span>TEXT CHANNELS</span>
             </div>
-            <Plus size={16} className="hover:text-white" />
+            <Plus size={16} className="cursor-pointer hover:text-white" />
           </div>
 
           {showChannels &&
@@ -124,30 +127,34 @@ const ChannelSidebar = ({
                 key={channel.id}
                 onClick={() => onChannelSelect(channel.id)}
                 className={`
-                w-full flex items-center gap-2 px-2 py-1.5 mx-2 rounded 
-                transition-all duration-150 hover:scale-[1.02]
+                w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+                transition-all duration-100 group
                 ${
                   selectedChannelId === channel.id
-                    ? "bg-white/10 text-white shadow-sm"
-                    : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
+                    ? "bg-[#404249] text-white"
+                    : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
                 }
               `}
               >
-                {getChannelIcon(channel.type)}
-                <span className="text-sm font-medium">{channel.name}</span>
+                <div className={`${selectedChannelId === channel.id ? "text-white" : "text-[#80848e]"}`}>
+                  {getChannelIcon(channel.type)}
+                </div>
+                <span className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel?.id ? "text-white" : "text-[#949ba4] group-hover:text-[#dbdee1]"}`}>
+                  {channel.name}
+                </span>
               </button>
             ))}
         </div>
 
         {/* Voice Channels */}
         {voiceChannels.length > 0 && (
-          <div className="pt-4">
-            <div className="flex items-center justify-between px-2 py-1 text-xs font-semibold text-gray-400 hover:text-gray-300 cursor-pointer">
-              <div className="flex items-center gap-1">
+          <div className="pt-4 px-2">
+            <div className="flex items-center justify-between px-2 py-1 mb-1 text-[11px] font-bold tracking-wider text-[#949ba4] hover:text-[#dbdee1] cursor-pointer group">
+              <div className="flex items-center gap-0.5">
                 <ChevronDown size={12} />
                 <span>VOICE CHANNELS</span>
               </div>
-              <Plus size={16} className="hover:text-white" />
+              <Plus size={16} className="cursor-pointer hover:text-white" />
             </div>
 
             {voiceChannels.map((channel) => (
@@ -155,16 +162,21 @@ const ChannelSidebar = ({
                 key={channel.id}
                 onClick={() => onChannelSelect(channel.id)}
                 className={`
-                  w-full flex items-center gap-2 px-2 py-1.5 mx-2 rounded 
+                  w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+                  transition-all duration-100 group
                   ${
                     selectedChannelId === channel.id
-                      ? "bg-white/10 text-white"
-                      : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
+                      ? "bg-[#404249] text-white"
+                      : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
                   }
                 `}
               >
-                {getChannelIcon(channel.type)}
-                <span className="text-sm font-medium">{channel.name}</span>
+                <div className={`${selectedChannelId === channel.id ? "text-white" : "text-[#80848e]"}`}>
+                  {getChannelIcon(channel.type)}
+                </div>
+                <span className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel?.id ? "text-white" : "text-[#949ba4] group-hover:text-[#dbdee1]"}`}>
+                  {channel.name}
+                </span>
               </button>
             ))}
           </div>
@@ -172,9 +184,9 @@ const ChannelSidebar = ({
       </div>
 
       {/* User Panel at Bottom */}
-      <div className="h-[52px] px-2 bg-black/20 backdrop-blur-md flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
+      <div className="h-[52px] px-2 bg-[#0b0c0e] flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2 pl-1 rounded hover:bg-[#3f4147] py-1 px-1 transition-colors cursor-pointer group">
+          <div className="relative w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
             {user?.imageUrl ? (
               <img
                 src={user.imageUrl}
@@ -182,46 +194,50 @@ const ChannelSidebar = ({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-white text-sm font-semibold">
+              <span className="text-white text-xs font-semibold">
                 {user?.firstName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </span>
             )}
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-[2px] border-[#0b0c0e] rounded-full" />
           </div>
           <div className="flex flex-col">
-            <span className="text-white text-sm font-medium">
+            <span className="text-white text-xs font-semibold leading-tight">
               {user?.username || "User"}
             </span>
-            <span className="text-xs text-gray-400">
-              #{user?.id?.slice(0, 4) || "0000"}
+            <span className="text-[11px] text-[#949ba4] leading-tight">
+              Online
             </span>
           </div>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="text-gray-400 hover:text-white cursor-pointer focus:outline-none">
-              <Settings size={18} />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-56 bg-[#111214] border-[#1e1f22]"
-            align="end"
-            side="top"
-            sideOffset={8}
-          >
-            <DropdownMenuItem className="text-[#b5bac1] hover:bg-[#4752c4] hover:text-white focus:bg-[#4752c4] focus:text-white cursor-pointer">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>User Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#1e1f22]" />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-red-600 hover:text-red-600 hover:bg-red-600/10 focus:text-red-600 focus:bg-red-600/10 cursor-pointer"
+        
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center justify-center w-8 h-8 rounded hover:bg-[#3f4147] text-[#dbdee1] transition-colors">
+                <Settings size={18} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-56 bg-[#111214] border-[#1e1f22]"
+              align="end"
+              side="top"
+              sideOffset={8}
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem className="text-[#b5bac1] hover:bg-[#4752c4] hover:text-white focus:bg-[#4752c4] focus:text-white cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>User Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-[#1e1f22]" />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 hover:text-red-600 hover:bg-red-600/10 focus:text-red-600 focus:bg-red-600/10 cursor-pointer"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );
