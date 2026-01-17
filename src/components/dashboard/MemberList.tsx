@@ -97,7 +97,7 @@ const MemberList = ({ members = [] }: MemberListProps) => {
   };
 
   return (
-    <div className="w-60 bg-[#111214] overflow-y-auto scrollbar-thin scrollbar-thumb-[#1e1f22] scrollbar-track-transparent">
+    <div className="hidden lg:block w-60 bg-[#111214] overflow-y-auto scrollbar-thin scrollbar-thumb-[#1e1f22] scrollbar-track-transparent">
       <div className="pt-4">
         {renderMembers(admins, "Admins")}
         {renderMembers(moderators, "Moderators")}

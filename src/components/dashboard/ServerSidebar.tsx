@@ -29,7 +29,7 @@ const ServerSidebar = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center w-[72px] bg-[#0b0c0e] py-3 gap-2 shrink-0">
+    <div className="hidden md:flex flex-col items-center w-[72px] bg-[#0b0c0e] py-3 gap-2 shrink-0">
       <TooltipProvider>
         {/* Home/DM Button */}
         <Tooltip>
@@ -48,10 +48,11 @@ const ServerSidebar = ({
               <button
                 className={`
                   flex items-center justify-center w-12 h-12 rounded-[24px] 
-                  transition-all duration-200 group-hover:rounded-[16px]
+                  transition-all duration-300 group-hover:rounded-[16px] group-hover:scale-110
+                  active:scale-95
                   ${
                     !currentServerId
-                      ? "bg-[#5865f2] rounded-[16px]"
+                      ? "bg-[#5865f2] rounded-[16px] scale-105"
                       : "bg-[#1a1b1e] hover:bg-[#5865f2]"
                   }
                 `}
@@ -59,7 +60,7 @@ const ServerSidebar = ({
               >
                 <Home
                   size={28}
-                  className="text-[#dbdee1] group-hover:text-white transition-colors"
+                  className="text-[#dbdee1] group-hover:text-white transition-all duration-300 group-hover:scale-110"
                 />
               </button>
             </div>
@@ -92,12 +93,13 @@ const ServerSidebar = ({
                   onClick={() => onServerSelect(server.id)}
                   className={`
                     relative flex items-center justify-center w-12 h-12 rounded-[24px] 
-                    transition-all duration-200 overflow-hidden
-                    group-hover:rounded-[16px] group-hover:bg-[#5865f2]
+                    transition-all duration-300 overflow-hidden
+                    group-hover:rounded-[16px] group-hover:bg-[#5865f2] group-hover:scale-110
+                    active:scale-95
                     ${
                       currentServerId === server.id
-                        ? "rounded-[16px] bg-[#5865f2] shadow-lg"
-                        : "bg-[#1a1b1e] hover:shadow-xl"
+                        ? "rounded-[16px] bg-[#5865f2] shadow-lg scale-105"
+                        : "bg-[#1a1b1e] hover:shadow-2xl"
                     }
                   `}
                 >
@@ -126,11 +128,11 @@ const ServerSidebar = ({
           <TooltipTrigger asChild>
             <button
               onClick={onCreateServer}
-              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-200 group mt-2"
+              className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-300 hover:scale-110 active:scale-95 group mt-2 shadow-md hover:shadow-xl"
             >
               <Plus
                 size={24}
-                className="text-[#23a559] group-hover:text-white transition-colors duration-200"
+                className="text-[#23a559] group-hover:text-white transition-all duration-300 group-hover:rotate-90"
               />
             </button>
           </TooltipTrigger>

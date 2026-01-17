@@ -10,12 +10,15 @@ import ActiveNow from "@/components/dashboard/ActiveNow";
 import DirectMessageChat from "@/components/dashboard/DirectMessageChat";
 import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
 import UserProfileSidebar from "@/components/dashboard/UserProfileSidebar";
+import SettingsModal from "@/components/dashboard/settings/SettingsModal";
+import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 
 const DirectMessagesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { userId } = useParams<{ userId?: string }>();
   const { servers } = useSelector((state: RootState) => state.server);
+  const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
   const [selectedView, setSelectedView] = useState<"friends" | "dm">("friends");
   const [selectedDMUserId, setSelectedDMUserId] = useState<string | null>(null);
   const [showCreateServer, setShowCreateServer] = useState(false);
@@ -97,6 +100,11 @@ const DirectMessagesPage = () => {
       <CreateServerDialog
         open={showCreateServer}
         onOpenChange={setShowCreateServer}
+      />
+      
+      <SettingsModal 
+        open={settingsModalOpen} 
+        onOpenChange={() => dispatch(setSettingsModalOpen())} 
       />
     </div>
   );

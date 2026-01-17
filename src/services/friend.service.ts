@@ -39,6 +39,33 @@ export interface FriendRequest {
   createdAt: string;
 }
 
+export interface UserProfile {
+  id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  imageUrl?: string;
+  bannerUrl?: string;
+  bio?: string;
+  createdAt: string;
+}
+
+export interface MutualFriend {
+  id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  imageUrl?: string;
+}
+
+export interface MutualServer {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  bio?: string;
+}
+
 // Get all friends
 export const getFriends = async (): Promise<Friend[]> => {
   const response = await axiosClient.get("/friends");
@@ -47,7 +74,7 @@ export const getFriends = async (): Promise<Friend[]> => {
 
 // Send a friend request
 export const sendFriendRequest = async (
-  username: string
+  username: string,
 ): Promise<FriendRequest> => {
   const response = await axiosClient.post("/friends/request", { username });
   return response.data.friendRequest;
@@ -66,8 +93,12 @@ export const getSentRequests = async (): Promise<FriendRequest[]> => {
 };
 
 // Accept a friend request
-export const acceptFriendRequest = async (requestId: string): Promise<Friend> => {
-  const response = await axiosClient.patch(`/friends/request/${requestId}/accept`);
+export const acceptFriendRequest = async (
+  requestId: string,
+): Promise<Friend> => {
+  const response = await axiosClient.patch(
+    `/friends/request/${requestId}/accept`,
+  );
   return response.data.newFriend;
 };
 
@@ -84,4 +115,36 @@ export const cancelFriendRequest = async (requestId: string): Promise<void> => {
 // Remove a friend
 export const removeFriend = async (friendId: string): Promise<void> => {
   await axiosClient.delete(`/friends/${friendId}`);
+};
+
+// Get user profile by ID
+export const getUserProfile = async (userId: string): Promise<UserProfile> => {
+  const response = await axiosClient.get(`/friends/user/${userId}/profile`);
+  return response.data.user;
+};
+
+// Get mutual friends with a user
+export const getMutualFriends = async (
+  userId: string,
+): Promise<{ mutualFriends: MutualFriend[]; count: number }> => {
+  const response = await axiosClient.get(
+    `/friends/user/${userId}/mutual-friends`,
+  );
+  return {
+    mutualFriends: response.data.mutualFriends,
+    count: response.data.count,
+  };
+};
+
+// Get mutual servers with a user
+export const getMutualServers = async (
+  userId: string,
+): Promise<{ mutualServers: MutualServer[]; count: number }> => {
+  const response = await axiosClient.get(
+    `/friends/user/${userId}/mutual-servers`,
+  );
+  return {
+    mutualServers: response.data.mutualServers,
+    count: response.data.count,
+  };
 };

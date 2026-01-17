@@ -20,6 +20,7 @@ interface Message {
   createdAt: string;
   updatedAt: string;
   deleted: boolean;
+  reactions?: Record<string, string[]>;
 }
 
 interface MessageState {
@@ -41,7 +42,7 @@ export const fetchChannelMessages = createAsyncThunk(
   "message/fetchChannelMessages",
   async (
     { channelId, cursor }: { channelId: string; cursor?: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const url = cursor
@@ -55,10 +56,10 @@ export const fetchChannelMessages = createAsyncThunk(
       };
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to fetch messages"
+        err.response?.data?.message || "Failed to fetch messages",
       );
     }
-  }
+  },
 );
 
 export const sendNewMessage = createAsyncThunk(
@@ -69,7 +70,7 @@ export const sendNewMessage = createAsyncThunk(
       content,
       fileUrl,
     }: { channelId: string; content: string; fileUrl?: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axiosClient.post(
@@ -77,15 +78,15 @@ export const sendNewMessage = createAsyncThunk(
         {
           content,
           fileUrl,
-        }
+        },
       );
       return response.data.message;
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to send message"
+        err.response?.data?.message || "Failed to send message",
       );
     }
-  }
+  },
 );
 
 export const deleteMessageById = createAsyncThunk(
@@ -96,10 +97,10 @@ export const deleteMessageById = createAsyncThunk(
       return messageId;
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to delete message"
+        err.response?.data?.message || "Failed to delete message",
       );
     }
-  }
+  },
 );
 
 const messageSlice = createSlice({
@@ -121,8 +122,68 @@ const messageSlice = createSlice({
         state.messagesByChannel[channelId] = [];
       }
       // Check if message already exists to prevent duplicates
-      if (!state.messagesByChannel[channelId].some(m => m.id === action.payload.id)) {
+      if (
+        !state.messagesByChannel[channelId].some(
+          (m) => m.id === action.payload.id,
+        )
+      ) {
         state.messagesByChannel[channelId].push(action.payload);
+      }
+    },
+    updateMessageReaction: (
+      state,
+      action: PayloadAction<{
+        channelId: string;
+        messageId: string;
+        emoji: string;
+        userId: string;
+        isAdding: boolean;
+      }>,
+    ) => {
+      const { channelId, messageId, emoji, userId, isAdding } = action.payload;
+      const messages = state.messagesByChannel[channelId];
+      if (messages) {
+        const message = messages.find((m) => m.id === messageId);
+        if (message) {
+          if (!message.reactions) {
+            message.reactions = {};
+          }
+
+          if (isAdding) {
+            // Remove user from all other emoji reactions (only one reaction per user)
+            Object.keys(message.reactions).forEach((existingEmoji) => {
+              if (
+                existingEmoji !== emoji &&
+                message.reactions![existingEmoji]
+              ) {
+                message.reactions![existingEmoji] = message.reactions![
+                  existingEmoji
+                ].filter((id) => id !== userId);
+                if (message.reactions![existingEmoji].length === 0) {
+                  delete message.reactions![existingEmoji];
+                }
+              }
+            });
+
+            // Add new reaction
+            if (!message.reactions[emoji]) {
+              message.reactions[emoji] = [];
+            }
+            if (!message.reactions[emoji].includes(userId)) {
+              message.reactions[emoji].push(userId);
+            }
+          } else {
+            // Remove reaction
+            if (message.reactions[emoji]) {
+              message.reactions[emoji] = message.reactions[emoji].filter(
+                (id) => id !== userId,
+              );
+              if (message.reactions[emoji].length === 0) {
+                delete message.reactions[emoji];
+              }
+            }
+          }
+        }
       }
     },
   },
@@ -163,5 +224,6 @@ const messageSlice = createSlice({
   },
 });
 
-export const { clearMessages, addMessage } = messageSlice.actions;
+export const { clearMessages, addMessage, updateMessageReaction } =
+  messageSlice.actions;
 export default messageSlice.reducer;
