@@ -17,7 +17,7 @@ import { loginUser } from "@/store/slices/authSlice";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
 import { isValidEmail, sanitizeInput } from "@/utils/authGuard";
-import { afterSignInUrl } from "@/data";
+import { afterSignInUrl } from "@/constants/data";
 
 export function LoginForm({
   className,

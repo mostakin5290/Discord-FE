@@ -23,7 +23,7 @@ import {
   sanitizeInput,
   getPasswordStrengthMessage,
 } from "@/utils/authGuard";
-import { afterSignInUrl } from "@/data";
+import { afterSignInUrl } from "@/constants/data";
 
 export function SignupForm({
   className,

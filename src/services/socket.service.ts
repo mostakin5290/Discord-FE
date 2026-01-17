@@ -8,7 +8,6 @@ class SocketService {
 
     const token = localStorage.getItem("token");
     if (!token) return;
-
     // Use VITE_API_URL but strip the /api/v1 part to get base URL if needed, 
     // or typically socket runs on the same host:port as the backend.
     // Assuming backend is at http://localhost:3000 based on previous analysis.

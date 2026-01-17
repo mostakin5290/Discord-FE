@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { afterSignInUrl } from "@/data";
+import { afterSignInUrl } from "@/constants/data";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -169,7 +169,7 @@ const Navbar = () => {
                     href="#support"
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white font-bold"
+                      "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white font-bold",
                     )}
                   >
                     Support
@@ -181,7 +181,7 @@ const Navbar = () => {
                     href="#blog"
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white font-bold"
+                      "bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white font-bold",
                     )}
                   >
                     Blog

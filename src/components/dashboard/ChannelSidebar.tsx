@@ -5,11 +5,22 @@ import {
   ChevronDown,
   Settings,
   Plus,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store/store";
 import ServerDropdown from "./ServerDropdown";
+import { logout } from "@/store/slices/authSlice";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Channel {
   id: string;
@@ -50,6 +61,14 @@ const ChannelSidebar = ({
 }: ChannelSidebarProps) => {
   const [showChannels, setShowChannels] = useState(true);
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
 
   const getChannelIcon = (type: string) => {
     switch (type) {
@@ -64,10 +83,12 @@ const ChannelSidebar = ({
 
   const textChannels = (server.channels || []).filter((c) => c.type === "TEXT");
   const voiceChannels = (server.channels || []).filter(
-    (c) => c.type === "AUDIO" || c.type === "VIDEO"
+    (c) => c.type === "AUDIO" || c.type === "VIDEO",
   );
 
-  const userMember = (server.members || []).find((m) => m.user?.id === user?.id);
+  const userMember = (server.members || []).find(
+    (m) => m.user?.id === user?.id,
+  );
   const isAdmin = userMember?.role === "ADMIN";
 
   return (
@@ -175,10 +196,32 @@ const ChannelSidebar = ({
             </span>
           </div>
         </div>
-        <Settings
-          size={18}
-          className="text-gray-400 hover:text-white cursor-pointer"
-        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="text-gray-400 hover:text-white cursor-pointer focus:outline-none">
+              <Settings size={18} />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-56 bg-[#111214] border-[#1e1f22]"
+            align="end"
+            side="top"
+            sideOffset={8}
+          >
+            <DropdownMenuItem className="text-[#b5bac1] hover:bg-[#4752c4] hover:text-white focus:bg-[#4752c4] focus:text-white cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>User Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-[#1e1f22]" />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-red-600 hover:text-red-600 hover:bg-red-600/10 focus:text-red-600 focus:bg-red-600/10 cursor-pointer"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
