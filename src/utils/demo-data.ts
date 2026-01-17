@@ -1,4 +1,4 @@
-import { ArchiveX, Command, File, Inbox, Plus, Send, Trash2 } from "lucide-react"
+import { ArchiveX, File, Inbox, Send, Trash2 } from "lucide-react"
 
 // This is sample data
 export const data = {

@@ -16,7 +16,7 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
   const { messagesByChannel } = useSelector(
     (state: RootState) => state.message
   );
-  const { user } = useSelector((state: RootState) => state.auth);
+
   const [messageInput, setMessageInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +59,9 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#313338]">
+    <div className="flex-1 flex flex-col glass-panel">
       {/* Channel Header */}
-      <div className="h-12 px-4 flex items-center border-b border-[#26272b] shadow-sm">
+      <div className="h-12 px-4 flex items-center border-b border-white/5 shadow-sm">
         <Hash size={24} className="text-gray-400 mr-2" />
         <h3 className="font-semibold text-white">{channelName}</h3>
       </div>
@@ -146,7 +146,7 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
       {/* Message Input */}
       <div className="px-4 pb-6">
         <form onSubmit={handleSendMessage} className="relative">
-          <div className="flex items-center bg-[#383a40] rounded-lg px-4 py-3 hover:bg-[#404249] transition-all duration-200 focus-within:ring-2 focus-within:ring-[#5865f2] focus-within:bg-[#404249]">
+          <div className="flex items-center glass-button rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-[#5865f2] focus-within:bg-black/40">
             <button
               type="button"
               className="text-gray-400 hover:text-gray-300 mr-2 transition-all duration-150 hover:scale-110"

@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { useEffect } from "react";
@@ -9,7 +9,9 @@ import LoadingSpinner from "../dashboard/LoadingSpinner";
 const PublicRoute = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state: RootState) => state.auth);
-  const { servers, isLoading } = useSelector((state: RootState) => state.server);
+  const { servers, isLoading } = useSelector(
+    (state: RootState) => state.server
+  );
 
   useEffect(() => {
     if (token) {

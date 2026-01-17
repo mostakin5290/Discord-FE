@@ -5,7 +5,6 @@ import {
   ChevronDown,
   Settings,
   Plus,
-  UserPlus,
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -72,7 +71,7 @@ const ChannelSidebar = ({
   const isAdmin = userMember?.role === "ADMIN";
 
   return (
-    <div className="flex flex-col w-60 bg-[#2b2d31]">
+    <div className="flex flex-col w-60 glass-sidebar">
       {/* Server Header with Dropdown */}
       <ServerDropdown
         serverName={server.name}
@@ -108,8 +107,8 @@ const ChannelSidebar = ({
                 transition-all duration-150 hover:scale-[1.02]
                 ${
                   selectedChannelId === channel.id
-                    ? "bg-[#404249] text-white shadow-sm"
-                    : "text-gray-400 hover:bg-[#35363c] hover:text-gray-300"
+                    ? "bg-white/10 text-white shadow-sm"
+                    : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
                 }
               `}
               >
@@ -138,8 +137,8 @@ const ChannelSidebar = ({
                   w-full flex items-center gap-2 px-2 py-1.5 mx-2 rounded 
                   ${
                     selectedChannelId === channel.id
-                      ? "bg-[#404249] text-white"
-                      : "text-gray-400 hover:bg-[#35363c] hover:text-gray-300"
+                      ? "bg-white/10 text-white"
+                      : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
                   }
                 `}
               >
@@ -152,7 +151,7 @@ const ChannelSidebar = ({
       </div>
 
       {/* User Panel at Bottom */}
-      <div className="h-[52px] px-2 bg-[#232428] flex items-center justify-between">
+      <div className="h-[52px] px-2 bg-black/20 backdrop-blur-md flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
             {user?.imageUrl ? (

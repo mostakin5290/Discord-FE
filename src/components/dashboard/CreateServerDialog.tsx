@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
 import { createNewServer } from "@/store/slices/serverSlice";
@@ -25,7 +25,6 @@ import {
   ChevronRight,
   ChevronLeft,
   X,
-  Upload,
   Trash,
 } from "lucide-react";
 import { Spinner } from "../ui/spinner";
@@ -45,7 +44,7 @@ const CreateServerDialog = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [step, setStep] = useState<Step>("initial");
-  const [serverType, setServerType] = useState<string>("");
+  const [, setServerType] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [desc, setDesc] = useState<string>("");

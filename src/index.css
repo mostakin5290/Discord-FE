@@ -4,7 +4,7 @@
 @import "./styles/discord-ui.css";
 
 
-@plugin "tailwindcss-animate"; 
+@plugin "tailwindcss-animate";
 
 /* Font Faces */
 @font-face {
@@ -470,8 +470,24 @@
     @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl;
   }
 
+  .glass-card {
+    @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
   .glass-strong {
     @apply bg-[#020617]/80 backdrop-blur-2xl border-b border-white/5;
+  }
+
+  .glass-panel {
+    @apply bg-black/50 backdrop-blur-md border border-white/5;
+  }
+
+  .glass-sidebar {
+    @apply bg-black/60 backdrop-blur-xl border-r border-white/5;
+  }
+
+  .glass-button {
+    @apply bg-white/5 hover:bg-white/10 transition-all duration-300 backdrop-blur-sm border border-white/5;
   }
 
   .text-glow {
@@ -486,39 +502,51 @@
   .bg-250p {
     background-size: 250%;
   }
+
   .bg-90p {
     background-size: 90%;
   }
+
   .bg-91p {
     background-size: 91%;
   }
+
   .bg-93p {
     background-size: 93%;
   }
+
   .bg-95p {
     background-size: 95%;
   }
+
   .bg-95\.5p {
     background-size: 95.5%;
   }
+
   .bg-96p {
     background-size: 96%;
   }
+
   .bg-110p {
     background-size: 110%;
   }
+
   .bg-1000px {
     background-size: 1000px;
   }
+
   .bg-1200px {
     background-size: 1200px;
   }
+
   .bg-auto-100p {
     background-size: auto 100%;
   }
+
   .bg-24px {
     background-size: 24px;
   }
+
   .bg-32px {
     background-size: 32px;
   }
@@ -531,15 +559,16 @@
 
 :root {
   /* HSL Values for Deep Space Theme */
-  --background: 222 47% 4%;
-  /* #020617 - Very Dark Slate */
-  --foreground: 210 40% 98%;
+  /* Deep Space Theme - Glossy Update */
+  --background: 240 10% 4%;
+  /* More cooler dark */
+  --foreground: 0 0% 98%;
 
-  --card: 222 47% 6%;
-  --card-foreground: 210 40% 98%;
+  --card: 240 10% 6%;
+  --card-foreground: 0 0% 98%;
 
-  --popover: 222 47% 6%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 240 10% 6%;
+  --popover-foreground: 0 0% 98%;
 
   --primary: 262 83% 58%;
   /* #8b5cf6 - Violet 500 */
@@ -566,23 +595,24 @@
 }
 
 .dark {
-  --background: 222 47% 4%;
+  --background: 240 10% 2%;
+  /* Almost Pure Black */
   --foreground: 210 40% 98%;
 
-  --card: 222 47% 6%;
+  --card: 240 10% 4%;
   --card-foreground: 210 40% 98%;
 
-  --popover: 222 47% 6%;
+  --popover: 240 10% 3%;
   --popover-foreground: 210 40% 98%;
 
-  --primary: 262 83% 58%;
+  --primary: 262 83% 65%;
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 217 33% 17%;
+  --secondary: 240 6% 8%;
   --secondary-foreground: 210 40% 98%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: 240 6% 8%;
+  --muted-foreground: 240 5% 65%;
 
   --accent: 217 33% 17%;
   --accent-foreground: 210 40% 98%;

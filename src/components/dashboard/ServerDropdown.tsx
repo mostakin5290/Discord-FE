@@ -6,18 +6,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setCreateChannelModelOpen, setInvitecodeModalOpen, setLeaveServerModelOpen } from "@/store/slices/modalSlice";
-import type { RootState } from "@/store/store";
+
 import {
   ChevronDown,
   UserPlus,
   Settings,
-  Users,
   PlusCircle,
   Sparkles,
   Bell,
   Shield,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 interface ServerDropdownProps {
   serverName: string;

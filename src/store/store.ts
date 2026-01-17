@@ -3,6 +3,8 @@ import authReducer from "./slices/authSlice";
 import serverReducer from "./slices/serverSlice";
 import messageReducer from "./slices/messageSlice";
 import modalReducer from "./slices/modalSlice";
+import friendReducer from "./slices/friendSlice";
+import dmReducer from "./slices/dmSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     server: serverReducer,
     message: messageReducer,
     modal: modalReducer,
+    friends: friendReducer,
+    dm: dmReducer,
   },
 });
 
