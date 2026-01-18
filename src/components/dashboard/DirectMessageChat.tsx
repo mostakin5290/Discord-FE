@@ -30,6 +30,8 @@ import {
   getStatusColor,
   shouldGroupMessage,
 } from "@/utils/messageUtils";
+import { useNavigate } from "react-router";
+import { createDirectCallToken } from "@/store/slices/callSlice";
 
 interface DirectMessageChatProps {
   userId: string;
@@ -40,6 +42,7 @@ const DirectMessageChat = ({
   userId,
   onToggleProfile,
 }: DirectMessageChatProps) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {
     conversations,
@@ -146,7 +149,7 @@ const DirectMessageChat = ({
         // Check if user already has a different reaction
         const userExistingReaction = Object.keys(message.reactions).find(
           (e) =>
-            message.reactions[e]?.includes(currentUser?.id || "") &&
+            message?.reactions?.[e]?.includes(currentUser?.id || "") &&
             e !== emoji,
         );
 
@@ -178,6 +181,23 @@ const DirectMessageChat = ({
     deleteType: "forMe" | "forEveryone" = "forEveryone",
   ) => {
     await dispatch(deleteMessageAction({ messageId, deleteType })).unwrap();
+  };
+
+  const handleCall = async () => {
+    const roomId = crypto.randomUUID();
+
+    try {
+      await dispatch(createDirectCallToken({
+        roomName: roomId,
+        participantName: currentUser?.username!,
+        participantIdentity: currentUser?.id!,
+        friendId: userId,
+      })).unwrap();
+
+      navigate(`/call/${userId}/${roomId}`);
+    } catch (error) {
+      console.error("Failed to start call:", error);
+    }
   };
 
   if (!recipientUser || (isLoading && (!messages || messages.length === 0))) {
@@ -221,10 +241,10 @@ const DirectMessageChat = ({
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-6 h-6 rounded-full bg-[#5865f2] flex items-center justify-center">
-              {recipientUser.imageUrl ? (
+              {recipientUser?.imageUrl ? (
                 <img
-                  src={recipientUser.imageUrl}
-                  alt={recipientUser.username}
+                  src={recipientUser?.imageUrl}
+                  alt={recipientUser?.username}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
@@ -244,9 +264,9 @@ const DirectMessageChat = ({
 
         <div className="flex items-center gap-4">
           <button className="text-[#b5bac1] hover:text-white transition-colors">
-            <Phone size={24} />
+            <Phone onClick={handleCall} size={24} />
           </button>
-          <button className="text-[#b5bac1] hover:text-white transition-colors">
+          <button onClick={handleCall} className="text-[#b5bac1] hover:text-white transition-colors">
             <Video size={24} />
           </button>
           <button className="text-[#b5bac1] hover:text-white transition-colors">

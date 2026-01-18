@@ -1,10 +1,9 @@
 import LandingPage from "@/pages/home/LandingPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router";
 import { MediaQueryProvider } from "@/context/media-query-context";
 import LoginPage from "./pages/authentication/Login-page";
 import SignupPage from "./pages/authentication/Signup-page";
 import AuthSuccessPage from "./pages/authentication/AuthSuccessPage";
-// import DashboardPage from "./pages/dashboard/dashboard-page";
 import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import DirectMessagesPage from "./pages/dashboard/DirectMessagesPage";
 import PublicRoute from "./components/routes/PublicRoute";
@@ -12,7 +11,6 @@ import ProtectedRoute from "./components/routes/ProtectedRoute";
 
 import InvitePage from "./pages/server/invite-page";
 import NotFoundPage from "./pages/NotFoundPage";
-// import DashboardLayout from "./pages/dashboard/dashboard-layout";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import socketService from "@/services/socket.service";
@@ -27,6 +25,9 @@ import {
 } from "@/store/slices/friendSlice";
 import { handleIncomingMessage, updateMessage } from "@/store/slices/dmSlice";
 import type { RootState, AppDispatch } from "@/store/store";
+import DirectCallPage from "./pages/dashboard/direct-call-page";
+import { setIncomingCall } from "./store/slices/callSlice";
+import IncomingCallModal from "./components/calls/IncomingCallModal";
 
 const AppComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,6 +105,16 @@ const AppComponent = () => {
           dispatch(updateMessage(message));
         });
 
+        // Listener for Incoming Calls
+        socket.on("incoming_call", (payload) => {
+          dispatch(setIncomingCall({
+            token: payload.token,
+            roomName: payload.roomName,
+            fromFriendId: payload.fromFriendId,
+            fromFriendName: payload.fromFriendName,
+          }));
+        });
+
         // Listeners for User Status
         socket.on("user_connected", (payload) => {
           if (payload.userId) {
@@ -133,6 +144,7 @@ const AppComponent = () => {
 
   return (
     <MediaQueryProvider>
+      <IncomingCallModal />
       <header>
         <Routes>
           {/* Public Routes (Accessible only if NOT logged in) */}
@@ -145,7 +157,8 @@ const AppComponent = () => {
 
           {/* Protected Routes (Accessible only if logged in) */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/server/:id" element={<DashboardPage />} />
+            <Route path="/server/:serverId" element={<DashboardPage />} />
+            <Route path="/server/:serverId/:channelId" element={<DashboardPage />} />
             <Route
               path="/server/:serverId/invite/:invitecode"
               element={<InvitePage />}
@@ -153,6 +166,9 @@ const AppComponent = () => {
 
             <Route path="/channels/@me" element={<DirectMessagesPage />} />
             <Route path="/dm/:userId" element={<DirectMessagesPage />} />
+
+            {/* One on One Call */}
+            <Route path="/call/:userId/:roomId" element={<DirectCallPage />} />
           </Route>
 
           {/* 404 - Catch all unmatched routes */}
