@@ -16,27 +16,39 @@ import { useNavigate, useParams } from "react-router";
 import { InvitecodeModal } from "@/components/dashboard/Invitecode-modal";
 import { LeaveServerModal } from "@/components/dashboard/leave-server-modal";
 import { CreateChannelModal } from "@/components/dashboard/create-channel-modal";
+<<<<<<< HEAD
 import SettingsModal from "@/components/dashboard/settings/SettingsModal";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
+=======
+import { CallGroupComponent } from "@/components/calls/call-group-component";
+import { clearGroupCall, removeUserFromChannel } from "@/store/slices/mediaChannelSlice";
+>>>>>>> 8802726 (feat: added group-call and one-on-one call)
 
 type ServerAccessStatus = "loading" | "valid" | "not_found" | "not_member";
 
 const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+<<<<<<< HEAD
   const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
   const { id: serverIdFromUrl } = useParams<{ id: string }>();
+=======
+  const { serverId: serverIdFromUrl, channelId: channelIdFromUrl } = useParams<{ serverId: string; channelId?: string }>();
+>>>>>>> 8802726 (feat: added group-call and one-on-one call)
   const navigate = useNavigate();
 
   const { servers, currentServer, isLoading } = useSelector(
     (state: RootState) => state.server
   );
 
+  const currentChannel = currentServer?.channels?.find((c) => c.id === channelIdFromUrl);
+  const currentChannelType = currentChannel?.type;
+  const isMediaChannel = currentChannelType === "AUDIO" || currentChannelType === "VIDEO";
+
+  const { groupCall } = useSelector((state: RootState) => state.groupCall);
 
   const userMember = currentServer?.members?.find((m) => m.user?.id === user?.id);
 
-
-  const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
   const [showCreateServer, setShowCreateServer] = useState(false);
   const [accessStatus, setAccessStatus] = useState<ServerAccessStatus>("loading");
 
@@ -124,41 +136,40 @@ const DashboardPage = () => {
     validateServerAccess();
   }, [serverIdFromUrl, servers.length, isLoading, dispatch]);
 
-  // Auto-select first channel when server changes
+  // Auto-redirect to first channel if no channel selected
   useEffect(() => {
     if (
       currentServer?.channels &&
       currentServer.channels.length > 0 &&
       accessStatus === "valid" &&
-      currentServer.id === serverIdFromUrl // Only auto-select when server matches URL
+      currentServer.id === serverIdFromUrl &&
+      !channelIdFromUrl
     ) {
-      // Only auto-select if we don't have a selected channel or if server changed
-      if (!selectedChannelId || !currentServer.channels.find(c => c.id === selectedChannelId)) {
-        setSelectedChannelId(currentServer.channels[0].id);
-      }
+      // Redirect to first channel
+      navigate(`/server/${serverIdFromUrl}/${currentServer.channels[0].id}`, { replace: true });
     }
-  }, [currentServer?.id, currentServer?.channels, accessStatus, serverIdFromUrl]);
+  }, [currentServer?.id, currentServer?.channels, accessStatus, serverIdFromUrl, channelIdFromUrl, navigate]);
 
   // Fetch messages when channel changes
   useEffect(() => {
-    if (selectedChannelId) {
-      dispatch(fetchChannelMessages({ channelId: selectedChannelId }));
+    if (channelIdFromUrl) {
+      dispatch(fetchChannelMessages({ channelId: channelIdFromUrl }));
     }
-  }, [selectedChannelId, dispatch]);
+  }, [channelIdFromUrl, dispatch]);
 
   const handleServerSelect = useCallback((serverId: string) => {
-    // Reset channel selection and navigate
-    setSelectedChannelId(null);
     navigate(`/server/${serverId}`);
   }, [navigate]);
-
-  const handleChannelSelect = useCallback((channelId: string) => {
-    setSelectedChannelId(channelId);
-  }, []);
 
   const handleCreateServer = useCallback(() => {
     setShowCreateServer(true);
   }, []);
+
+  const handleLeaveGroupCall = useCallback(() => {
+    dispatch(clearGroupCall());
+    dispatch(removeUserFromChannel({ channelId: channelIdFromUrl || "", serverId: serverIdFromUrl || "" }));
+    navigate("/channels/@me");
+  }, [dispatch, navigate, channelIdFromUrl, serverIdFromUrl]);
 
   // Show loading state - also check if currentServer matches URL to handle navigation race conditions
   const isServerMismatch = currentServer && currentServer.id !== serverIdFromUrl;
@@ -174,15 +185,15 @@ const DashboardPage = () => {
         />
         {/* Loading Content Area */}
         <div className="flex-1 flex flex-col relative bg-[#1a1b1e]">
-             {/* Fake Header */}
-            <div className="h-12 border-b border-[#202225] bg-[#1a1b1e] w-full" />
-            
-            <div className="flex-1 flex items-center justify-center flex-col gap-4">
-                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2]" />
-                 <p className="text-[#949ba4] text-sm font-medium animate-pulse">Loading Discord...</p>
-            </div>
+          {/* Fake Header */}
+          <div className="h-12 border-b border-[#202225] bg-[#1a1b1e] w-full" />
+
+          <div className="flex-1 flex items-center justify-center flex-col gap-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2]" />
+            <p className="text-[#949ba4] text-sm font-medium animate-pulse">Loading Discord...</p>
+          </div>
         </div>
-        
+
         <CreateServerDialog
           open={showCreateServer}
           onOpenChange={setShowCreateServer}
@@ -242,18 +253,17 @@ const DashboardPage = () => {
       {currentServer && (
         <ChannelSidebar
           server={currentServer}
-          selectedChannelId={selectedChannelId}
-          onChannelSelect={handleChannelSelect}
+          selectedChannelId={channelIdFromUrl || null}
         />
       )}
 
       {/* Main Chat Area (Center) */}
-      {currentServer ? (
-        selectedChannelId ? (
+      {currentServer && !isMediaChannel ? (
+        channelIdFromUrl && !isMediaChannel ? (
           <ChatArea
-            channelId={selectedChannelId}
+            channelId={channelIdFromUrl}
             channelName={
-              currentServer?.channels?.find((c) => c.id === selectedChannelId)
+              currentServer?.channels?.find((c) => c.id === channelIdFromUrl)
                 ?.name || "channel"
             }
           />
@@ -268,14 +278,33 @@ const DashboardPage = () => {
           </div>
         )
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+        !isMediaChannel && (
+          <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
             <p className="text-[#949ba4] text-sm font-medium">Loading server data...</p>
+          </div>
+        )
+      )}
+
+      {currentServer ? (
+        channelIdFromUrl && isMediaChannel && (
+          <CallGroupComponent
+            token={groupCall?.token || ""}
+            serverUrl={import.meta.env.VITE_LIVEKIT_URL || ""}
+            roomName={groupCall?.roomName || ""}
+            onDisconnect={handleLeaveGroupCall}
+          />
+        )
+      ) : (
+        <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
+          <p className="text-[#949ba4] text-sm font-medium">Loading server data...</p>
         </div>
       )}
 
+
       {/* Member List Sidebar (Right) */}
-      {currentServer && selectedChannelId && (
+      {currentServer && channelIdFromUrl && (
         <MemberList members={currentServer.members || []} />
       )}
 

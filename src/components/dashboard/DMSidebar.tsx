@@ -156,11 +156,11 @@ const DMSidebar = ({
           </div>
 
           <div className="space-y-0.5">
-            {conversations.map((conv) => {
+            {conversations.map((conv, idx: number) => {
               if (!conv.participant) return null;
               return (
                 <div
-                  key={conv.id}
+                  key={idx}
                   className="relative"
                   onMouseEnter={() => setHoveredDM(conv.participantId)}
                   onMouseLeave={() => setHoveredDM(null)}

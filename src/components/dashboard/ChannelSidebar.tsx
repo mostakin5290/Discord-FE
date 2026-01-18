@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/store";
 import ServerDropdown from "./ServerDropdown";
 import { logout } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router";
@@ -21,7 +21,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+<<<<<<< HEAD
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
+=======
+import { createGroupCallToken } from "@/store/slices/mediaChannelSlice";
+>>>>>>> 8802726 (feat: added group-call and one-on-one call)
 
 interface Channel {
   id: string;
@@ -52,17 +56,15 @@ interface Server {
 interface ChannelSidebarProps {
   server: Server;
   selectedChannelId: string | null;
-  onChannelSelect: (channelId: string) => void;
 }
 
 const ChannelSidebar = ({
   server,
   selectedChannelId,
-  onChannelSelect,
 }: ChannelSidebarProps) => {
   const [showChannels, setShowChannels] = useState(true);
   const { user } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -91,6 +93,18 @@ const ChannelSidebar = ({
     (m) => m.user?.id === user?.id,
   );
   const isAdmin = userMember?.role === "ADMIN";
+
+  const handleJoinChannelGroupCall = (channelId: string) => {
+    dispatch(createGroupCallToken({
+      channelId: channelId,
+      participantIdentity: user?.id || "",
+      participantName: user?.username || "",
+      roomName: channelId || "",
+      serverId: server?.id || "",
+    }));
+
+    navigate(`/server/${server.id}/${channelId}`);
+  };
 
   return (
     <div className="hidden md:flex flex-col w-60 glass-sidebar">
@@ -126,15 +140,21 @@ const ChannelSidebar = ({
             textChannels.map((channel) => (
               <button
                 key={channel.id}
-                onClick={() => onChannelSelect(channel.id)}
+                onClick={() => navigate(`/server/${server.id}/${channel.id}`)}
                 className={`
                 w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+<<<<<<< HEAD
                 transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
                 ${
                   selectedChannelId === channel.id
                     ? "bg-[#404249] text-white scale-105 translate-x-1"
+=======
+                transition-all duration-100 group
+                ${selectedChannelId === channel.id
+                    ? "bg-[#404249] text-white"
+>>>>>>> 8802726 (feat: added group-call and one-on-one call)
                     : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
-                }
+                  }
               `}
               >
                 <div
@@ -165,14 +185,21 @@ const ChannelSidebar = ({
             {voiceChannels.map((channel) => (
               <button
                 key={channel.id}
-                onClick={() => onChannelSelect(channel.id)}
+                onClick={() => handleJoinChannelGroupCall(channel.id)}
                 className={`
                   w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+<<<<<<< HEAD
                   transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
                   ${
                     selectedChannelId === channel.id
                       ? "bg-[#404249] text-white scale-105 translate-x-1"
                       : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
+=======
+                  transition-all duration-100 group
+                  ${selectedChannelId === channel.id
+                    ? "bg-[#404249] text-white"
+                    : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
+>>>>>>> 8802726 (feat: added group-call and one-on-one call)
                   }
                 `}
               >
