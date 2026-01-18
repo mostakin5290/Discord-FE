@@ -21,11 +21,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-<<<<<<< HEAD
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
-=======
 import { createGroupCallToken } from "@/store/slices/mediaChannelSlice";
->>>>>>> 8802726 (feat: added group-call and one-on-one call)
 
 interface Channel {
   id: string;
@@ -108,8 +105,7 @@ const ChannelSidebar = ({
 
   return (
     <div className="hidden md:flex flex-col w-60 glass-sidebar">
-      {/* Server Header with Dropdown */}
-      {/* Server Header with Dropdown */}
+      {/* Server Header */}
       <div className="h-12 flex items-center px-4 font-semibold text-white shadow-sm border-b border-[#202225] hover:bg-[#35373c] transition-all duration-300 cursor-pointer text-[15px] backdrop-blur-sm">
         <ServerDropdown
           serverName={server.name}
@@ -129,7 +125,8 @@ const ChannelSidebar = ({
             <div className="flex items-center gap-0.5">
               <ChevronDown
                 size={12}
-                className={`transition-transform duration-200 ${showChannels ? "" : "-rotate-90"}`}
+                className={`transition-transform duration-200 ${showChannels ? "" : "-rotate-90"
+                  }`}
               />
               <span>TEXT CHANNELS</span>
             </div>
@@ -142,28 +139,28 @@ const ChannelSidebar = ({
                 key={channel.id}
                 onClick={() => navigate(`/server/${server.id}/${channel.id}`)}
                 className={`
-                w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
-<<<<<<< HEAD
-                transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
-                ${
-                  selectedChannelId === channel.id
+              w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+              transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
+              ${selectedChannelId === channel.id
                     ? "bg-[#404249] text-white scale-105 translate-x-1"
-=======
-                transition-all duration-100 group
-                ${selectedChannelId === channel.id
-                    ? "bg-[#404249] text-white"
->>>>>>> 8802726 (feat: added group-call and one-on-one call)
                     : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
                   }
-              `}
+            `}
               >
                 <div
-                  className={`${selectedChannelId === channel.id ? "text-white" : "text-[#80848e]"}`}
+                  className={
+                    selectedChannelId === channel.id
+                      ? "text-white"
+                      : "text-[#80848e]"
+                  }
                 >
                   {getChannelIcon(channel.type)}
                 </div>
                 <span
-                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel?.id ? "text-white" : "text-[#949ba4] group-hover:text-[#dbdee1]"}`}
+                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
+                    ? "text-white"
+                    : "text-[#949ba4] group-hover:text-[#dbdee1]"
+                    }`}
                 >
                   {channel.name}
                 </span>
@@ -187,29 +184,28 @@ const ChannelSidebar = ({
                 key={channel.id}
                 onClick={() => handleJoinChannelGroupCall(channel.id)}
                 className={`
-                  w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
-<<<<<<< HEAD
-                  transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
-                  ${
-                    selectedChannelId === channel.id
-                      ? "bg-[#404249] text-white scale-105 translate-x-1"
-                      : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
-=======
-                  transition-all duration-100 group
-                  ${selectedChannelId === channel.id
-                    ? "bg-[#404249] text-white"
+              w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
+              transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
+              ${selectedChannelId === channel.id
+                    ? "bg-[#404249] text-white scale-105 translate-x-1"
                     : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
->>>>>>> 8802726 (feat: added group-call and one-on-one call)
                   }
-                `}
+            `}
               >
                 <div
-                  className={`${selectedChannelId === channel.id ? "text-white" : "text-[#80848e]"}`}
+                  className={
+                    selectedChannelId === channel.id
+                      ? "text-white"
+                      : "text-[#80848e]"
+                  }
                 >
                   {getChannelIcon(channel.type)}
                 </div>
                 <span
-                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel?.id ? "text-white" : "text-[#949ba4] group-hover:text-[#dbdee1]"}`}
+                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
+                    ? "text-white"
+                    : "text-[#949ba4] group-hover:text-[#dbdee1]"
+                    }`}
                 >
                   {channel.name}
                 </span>
@@ -219,7 +215,7 @@ const ChannelSidebar = ({
         )}
       </div>
 
-      {/* User Panel at Bottom */}
+      {/* User Panel */}
       <div className="h-[52px] px-2 bg-[#0b0c0e] flex items-center justify-between shrink-0 border-t border-[#1e1f22]">
         <div className="flex items-center gap-2 pl-1 rounded hover:bg-[#3f4147] py-1 px-1 transition-all duration-300 hover:scale-105 cursor-pointer group">
           <div className="relative w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
@@ -231,11 +227,14 @@ const ChannelSidebar = ({
               />
             ) : (
               <span className="text-white text-xs font-semibold">
-                {user?.firstName?.charAt(0) || user?.username?.charAt(0) || "U"}
+                {user?.firstName?.charAt(0) ||
+                  user?.username?.charAt(0) ||
+                  "U"}
               </span>
             )}
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-[2px] border-[#0b0c0e] rounded-full animate-pulse\" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-[2px] border-[#0b0c0e] rounded-full animate-pulse" />
           </div>
+
           <div className="flex flex-col">
             <span className="text-white text-xs font-semibold leading-tight">
               {user?.username || "User"}
@@ -257,6 +256,7 @@ const ChannelSidebar = ({
                 <Settings size={18} />
               </button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent
               className="w-56 bg-[#111214] border-[#1e1f22]"
               align="end"
@@ -270,7 +270,9 @@ const ChannelSidebar = ({
                 <Settings className="mr-2 h-4 w-4" />
                 <span>User Settings</span>
               </DropdownMenuItem>
+
               <DropdownMenuSeparator className="bg-[#1e1f22]" />
+
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="text-red-600 hover:text-red-600 hover:bg-red-600/10 focus:text-red-600 focus:bg-red-600/10 cursor-pointer"
@@ -283,6 +285,7 @@ const ChannelSidebar = ({
         </div>
       </div>
     </div>
+
   );
 };
 
