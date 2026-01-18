@@ -149,7 +149,7 @@ const DirectMessageChat = ({
         // Check if user already has a different reaction
         const userExistingReaction = Object.keys(message.reactions).find(
           (e) =>
-            message.reactions[e]?.includes(currentUser?.id || "") &&
+            message?.reactions?.[e]?.includes(currentUser?.id || "") &&
             e !== emoji,
         );
 
@@ -266,7 +266,7 @@ const DirectMessageChat = ({
           <button className="text-[#b5bac1] hover:text-white transition-colors">
             <Phone onClick={handleCall} size={24} />
           </button>
-          <button className="text-[#b5bac1] hover:text-white transition-colors">
+          <button onClick={handleCall} className="text-[#b5bac1] hover:text-white transition-colors">
             <Video size={24} />
           </button>
           <button className="text-[#b5bac1] hover:text-white transition-colors">
