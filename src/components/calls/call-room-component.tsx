@@ -2,21 +2,17 @@
 
 import {
     LiveKitRoom,
-    VideoConference,
     RoomAudioRenderer,
     ControlBar,
     useTracks,
     ParticipantTile,
-    useParticipants,
-    useRoomContext,
     TrackRefContext,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { Track } from "livekit-client";
-import { useCallback, useState } from "react";
-import { Loader2, Copy, Check, Users } from "lucide-react";
-import { useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
+import { useCallback } from "react";
+import { Loader2 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
 
 interface VideoRoomProps {
     token: string;
@@ -27,6 +23,7 @@ interface VideoRoomProps {
 
 export function CallRoomComponent({ token, serverUrl, roomName, onDisconnect }: VideoRoomProps) {
     const navigate = useNavigate();
+
 
     const handleDisconnect = useCallback(() => {
         onDisconnect?.();
@@ -43,13 +40,16 @@ export function CallRoomComponent({ token, serverUrl, roomName, onDisconnect }: 
             data-lk-theme="default"
             className="h-screen w-full bg-zinc-950"
         >
-            <RoomContent roomName={roomName} />
+            <RoomContent />
             <RoomAudioRenderer />
         </LiveKitRoom>
     );
 }
 
-function RoomContent({ roomName }: { roomName: string }) {
+function RoomContent() {
+    const path = useLocation().pathname.split("/").filter(Boolean)?.[0];
+    const channelType = path === "call" ? "AUDIO" : "VIDEO";
+
     const tracks = useTracks(
         [
             { source: Track.Source.Camera, withPlaceholder: true },
@@ -57,51 +57,9 @@ function RoomContent({ roomName }: { roomName: string }) {
         ],
         { onlySubscribed: false }
     );
-    const participants = useParticipants();
-    const room = useRoomContext();
-    const [copied, setCopied] = useState(false);
-
-    const copyRoomLink = async () => {
-        const url = `${window.location.origin}/call/${roomName}`;
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
 
     return (
         <div className="flex h-full flex-col">
-            {/* Header */}
-            {/* <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/80 px-6 py-3 backdrop-blur-sm">
-                <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500">
-                        <Users className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                        <h1 className="font-semibold text-white">{roomName}</h1>
-                        <p className="text-sm text-zinc-400">
-                            {participants.length} participant{participants.length !== 1 ? "s" : ""}
-                        </p>
-                    </div>
-                </div>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={copyRoomLink}
-                    className="border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:bg-zinc-700 hover:text-white"
-                >
-                    {copied ? (
-                        <>
-                            <Check className="mr-2 h-4 w-4" />
-                            Copied!
-                        </>
-                    ) : (
-                        <>
-                            <Copy className="mr-2 h-4 w-4" />
-                            Copy invite link
-                        </>
-                    )}
-                </Button>
-            </div> */}
 
             {/* Video Grid */}
             <div className="flex-1 p-4">
@@ -131,6 +89,7 @@ function RoomContent({ roomName }: { roomName: string }) {
                         microphone: true,
                         screenShare: true,
                         leave: true,
+                        camera: channelType === "VIDEO" ? true : false,
                         chat: false,
                         settings: false,
                     }}

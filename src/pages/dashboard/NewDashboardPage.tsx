@@ -39,7 +39,7 @@ const DashboardPage = () => {
   const currentChannelType = currentChannel?.type;
   const isMediaChannel = currentChannelType === "AUDIO" || currentChannelType === "VIDEO";
 
-  const { groupCall } = useSelector((state: RootState) => state.groupCall);
+  const { groupCall, isLoading: isGroupCallLoading } = useSelector((state: RootState) => state.groupCall);
 
   const userMember = currentServer?.members?.find((m) => m.user?.id === user?.id);
 
@@ -138,9 +138,9 @@ const DashboardPage = () => {
       channelIdFromUrl &&
       user
     ) {
-      const channel = currentServer.channels.find((c) => c.id === channelIdFromUrl);
+      const channel = currentServer?.channels.find((c) => c.id === channelIdFromUrl);
       const isMedia = channel?.type === "AUDIO" || channel?.type === "VIDEO";
-      
+
       if (isMedia) {
         // Check if we are already in this call
         if (groupCall?.channelId === channelIdFromUrl && groupCall?.token) {
@@ -153,7 +153,7 @@ const DashboardPage = () => {
           participantIdentity: user.id,
           participantName: user.username,
           roomName: channelIdFromUrl,
-          serverId: serverIdFromUrl,
+          serverId: serverIdFromUrl ?? "",
         }));
       }
     }
@@ -312,14 +312,22 @@ const DashboardPage = () => {
       )}
 
       {currentServer ? (
-        channelIdFromUrl && isMediaChannel && groupCall?.token && (
-          <CallGroupComponent
-            token={groupCall.token}
-            serverUrl={import.meta.env.VITE_LIVEKIT_URL || ""}
-            roomName={groupCall.roomName || ""}
-            onDisconnect={handleLeaveGroupCall}
-          />
-        )
+        channelIdFromUrl && isMediaChannel ? (
+          isGroupCallLoading || !groupCall || !groupCall.token || groupCall.channelId !== channelIdFromUrl ? (
+            <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
+              <p className="text-[#949ba4] text-sm font-medium">Connecting to channel...</p>
+            </div>
+          ) : (
+            <CallGroupComponent
+              token={groupCall.token}
+              serverUrl={import.meta.env.VITE_LIVEKIT_URL || ""}
+              roomName={groupCall.roomName}
+              channelId={groupCall.channelId}
+              onDisconnect={handleLeaveGroupCall}
+            />
+          )
+        ) : null
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
@@ -358,9 +366,9 @@ const DashboardPage = () => {
         />
       }
 
-      <SettingsModal 
-        open={settingsModalOpen} 
-        onOpenChange={() => dispatch(setSettingsModalOpen())} 
+      <SettingsModal
+        open={settingsModalOpen}
+        onOpenChange={() => dispatch(setSettingsModalOpen())}
       />
     </div>
   );

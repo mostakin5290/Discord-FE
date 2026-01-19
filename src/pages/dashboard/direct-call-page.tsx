@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import type { AppDispatch, RootState } from "@/store/types";
 import { fetchUserServers } from "@/store/slices/serverSlice";
 import ServerSidebar from "@/components/dashboard/ServerSidebar";
@@ -21,7 +21,7 @@ const DirectCallPage = () => {
     const [showCreateServer, setShowCreateServer] = useState(false);
     const [showProfile, setShowProfile] = useState(true);
     const { token, isLoading, error, roomName } = useSelector((state: RootState) => state.call);
-
+    const channelType = useLocation().pathname.split("/").filter(Boolean)?.[0] === "call" ? "AUDIO" : "VIDEO";
 
     useEffect(() => {
         dispatch(fetchUserServers());

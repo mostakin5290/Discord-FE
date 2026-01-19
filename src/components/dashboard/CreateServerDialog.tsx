@@ -309,7 +309,7 @@ const CreateServerDialog = ({
                   htmlFor="desc"
                   className="text-xs font-bold text-gray-300 uppercase tracking-wide ml-1"
                 >
-                  Description (Optional)
+                  Description
                 </Label>
                 <Textarea
                   id="desc"

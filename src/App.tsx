@@ -30,7 +30,7 @@ import { fetchMe } from "@/store/slices/authSlice";
 import { handleIncomingMessage, updateMessage } from "@/store/slices/dmSlice";
 import type { RootState, AppDispatch } from "@/store/types";
 import DirectCallPage from "./pages/dashboard/direct-call-page";
-import { setIncomingCall } from "./store/slices/callSlice";
+import { setChannelType, setIncomingCall } from "./store/slices/callSlice";
 import IncomingCallModal from "./components/calls/IncomingCallModal";
 import DiscoveryPage from "./pages/discover/discovery-dashboard";
 
@@ -123,7 +123,11 @@ const AppComponent = () => {
             roomName: payload.roomName,
             fromFriendId: payload.fromFriendId,
             fromFriendName: payload.fromFriendName,
+            channelType: payload.channelType,
           }));
+          dispatch(setChannelType(payload.channelType as "VIDEO" | "AUDIO"));
+
+          console.log("App.tsx", payload.channelType);
         });
 
         // Listeners for User Status
@@ -188,6 +192,7 @@ const AppComponent = () => {
 
             {/* One on One Call */}
             <Route path="/call/:userId/:roomId" element={<DirectCallPage />} />
+            <Route path="/video/:userId/:roomId" element={<DirectCallPage />} />
           </Route>
 
           {/* 404 - Catch all unmatched routes */}
