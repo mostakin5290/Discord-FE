@@ -183,7 +183,7 @@ const DirectMessageChat = ({
     await dispatch(deleteMessageAction({ messageId, deleteType })).unwrap();
   };
 
-  const handleCall = async () => {
+  const handleAudioCall = async () => {
     const roomId = crypto.randomUUID();
 
     try {
@@ -192,9 +192,28 @@ const DirectMessageChat = ({
         participantName: currentUser?.username!,
         participantIdentity: currentUser?.id!,
         friendId: userId,
+        channelType: "AUDIO",
       })).unwrap();
 
       navigate(`/call/${userId}/${roomId}`);
+    } catch (error) {
+      console.error("Failed to start call:", error);
+    }
+  };
+
+  const handleVideoCall = async () => {
+    const roomId = crypto.randomUUID();
+
+    try {
+      await dispatch(createDirectCallToken({
+        roomName: roomId,
+        participantName: currentUser?.username!,
+        participantIdentity: currentUser?.id!,
+        friendId: userId,
+        channelType: "VIDEO",
+      })).unwrap();
+
+      navigate(`/video/${userId}/${roomId}`);
     } catch (error) {
       console.error("Failed to start call:", error);
     }
@@ -264,9 +283,9 @@ const DirectMessageChat = ({
 
         <div className="flex items-center gap-4">
           <button className="text-[#b5bac1] hover:text-white transition-colors">
-            <Phone onClick={handleCall} size={24} />
+            <Phone onClick={handleAudioCall} size={24} />
           </button>
-          <button onClick={handleCall} className="text-[#b5bac1] hover:text-white transition-colors">
+          <button onClick={handleVideoCall} className="text-[#b5bac1] hover:text-white transition-colors">
             <Video size={24} />
           </button>
           <button className="text-[#b5bac1] hover:text-white transition-colors">

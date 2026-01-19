@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
-import { createGroupCallToken } from "@/store/slices/mediaChannelSlice";
+import { clearGroupCall, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
 
 interface Channel {
   id: string;
@@ -93,6 +93,8 @@ const ChannelSidebar = ({
   const isAdmin = userMember?.role === "ADMIN";
 
   const handleJoinChannelGroupCall = (channelId: string) => {
+    dispatch(clearGroupCall());
+
     dispatch(createGroupCallToken({
       channelId: channelId,
       participantIdentity: user?.id || "",
@@ -182,7 +184,7 @@ const ChannelSidebar = ({
 
             {voiceChannels.map((channel) => {
               const activeMembers = (server.members || []).filter(
-                (m) => m.user.streamChannelId === channel.id
+                (m) => m.user?.streamChannelId === channel.id
               );
 
               return (
@@ -226,7 +228,7 @@ const ChannelSidebar = ({
                           className="flex items-center gap-2 px-2 py-1 rounded hover:bg-[#35373c] cursor-pointer"
                         >
                           <div className="w-6 h-6 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
-                            {member.user.imageUrl ? (
+                            {member.user?.imageUrl ? (
                               <img
                                 src={member.user.imageUrl}
                                 alt={member.user.username}
@@ -234,12 +236,12 @@ const ChannelSidebar = ({
                               />
                             ) : (
                               <span className="text-white text-[10px] font-semibold">
-                                {member.user.username.charAt(0).toUpperCase()}
+                                {member.user?.username?.charAt(0).toUpperCase() || "U"}
                               </span>
                             )}
                           </div>
                           <span className="text-[#949ba4] text-xs font-medium truncate">
-                            {member.user.username}
+                            {member.user?.username || "Unknown"}
                           </span>
                         </div>
                       ))}
@@ -269,7 +271,7 @@ const ChannelSidebar = ({
                   "U"}
               </span>
             )}
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-[2px] border-[#0b0c0e] rounded-full animate-pulse" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-2 border-[#0b0c0e] rounded-full animate-pulse" />
           </div>
 
           <div className="flex flex-col">

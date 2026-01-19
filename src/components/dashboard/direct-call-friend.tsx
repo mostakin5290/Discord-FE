@@ -81,7 +81,6 @@ const DirectCallFriend = ({ userId, onToggleProfile, token, roomName }: { userId
                 </div>
             </div>
             <CallRoomComponent token={token} serverUrl={serverUrl} roomName={roomName} onDisconnect={handleLeaveCall} />
-
         </div>
     )
 }

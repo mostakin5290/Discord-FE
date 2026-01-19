@@ -22,7 +22,15 @@ export const createGroupCallToken = createAsyncThunk(
     async ({ channelId, serverId, participantName, participantIdentity, roomName }: { channelId: string; serverId: string; participantName: string; participantIdentity: string; roomName: string }, { rejectWithValue }) => {
         try {
             const response = await axiosClient.post("/livekit/create-group-call-token", { channelId, serverId, participantName, participantIdentity, roomName });
-            return response.data;
+            // Backend only returns { token }, so we construct the full GroupCall object
+            return {
+                token: response.data.token,
+                roomName,
+                participantName,
+                participantIdentity,
+                channelId,
+                serverId,
+            };
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || "Failed to create group call token");
         }
@@ -43,11 +51,11 @@ export const removeUserFromChannel = createAsyncThunk(
 
 const GROUP_CALL_STORAGE_KEY = 'activeGroupCall';
 
-const saveGroupCallToStorage = (groupCall: GroupCall) => {
+export const saveGroupCallToStorage = (groupCall: GroupCall) => {
     sessionStorage.setItem(GROUP_CALL_STORAGE_KEY, JSON.stringify(groupCall));
 };
 
-const clearGroupCallFromStorage = () => {
+export const clearGroupCallFromStorage = () => {
     sessionStorage.removeItem(GROUP_CALL_STORAGE_KEY);
 };
 
