@@ -28,6 +28,7 @@ import type { RootState, AppDispatch } from "@/store/store";
 import DirectCallPage from "./pages/dashboard/direct-call-page";
 import { setIncomingCall } from "./store/slices/callSlice";
 import IncomingCallModal from "./components/calls/IncomingCallModal";
+import DiscoveryPage from "./pages/discover/discovery-dashboard";
 
 const AppComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -166,6 +167,9 @@ const AppComponent = () => {
 
             <Route path="/channels/@me" element={<DirectMessagesPage />} />
             <Route path="/dm/:userId" element={<DirectMessagesPage />} />
+
+            {/* Discovery */}
+            <Route path="/discovery/:discoveryTab" element={<DiscoveryPage />} />
 
             {/* One on One Call */}
             <Route path="/call/:userId/:roomId" element={<DirectCallPage />} />
