@@ -7,7 +7,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 
 
 interface FindConversationDialogProps {

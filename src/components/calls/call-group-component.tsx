@@ -18,7 +18,7 @@ import { Loader2, Copy, Check, Users } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 
 interface VideoRoomProps {
     token: string;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearIsSearching, clearSearchQuery, clearSearchResults, fetchAllServers } from "@/store/slices/discoverySlice";
-import { type AppDispatch, type RootState } from "@/store/store";
+import { type AppDispatch, type RootState } from "@/store/types";
 import { ArrowLeft, FastForward, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 

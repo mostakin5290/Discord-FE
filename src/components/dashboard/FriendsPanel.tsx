@@ -16,7 +16,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import {
   fetchFriends,
   fetchPendingRequests,

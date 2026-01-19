@@ -13,6 +13,7 @@ interface User {
   bio?: string;
   provider?: string;
   password?: string;
+  hasPassword?: boolean;
 }
 
 interface AuthState {
@@ -78,7 +79,7 @@ export const fetchMe = createAsyncThunk(
 // Update user profile
 export const updateUserProfile = createAsyncThunk(
   "auth/updateProfile",
-  async (data: Partial<User>, { rejectWithValue }) => {
+  async (data: Partial<User> | FormData, { rejectWithValue }) => {
     try {
       const response = await axiosClient.put("/auth/profile", data);
       return response.data;
@@ -225,9 +226,10 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.isLoading = false;
+        state.user = action.payload;
         // Update localStorage
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("user", JSON.stringify(action.payload));
       });
   },
 });

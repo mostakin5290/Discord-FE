@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { setCreateChannelModelOpen } from "@/store/slices/modalSlice";
 import { createChannel, fetchServerById } from "@/store/slices/serverSlice";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";

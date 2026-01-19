@@ -6,24 +6,42 @@ import { toast } from "sonner";
 
 interface MessageInputProps {
   placeholder: string;
-  onSendMessage: (content: string, fileUrl?: string) => Promise<void>;
+  onSendMessage: (content: string, file?: File) => Promise<void>;
   replyingTo?: any | null;
   onCancelReply?: () => void;
   disabled?: boolean;
+  onTyping?: (isTyping: boolean) => void;
 }
 
 const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
   (
-    { placeholder, onSendMessage, replyingTo, onCancelReply, disabled = false },
+    { placeholder, onSendMessage, replyingTo, onCancelReply, onTyping, disabled = false },
     ref,
   ) => {
     const [messageInput, setMessageInput] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setMessageInput(e.target.value);
+      
+      if (onTyping) {
+        onTyping(true);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+          onTyping(false);
+        }, 3000);
+      }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+
+      // Clear typing status immediately
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      if (onTyping) onTyping(false);
 
       // Validate message
       const validation = validateMessage(messageInput);
@@ -62,17 +80,15 @@ const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
         return;
       }
 
+      setIsSending(true);
       try {
-        // In a real app, upload to server first and get URL
-        // For now, just send a placeholder message
-        const message = `[Attached File: ${file.name}]`;
-        await onSendMessage(
-          message,
-          "https://via.placeholder.com/300?text=File+Attachment",
-        );
-        toast.success("File attached");
-      } catch (error) {
-        toast.error("Failed to upload file");
+        await onSendMessage(messageInput.trim(), file);
+        toast.success("File sent!");
+        setMessageInput(""); // Clear input after send
+      } catch (error: any) {
+         toast.error(error?.message || "Failed to send file");
+      } finally {
+        setIsSending(false);
       }
 
       // Reset file input
@@ -136,7 +152,7 @@ const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
             <input
               type="text"
               value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
+              onChange={handleInputChange}
               placeholder={placeholder}
               disabled={disabled || isSending}
               maxLength={2000}

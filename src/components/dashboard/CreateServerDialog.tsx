@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/store/store";
+import type { AppDispatch } from "@/store/types";
 import { createNewServer } from "@/store/slices/serverSlice";
 import { toast } from "sonner";
 import {

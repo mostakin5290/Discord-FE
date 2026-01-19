@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 import { useState } from "react";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 import DisableAccountDialog from "./DisableAccountDialog";
+import EditAttributeDialog from "./EditAttributeDialog";
 
 interface MyAccountProps {
   onEditProfile?: () => void;
@@ -14,6 +15,8 @@ const MyAccount = ({ onEditProfile }: MyAccountProps) => {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
   const [disableAccountOpen, setDisableAccountOpen] = useState(false);
+  const [editDisplayNameOpen, setEditDisplayNameOpen] = useState(false);
+  const [editUsernameOpen, setEditUsernameOpen] = useState(false);
 
   return (
     <div className="w-full h-full text-[#b5bac1]">
@@ -25,9 +28,9 @@ const MyAccount = ({ onEditProfile }: MyAccountProps) => {
       </p>
 
       {/* Banner & Avatar Card */}
-      <div className="bg-[#111214] rounded-lg overflow-hidden mb-8 relative group shadow-lg border border-[#1a1b1e] hover:border-[#2e3035] transition-all duration-300">
+      <div className="bg-[#111214] rounded-lg overflow-hidden mb-8 relative group shadow-sm border border-[#1e1f22]">
         {/* Banner */}
-        <div className="h-[100px] bg-gradient-to-br from-[#5865f2] to-[#3b47d4] relative">
+        <div className="h-[100px] bg-[#1e1f22] relative group/banner cursor-pointer" onClick={onEditProfile}>
           {user?.bannerUrl ? (
             <img
               src={user.bannerUrl}
@@ -35,13 +38,18 @@ const MyAccount = ({ onEditProfile }: MyAccountProps) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#5865f2] to-[#3b47d4]" />
+            <div className="w-full h-full bg-[#3e4147]" /> // Solid fallback color close to screenshot
           )}
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
+            <span className="text-white text-sm font-semibold">CHANGE BANNER</span>
+          </div>
         </div>
 
+
         {/* Avatar */}
-        <div className="absolute top-[76px] left-[16px] p-1.5 bg-[#111214] rounded-full shadow-xl">
-          <div className="w-[80px] h-[80px] rounded-full overflow-hidden bg-[#111214] ring-4 ring-[#111214]/50">
+        <div className="absolute top-[72px] left-[16px]">
+          <div className="relative w-[80px] h-[80px] rounded-full border-[6px] border-[#111214] bg-[#111214] overflow-hidden group/avatar cursor-pointer" onClick={onEditProfile}>
             {user?.imageUrl ? (
               <img
                 src={user.imageUrl}
@@ -49,100 +57,110 @@ const MyAccount = ({ onEditProfile }: MyAccountProps) => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-[#5865f2] to-[#4752c4] text-white text-2xl font-bold shadow-inner">
+              <div className="flex items-center justify-center w-full h-full bg-[#5865f2] text-white text-3xl font-medium">
                 {(user?.username?.[0] || "U").toUpperCase()}
               </div>
             )}
+            {/* Hover Overlay */}
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="text-white text-xs font-semibold">CHANGE AVATAR</span>
+            </div>
+            <div className="absolute bottom-[2px] right-[2px] w-6 h-6 bg-[#23a559] border-[3px] border-[#111214] rounded-full" />
           </div>
-          <div className="absolute bottom-1.5 right-1.5 w-6 h-6 bg-[#23a559] border-[4px] border-[#111214] rounded-full shadow-lg" />
         </div>
 
-        {/* User Info & Actions */}
-        <div className="pt-[50px] px-4 pb-4 flex justify-between items-end">
-          <div className="flex-1">
-            <div className="text-xl font-bold text-white flex items-center gap-2 mb-1">
-              {user?.username}
-              <span className="text-[#949ba4] font-normal text-sm">
-                #{user?.id?.slice(0, 4) || "0000"}
-              </span>
+        {/* User Info Header: Name & Edit Profile Button */}
+        <div className="pt-4 pr-4 pl-[110px] pb-4 flex justify-between items-start min-h-[70px]">
+          <div>
+            <div className="text-xl font-bold text-white leading-tight">
+              {user?.username || "Username"}
             </div>
-            <div className="flex items-center gap-2 text-xs text-[#23a559]">
-              <div className="w-2 h-2 bg-[#23a559] rounded-full animate-pulse" />
-              <span className="font-medium">Online</span>
+             <div className="text-sm text-[#b5bac1] leading-tight">
+              {user?.username || "username"}
             </div>
+            {/* Badges Placeholder */}
+             <div className="flex gap-1 mt-2">
+                 <div className="w-5 h-5 bg-[#5865f2] rounded flex items-center justify-center text-[10px] text-white font-bold" title="HypeSquad Brilliance">
+                    B
+                 </div>
+                 <div className="w-5 h-5 bg-[#f0b232] rounded flex items-center justify-center text-[10px] text-white font-bold" title="Early Supporter">
+                    S
+                 </div>
+             </div>
           </div>
+          
           <button
             onClick={onEditProfile}
-            className="px-4 py-2 bg-[#5865f2] hover:bg-[#4752c4] text-white text-sm font-semibold rounded-md transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
+            className="px-4 py-1.5 bg-[#5865f2] hover:bg-[#4752c4] text-white text-sm font-semibold rounded transition-colors"
           >
             Edit User Profile
           </button>
         </div>
 
-        {/* Info Fields */}
-        <div className="p-4 bg-[#1e1f22] m-4 rounded-lg space-y-4 border border-[#26272b]">
-          <div className="flex justify-between items-center group/field p-2 rounded-md hover:bg-[#26272b] transition-colors">
-            <div>
-              <label className="text-xs font-bold uppercase text-[#949ba4] tracking-wide">
-                Display Name
-              </label>
-              <div className="text-white text-base font-medium">
-                {user?.firstName || user?.username}
-              </div>
+        {/* Info Fields Container - Darker Inset */}
+        <div className="p-4 bg-[#2f3136] m-4 rounded-lg space-y-1">
+          {/* Display Name */}
+          <div className="flex justify-between items-center py-3">
+             <div className="flex-1">
+              <h3 className="text-xs font-bold uppercase text-[#b5bac1] mb-1">Display Name</h3>
+              <div className="text-white text-sm">{user?.firstName || user?.username}</div>
             </div>
-            <button className="px-3 py-1.5 bg-[#4e5058] text-white text-xs font-semibold rounded hover:bg-[#6d6f78] transition-all duration-200 hover:shadow-md opacity-0 group-hover/field:opacity-100">
+            <button 
+              onClick={() => setEditDisplayNameOpen(true)}
+              className="px-5 py-1.5 bg-[#4e5058] hover:bg-[#6d6f78] text-white text-sm font-medium rounded transition-colors"
+            >
               Edit
             </button>
           </div>
-          <div className="flex justify-between items-center group/field p-2 rounded-md hover:bg-[#26272b] transition-colors">
-            <div>
-              <label className="text-xs font-bold uppercase text-[#949ba4] tracking-wide">
-                Username
-              </label>
-              <div className="text-white text-base font-medium">
-                {user?.username}
-              </div>
+          
+          {/* Username */}
+          <div className="flex justify-between items-center py-3">
+             <div className="flex-1">
+              <h3 className="text-xs font-bold uppercase text-[#b5bac1] mb-1">Username</h3>
+              <div className="text-white text-sm">{user?.username}</div>
             </div>
-            <button className="px-3 py-1.5 bg-[#4e5058] text-white text-xs font-semibold rounded hover:bg-[#6d6f78] transition-all duration-200 hover:shadow-md opacity-0 group-hover/field:opacity-100">
-              Edit
-            </button>
-          </div>
-          <div className="flex justify-between items-center group/field p-2 rounded-md hover:bg-[#26272b] transition-colors">
-            <div>
-              <label className="text-xs font-bold uppercase text-[#949ba4] tracking-wide">
-                Email
-              </label>
-              <div className="text-white text-base font-medium">
-                {user?.email
-                  ? user.email.replace(/(.{2})(.*)(@.*)/, "$1****$3")
-                  : "********@***.com"}
-                <span className="ml-2 text-[#00a8fc] text-sm cursor-pointer hover:underline font-medium">
-                  Reveal
-                </span>
-              </div>
-            </div>
-            <button className="px-3 py-1.5 bg-[#4e5058] text-white text-xs font-semibold rounded hover:bg-[#6d6f78] transition-all duration-200 hover:shadow-md opacity-0 group-hover/field:opacity-100">
+            <button 
+              onClick={() => setEditUsernameOpen(true)}
+              className="px-5 py-1.5 bg-[#4e5058] hover:bg-[#6d6f78] text-white text-sm font-medium rounded transition-colors"
+            >
               Edit
             </button>
           </div>
 
-          <div className="flex justify-between items-center group/field p-2 rounded-md hover:bg-[#26272b] transition-colors">
-            <div>
-              <label className="text-xs font-bold uppercase text-[#949ba4] tracking-wide">
-                Phone Number
-              </label>
-              <div className="text-white text-base font-medium">
+          {/* Email */}
+          <div className="flex justify-between items-center py-3">
+             <div className="flex-1">
+              <h3 className="text-xs font-bold uppercase text-[#b5bac1] mb-1">Email</h3>
+              <div className="text-white text-sm flex items-center gap-2">
+                {user?.email
+                  ? user.email.replace(/(.{2})(.*)(@.*)/, "$1****$3")
+                  : "********@***.com"}
+                <span className="text-[#00a8fc] text-xs cursor-pointer hover:underline font-medium">
+                  Reveal
+                </span>
+              </div>
+            </div>
+            <button className="px-5 py-1.5 bg-[#4e5058] hover:bg-[#6d6f78] text-white text-sm font-medium rounded transition-colors">
+              Edit
+            </button>
+          </div>
+
+          {/* Phone Number */}
+          <div className="flex justify-between items-center py-3">
+             <div className="flex-1">
+              <h3 className="text-xs font-bold uppercase text-[#b5bac1] mb-1">Phone Number</h3>
+              <div className="text-white text-sm flex items-center gap-2">
                 ********5840
-                <span className="ml-2 text-[#00a8fc] text-sm cursor-pointer hover:underline font-medium">
+                <span className="text-[#00a8fc] text-xs cursor-pointer hover:underline font-medium">
                   Reveal
                 </span>
               </div>
             </div>
             <div className="flex gap-2">
-              <button className="px-3 py-1.5 text-[#b5bac1] hover:underline text-xs font-semibold transition-colors opacity-0 group-hover/field:opacity-100">
-                Remove
+              <button className="text-[#b5bac1] hover:underline text-xs font-medium px-2">
+                 Remove
               </button>
-              <button className="px-3 py-1.5 bg-[#4e5058] text-white text-xs font-semibold rounded hover:bg-[#6d6f78] transition-all duration-200 hover:shadow-md opacity-0 group-hover/field:opacity-100">
+              <button className="px-5 py-1.5 bg-[#4e5058] hover:bg-[#6d6f78] text-white text-sm font-medium rounded transition-colors">
                 Edit
               </button>
             </div>
@@ -170,6 +188,28 @@ const MyAccount = ({ onEditProfile }: MyAccountProps) => {
       <ChangePasswordDialog
         open={changePasswordOpen}
         onOpenChange={setChangePasswordOpen}
+      />
+
+       {/* Edit Dialogs */}
+      <EditAttributeDialog
+        open={editDisplayNameOpen}
+        onOpenChange={setEditDisplayNameOpen}
+        title="Change Display Name"
+        label="Display Name"
+        description="Enter a new display name."
+        initialValue={user?.firstName || user?.username || ""}
+        fieldName="firstName"
+        user={user}
+      />
+      <EditAttributeDialog
+        open={editUsernameOpen}
+        onOpenChange={setEditUsernameOpen}
+        title="Change Username"
+        label="Username"
+        description="Enter a new username."
+        initialValue={user?.username || ""}
+        fieldName="username"
+        user={user}
       />
 
       <div className="border-t border-[#3f4147] my-8" />

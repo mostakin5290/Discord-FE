@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 import { setInvitecodeModalOpen } from "@/store/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";

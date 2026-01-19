@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { deleteAccount } from "@/store/slices/authSlice";
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,7 +61,7 @@ const DeleteAccountDialog = ({
       localStorage.removeItem("user");
       navigate("/login");
     } catch (error: any) {
-      toast.error((error as string) || "Failed to delete account");
+      toast.error(typeof error === "string" ? error : "Failed to delete account");
     } finally {
       setIsLoading(false);
     }
@@ -78,14 +79,14 @@ const DeleteAccountDialog = ({
               Delete Account
             </DialogTitle>
           </div>
-          <p className="text-[#b5bac1] text-sm leading-relaxed">
+          <DialogDescription className="text-[#b5bac1] text-sm leading-relaxed">
             This action is{" "}
             <span className="text-[#da373c] font-semibold">
               permanent and cannot be undone
             </span>
             . All your data, including messages, servers, and connections will
             be permanently deleted.
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>

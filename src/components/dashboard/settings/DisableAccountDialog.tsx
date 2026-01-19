@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { disableAccount } from "@/store/slices/authSlice";
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +56,7 @@ const DisableAccountDialog = ({
       localStorage.removeItem("user");
       navigate("/login");
     } catch (error: any) {
-      toast.error((error as string) || "Failed to disable account");
+      toast.error(typeof error === "string" ? error : "Failed to disable account");
     } finally {
       setIsLoading(false);
     }
@@ -73,14 +74,14 @@ const DisableAccountDialog = ({
               Disable Account
             </DialogTitle>
           </div>
-          <p className="text-[#b5bac1] text-sm leading-relaxed">
+          <DialogDescription className="text-[#b5bac1] text-sm leading-relaxed">
             Disabling your account will hide your profile and you won't be able
             to access it. You can{" "}
             <span className="text-white font-semibold">
               recover your account anytime
             </span>{" "}
             by logging back in.
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>

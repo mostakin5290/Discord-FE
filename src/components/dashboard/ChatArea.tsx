@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import {
   sendNewMessage,
   updateMessageReaction,
@@ -19,28 +19,36 @@ import MessageItem from "@/components/chat/MessageItem";
 import MessageInput from "@/components/chat/MessageInput";
 import { shouldGroupMessage } from "@/utils/messageUtils";
 import axiosClient from "@/lib/axios";
+import { SearchModal } from "@/components/search/SearchModal";
+
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 interface ChatAreaProps {
   channelId: string;
   channelName: string;
+  serverId: string;
 }
 
-const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
+const ChatArea = ({ channelId, channelName, serverId }: ChatAreaProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { messagesByChannel } = useSelector(
     (state: RootState) => state.message,
   );
   const { user: currentUser } = useSelector((state: RootState) => state.auth);
   const [replyingTo, setReplyingTo] = useState<any | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const messages = messagesByChannel[channelId] || [];
+  
+  // Real-time chat integration
+  const { typingUsers, handleTyping } = useChatSocket(channelId);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, typingUsers]); // Scroll when typing changes too
 
-  const handleSendMessage = async (content: string, fileUrl?: string) => {
+  const handleSendMessage = async (content: string, file?: File) => {
     try {
       if (replyingTo) {
         // TODO: Implement reply functionality for server messages
@@ -53,11 +61,11 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
         sendNewMessage({
           channelId,
           content: content,
-          fileUrl: fileUrl,
+          file: file,
         }),
       ).unwrap();
     } catch (error: any) {
-      toast.error(error || "Failed to send message");
+      toast.error(error || "Failed to sending message");
       throw error; // Re-throw to let MessageInput handle the error
     }
   };
@@ -142,18 +150,14 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
             className="cursor-pointer hover:text-[#dbdee1] transition-all duration-200 hover:scale-110 active:scale-95"
           />
 
-          {/* Search Bar - Mock */}
-          <div className="relative hidden md:block">
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-[#1e1f22] text-sm text-[#dbdee1] rounded px-2 py-1 w-36 outline-none transition-all duration-300 focus:w-60 focus:bg-[#0b0c0e] focus:ring-2 focus:ring-[#5865f2]/30"
-            />
-            <Search
-              size={16}
-              className="absolute right-2 top-1.5 text-[#949ba4]"
-            />
-          </div>
+          {/* Search Button */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="hidden md:flex items-center gap-2 bg-[#1e1f22] hover:bg-[#0b0c0e] text-[#dbdee1] text-sm rounded px-3 py-1.5 transition-all duration-300 hover:ring-2 hover:ring-[#5865f2]/30 cursor-pointer"
+          >
+            <Search size={16} className="text-[#949ba4]" />
+            <span className="text-xs text-[#949ba4]">Search</span>
+          </button>
 
           <Inbox
             size={24}
@@ -205,12 +209,32 @@ const ChatArea = ({ channelId, channelName }: ChatAreaProps) => {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Typing Indicator */}
+      {typingUsers.length > 0 && (
+        <div className="absolute bottom-[80px] left-4 text-xs font-bold text-[#dbdee1] animate-in fade-in slide-in-from-bottom-2">
+          <span className="animate-pulse">
+            {typingUsers.length > 3
+              ? "Several people are typing..."
+              : `${typingUsers.length} person is typing...`}
+            {/* Note: Ideally map user IDs to names here if available in a cache */}
+          </span>
+        </div>
+      )}
+
       {/* Message Input */}
       <MessageInput
         placeholder={`Message #${channelName}`}
         onSendMessage={handleSendMessage}
         replyingTo={replyingTo}
         onCancelReply={() => setReplyingTo(null)}
+        onTyping={handleTyping}
+      />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        serverId={serverId}
       />
     </div>
   );

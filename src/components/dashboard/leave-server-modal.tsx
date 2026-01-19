@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { setLeaveServerModelOpen } from "@/store/slices/modalSlice";
 import { leaveServer } from "@/store/slices/serverSlice";
 import { toast } from "sonner";

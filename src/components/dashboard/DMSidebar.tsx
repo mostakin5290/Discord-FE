@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import { fetchConversations } from "@/store/slices/dmSlice";
 import { logout } from "@/store/slices/authSlice";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";

@@ -1,4 +1,4 @@
-import type { RootState, AppDispatch } from '@/store/store';
+import type { RootState, AppDispatch } from '@/store/types';
 import { getInitials, getStatusColor } from '@/utils/messageUtils';
 import { HelpCircle, Inbox, PhoneOff, Users } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';

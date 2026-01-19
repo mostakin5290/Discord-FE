@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import ServerDropdown from "./ServerDropdown";
 import { logout } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router";
@@ -39,6 +39,7 @@ interface Member {
     firstName: string;
     lastName: string;
     imageUrl?: string;
+    streamChannelId?: string;
   };
 }
 
@@ -179,38 +180,74 @@ const ChannelSidebar = ({
               <Plus size={16} className="cursor-pointer hover:text-white" />
             </div>
 
-            {voiceChannels.map((channel) => (
-              <button
-                key={channel.id}
-                onClick={() => handleJoinChannelGroupCall(channel.id)}
-                className={`
-              w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
-              transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
-              ${selectedChannelId === channel.id
-                    ? "bg-[#404249] text-white scale-105 translate-x-1"
-                    : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
-                  }
-            `}
-              >
-                <div
-                  className={
-                    selectedChannelId === channel.id
-                      ? "text-white"
-                      : "text-[#80848e]"
-                  }
-                >
-                  {getChannelIcon(channel.type)}
+            {voiceChannels.map((channel) => {
+              const activeMembers = (server.members || []).filter(
+                (m) => m.user.streamChannelId === channel.id
+              );
+
+              return (
+                <div key={channel.id} className="mb-[2px]">
+                  <button
+                    onClick={() => handleJoinChannelGroupCall(channel.id)}
+                    className={`
+                  w-full flex items-center gap-1.5 px-2 py-[6px] rounded-[4px]
+                  transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
+                  ${selectedChannelId === channel.id
+                        ? "bg-[#404249] text-white scale-105 translate-x-1"
+                        : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
+                      }
+                `}
+                  >
+                    <div
+                      className={
+                        selectedChannelId === channel.id
+                          ? "text-white"
+                          : "text-[#80848e]"
+                      }
+                    >
+                      {getChannelIcon(channel.type)}
+                    </div>
+                    <span
+                      className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
+                        ? "text-white"
+                        : "text-[#949ba4] group-hover:text-[#dbdee1]"
+                        }`}
+                    >
+                      {channel.name}
+                    </span>
+                  </button>
+
+                  {/* Active Voice Participants */}
+                  {activeMembers.length > 0 && (
+                    <div className="pl-6 pb-2 flex flex-col gap-1 mt-1">
+                      {activeMembers.map((member) => (
+                        <div
+                          key={member.id}
+                          className="flex items-center gap-2 px-2 py-1 rounded hover:bg-[#35373c] cursor-pointer"
+                        >
+                          <div className="w-6 h-6 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
+                            {member.user.imageUrl ? (
+                              <img
+                                src={member.user.imageUrl}
+                                alt={member.user.username}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-white text-[10px] font-semibold">
+                                {member.user.username.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[#949ba4] text-xs font-medium truncate">
+                            {member.user.username}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <span
-                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
-                    ? "text-white"
-                    : "text-[#949ba4] group-hover:text-[#dbdee1]"
-                    }`}
-                >
-                  {channel.name}
-                </span>
-              </button>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

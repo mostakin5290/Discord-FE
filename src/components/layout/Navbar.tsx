@@ -14,7 +14,7 @@ import { Menu, Download, Shield, Sparkles, Smile } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 import { afterSignInUrl } from "@/constants/data";
 
 const Navbar = () => {

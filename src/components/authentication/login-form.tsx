@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { loginUser } from "@/store/slices/authSlice";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";

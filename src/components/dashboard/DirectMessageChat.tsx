@@ -10,7 +10,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import {
   fetchConversations,
   fetchConversationMessages,

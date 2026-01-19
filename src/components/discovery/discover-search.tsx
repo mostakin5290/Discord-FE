@@ -1,5 +1,5 @@
 import { clearSearchQuery, searchServers, setSearchQuery } from '@/store/slices/discoverySlice';
-import type { AppDispatch, RootState } from '@/store/store';
+import type { AppDispatch, RootState } from '@/store/types';
 import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

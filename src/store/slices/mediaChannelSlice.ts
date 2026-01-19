@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import axiosClient from "@/lib/axios";
-import type { store } from "../store";
+
 
 interface GroupCall {
     roomName: string;
@@ -113,6 +113,6 @@ const groupCallSlice = createSlice({
     },
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+// export type RootState = ReturnType<typeof store.getState>;
 export const { setGroupCall, clearGroupCall } = groupCallSlice.actions;
 export default groupCallSlice.reducer;

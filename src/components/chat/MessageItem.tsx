@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/store/store";
+import type { AppDispatch } from "@/store/types";
 import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
 import {
   MoreHorizontal,
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { getInitials, formatMessageTime } from "@/utils/messageUtils";
+import { FileAttachment } from "@/components/chat/FileAttachment";
 
 interface MessageItemProps {
   message: any;
@@ -239,11 +240,7 @@ const MessageItem = ({
                 </p>
               )}
               {message.fileUrl && (
-                <img
-                  src={message.fileUrl}
-                  alt="Attachment"
-                  className="mt-2 max-w-md rounded-lg border border-[#2e3035]"
-                />
+                <FileAttachment fileUrl={message.fileUrl} />
               )}
             </>
           )}

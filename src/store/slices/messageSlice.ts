@@ -68,17 +68,21 @@ export const sendNewMessage = createAsyncThunk(
     {
       channelId,
       content,
-      fileUrl,
-    }: { channelId: string; content: string; fileUrl?: string },
+      file,
+    }: { channelId: string; content: string; file?: File },
     { rejectWithValue },
   ) => {
     try {
+      const formData = new FormData();
+      formData.append("content", content);
+      
+      if (file) {
+        formData.append("file", file);
+      }
+
       const response = await axiosClient.post(
         `/messages/channel/${channelId}`,
-        {
-          content,
-          fileUrl,
-        },
+        formData,
       );
       return response.data.message;
     } catch (err: any) {
@@ -210,7 +214,14 @@ const messageSlice = createSlice({
         if (!state.messagesByChannel[message.channelId]) {
           state.messagesByChannel[message.channelId] = [];
         }
-        state.messagesByChannel[message.channelId].push(message);
+        // Check if message already exists to prevent duplicates (from socket)
+        if (
+          !state.messagesByChannel[message.channelId].some(
+            (m) => m.id === message.id,
+          )
+        ) {
+          state.messagesByChannel[message.channelId].push(message);
+        }
       })
       // Delete message
       .addCase(deleteMessageById.fulfilled, (state, action) => {

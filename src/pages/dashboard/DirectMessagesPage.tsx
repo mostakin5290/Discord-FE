@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { fetchUserServers } from "@/store/slices/serverSlice";
 import ServerSidebar from "@/components/dashboard/ServerSidebar";
 import DMSidebar from "@/components/dashboard/DMSidebar";

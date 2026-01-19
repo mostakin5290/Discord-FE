@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import * as dmService from "@/services/dm.service";
 import type { Conversation, DirectMessage } from "@/services/dm.service";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/types";
 
 interface DMState {
   conversations: Conversation[];

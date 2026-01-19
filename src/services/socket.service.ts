@@ -39,6 +39,30 @@ class SocketService {
   getSocket() {
     return this.socket;
   }
+
+  joinChannel(channelId: string) {
+    if (this.socket) {
+      this.socket.emit("join_channel", channelId);
+    }
+  }
+
+  leaveChannel(channelId: string) {
+    if (this.socket) {
+      this.socket.emit("leave_channel", channelId);
+    }
+  }
+
+  sendMessage(message: any) {
+    if (this.socket) {
+      this.socket.emit("send_message", message);
+    }
+  }
+
+  sendTyping(channelId: string, isTyping: boolean) {
+    if (this.socket) {
+      this.socket.emit("typing", { channelId, isTyping });
+    }
+  }
 }
 
 export default new SocketService();

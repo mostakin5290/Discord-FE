@@ -2,7 +2,7 @@ import SettingsSidebar from "./SettingsSidebar";
 import MyAccount from "./MyAccount";
 import ProfileSettings from "./ProfileSettings";
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface SettingsModalProps {
   open: boolean;
@@ -77,6 +77,10 @@ const SettingsModal = ({ open, onOpenChange }: SettingsModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[1400px] w-[90vw] h-[90vh] bg-[#313338] p-0 border-none rounded-xl flex overflow-hidden shadow-2xl my-auto mx-auto">
+        <DialogTitle className="sr-only">User Settings</DialogTitle>
+        <DialogDescription className="sr-only">
+          Manage your account settings and preferences
+        </DialogDescription>
         <div className="flex w-full h-full">
           {/* Sidebar Column */}
           <div className="w-[260px] min-w-[260px] bg-[#2b2d31] flex justify-end py-[60px] pr-[6px] animate-in slide-in-from-left duration-300 rounded-l-xl">

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import { acceptIncomingCall, clearIncomingCall } from "@/store/slices/callSlice";
 import { useNavigate } from "react-router";
 import { Phone, PhoneOff } from "lucide-react";

@@ -1,6 +1,6 @@
 import LoadingSpinner from "@/components/dashboard/LoadingSpinner";
 import { joinServerWithCode } from "@/store/slices/serverSlice";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";

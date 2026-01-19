@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/store/store";
+import type { AppDispatch } from "@/store/types";
 import { fetchMe } from "@/store/slices/authSlice";
 import { afterSignInUrl } from "@/constants/data";
 

@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import type { AppDispatch } from "@/store/store";
+import type { AppDispatch } from "@/store/types";
 import {
   joinServerWithCode,
   fetchUserServers,

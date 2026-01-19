@@ -23,8 +23,9 @@ import {
   removeFriendFromList,
   updateFriendStatus,
 } from "@/store/slices/friendSlice";
+import { fetchMe } from "@/store/slices/authSlice";
 import { handleIncomingMessage, updateMessage } from "@/store/slices/dmSlice";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import DirectCallPage from "./pages/dashboard/direct-call-page";
 import { setIncomingCall } from "./store/slices/callSlice";
 import IncomingCallModal from "./components/calls/IncomingCallModal";
@@ -32,7 +33,13 @@ import DiscoveryPage from "./pages/discover/discovery-dashboard";
 
 const AppComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, token } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchMe(token));
+    }
+  }, [token, dispatch]);
 
   useEffect(() => {
     if (user) {

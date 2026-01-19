@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/types";
 import {
   fetchUserServers,
   fetchServerById,
@@ -19,7 +19,7 @@ import { CreateChannelModal } from "@/components/dashboard/create-channel-modal"
 import SettingsModal from "@/components/dashboard/settings/SettingsModal";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 import { CallGroupComponent } from "@/components/calls/call-group-component";
-import { clearGroupCall, removeUserFromChannel } from "@/store/slices/mediaChannelSlice";
+import { clearGroupCall, removeUserFromChannel, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
 
 type ServerAccessStatus = "loading" | "valid" | "not_found" | "not_member";
 
@@ -130,10 +130,40 @@ const DashboardPage = () => {
     validateServerAccess();
   }, [serverIdFromUrl, servers.length, isLoading, dispatch]);
 
+  // Join group call if navigating directly to a media channel
+  useEffect(() => {
+    if (
+      accessStatus === "valid" &&
+      currentServer?.id === serverIdFromUrl &&
+      channelIdFromUrl &&
+      user
+    ) {
+      const channel = currentServer.channels.find((c) => c.id === channelIdFromUrl);
+      const isMedia = channel?.type === "AUDIO" || channel?.type === "VIDEO";
+      
+      if (isMedia) {
+        // Check if we are already in this call
+        if (groupCall?.channelId === channelIdFromUrl && groupCall?.token) {
+          return;
+        }
+
+        // Dispatch action to join/create call token
+        dispatch(createGroupCallToken({
+          channelId: channelIdFromUrl,
+          participantIdentity: user.id,
+          participantName: user.username,
+          roomName: channelIdFromUrl,
+          serverId: serverIdFromUrl,
+        }));
+      }
+    }
+  }, [accessStatus, currentServer, serverIdFromUrl, channelIdFromUrl, user, groupCall?.channelId, groupCall?.token, dispatch]);
+
   // Auto-redirect to first channel if no channel selected
   useEffect(() => {
     if (
-      currentServer?.channels &&
+      currentServer &&
+      currentServer.channels &&
       currentServer.channels.length > 0 &&
       accessStatus === "valid" &&
       currentServer.id === serverIdFromUrl &&
@@ -142,7 +172,7 @@ const DashboardPage = () => {
       // Redirect to first channel
       navigate(`/server/${serverIdFromUrl}/${currentServer.channels[0].id}`, { replace: true });
     }
-  }, [currentServer?.id, currentServer?.channels, accessStatus, serverIdFromUrl, channelIdFromUrl, navigate]);
+  }, [currentServer, accessStatus, serverIdFromUrl, channelIdFromUrl, navigate]);
 
   // Fetch messages when channel changes
   useEffect(() => {
@@ -256,6 +286,7 @@ const DashboardPage = () => {
         channelIdFromUrl && !isMediaChannel ? (
           <ChatArea
             channelId={channelIdFromUrl}
+            serverId={serverIdFromUrl || ""}
             channelName={
               currentServer?.channels?.find((c) => c.id === channelIdFromUrl)
                 ?.name || "channel"
@@ -281,11 +312,11 @@ const DashboardPage = () => {
       )}
 
       {currentServer ? (
-        channelIdFromUrl && isMediaChannel && (
+        channelIdFromUrl && isMediaChannel && groupCall?.token && (
           <CallGroupComponent
-            token={groupCall?.token || ""}
+            token={groupCall.token}
             serverUrl={import.meta.env.VITE_LIVEKIT_URL || ""}
-            roomName={groupCall?.roomName || ""}
+            roomName={groupCall.roomName || ""}
             onDisconnect={handleLeaveGroupCall}
           />
         )

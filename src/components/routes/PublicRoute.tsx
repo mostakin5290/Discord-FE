@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/types";
 import { useEffect, useState } from "react";
 import { logout } from "@/store/slices/authSlice";
 import LoadingSpinner from "../dashboard/LoadingSpinner";
