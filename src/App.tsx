@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { MediaQueryProvider } from "@/context/media-query-context";
 import LoginPage from "./pages/authentication/Login-page";
 import SignupPage from "./pages/authentication/Signup-page";
+import VerifyOtpPage from "./pages/authentication/verify-otp-page";
+import ForgotPasswordPage from "./pages/authentication/forgot-password-page";
+import ResetPasswordPage from "./pages/authentication/reset-password-page";
 import AuthSuccessPage from "./pages/authentication/AuthSuccessPage";
 import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import DirectMessagesPage from "./pages/dashboard/DirectMessagesPage";
@@ -155,6 +158,11 @@ const AppComponent = () => {
       <IncomingCallModal />
       <header>
         <Routes>
+          {/* Authentication Routes (Always accessible) */}
+          <Route path="/verify-otp" element={<VerifyOtpPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
           {/* Public Routes (Accessible only if NOT logged in) */}
           <Route element={<PublicRoute />}>
             <Route path="/" element={<LandingPage />} />

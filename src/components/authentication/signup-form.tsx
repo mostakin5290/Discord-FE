@@ -140,8 +140,11 @@ export function SignupForm({
       const resultAction = await dispatch(signupUser(sanitizedData));
 
       if (signupUser.fulfilled.match(resultAction)) {
-        toast.success("Account created successfully!");
-        navigate(afterSignInUrl);
+        // Backend now sends OTP automatically, just redirect to verify page
+        toast.success("Account created! Please check your email for the verification code.");
+        navigate("/verify-otp", {
+          state: { email: sanitizedData.email }
+        });
       } else {
         if (resultAction.payload) {
           toast.error(resultAction.payload as string);

@@ -20,6 +20,7 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isLoading: boolean;
+  isVerifying: boolean;
   error: string | null;
 }
 
@@ -27,6 +28,7 @@ const initialState: AuthState = {
   user: JSON.parse(localStorage.getItem("user") || "null"),
   token: localStorage.getItem("token"),
   isLoading: false,
+  isVerifying: false,
   error: null,
 };
 
@@ -140,6 +142,36 @@ export const disableAccount = createAsyncThunk(
   },
 );
 
+// Verify OTP for email verification
+export const verifyOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async (data: { email: string; otp: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post("/auth/verify-otp", data);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to verify OTP",
+      );
+    }
+  },
+);
+
+// Resend OTP for email verification
+export const resendOtp = createAsyncThunk(
+  "auth/resendOtp",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post("/auth/send-otp", { email });
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to resend OTP",
+      );
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -185,12 +217,10 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(signupUser.fulfilled, (state, action) => {
+      .addCase(signupUser.fulfilled, (state) => {
         state.isLoading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
-        localStorage.setItem("token", action.payload.token);
+        // Signup now only creates account and sends OTP
+        // User and token will be set after OTP verification
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -230,6 +260,38 @@ const authSlice = createSlice({
         state.user = action.payload;
         // Update localStorage
         localStorage.setItem("user", JSON.stringify(action.payload));
+      })
+      // Verify OTP
+      .addCase(verifyOtp.pending, (state) => {
+        state.isVerifying = true;
+        state.error = null;
+      })
+      .addCase(verifyOtp.fulfilled, (state, action) => {
+        state.isVerifying = false;
+        // OTP verification successful - user is now verified
+        // The backend returns user and token after successful verification
+        if (action.payload.user && action.payload.token) {
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          localStorage.setItem("user", JSON.stringify(action.payload.user));
+          localStorage.setItem("token", action.payload.token);
+        }
+      })
+      .addCase(verifyOtp.rejected, (state, action) => {
+        state.isVerifying = false;
+        state.error = action.payload as string;
+      })
+      // Resend OTP
+      .addCase(resendOtp.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(resendOtp.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resendOtp.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });

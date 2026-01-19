@@ -140,12 +140,12 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                  <span
+                    onClick={() => navigate("/forgot-password")}
+                    className="ml-auto text-sm underline-offset-2 hover:underline cursor-pointer"
                   >
                     Forgot your password?
-                  </a>
+                  </span>
                 </div>
                 <Input
                   id="password"
