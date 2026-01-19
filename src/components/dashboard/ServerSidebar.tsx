@@ -1,5 +1,5 @@
-import { Plus, Home } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Plus, Home, Globe } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +27,8 @@ const ServerSidebar = ({
   onCreateServer,
 }: ServerSidebarProps) => {
   const navigate = useNavigate();
+  const pathname = useLocation();
+  const isDiscoveryPage = pathname.pathname.includes("/discovery");
 
   return (
     <div className="hidden md:flex flex-col items-center w-[72px] bg-[#0b0c0e] py-3 gap-2 shrink-0">
@@ -38,10 +40,9 @@ const ServerSidebar = ({
               {/* Active/Hover Indicator Pill */}
               <div
                 className={`absolute left-0 w-[4px] bg-white rounded-r-full transition-all duration-200 origin-left
-                  ${
-                    !currentServerId
-                      ? "h-[40px] opacity-100"
-                      : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
+                  ${!currentServerId && !isDiscoveryPage
+                    ? "h-[40px] opacity-100"
+                    : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
                   }
                 `}
               />
@@ -50,10 +51,9 @@ const ServerSidebar = ({
                   flex items-center justify-center w-12 h-12 rounded-[24px] 
                   transition-all duration-300 group-hover:rounded-[16px] group-hover:scale-110
                   active:scale-95
-                  ${
-                    !currentServerId
-                      ? "bg-[#5865f2] rounded-[16px] scale-105"
-                      : "bg-[#1a1b1e] hover:bg-[#5865f2]"
+                  ${!currentServerId && !isDiscoveryPage
+                    ? "bg-[#5865f2] rounded-[16px] scale-105"
+                    : "bg-[#1a1b1e] hover:bg-[#5865f2]"
                   }
                 `}
                 onClick={() => navigate("/channels/@me")}
@@ -81,10 +81,9 @@ const ServerSidebar = ({
                 {/* Active/Hover Indicator Pill */}
                 <div
                   className={`absolute left-0 w-[4px] bg-white rounded-r-full transition-all duration-200 origin-left
-                    ${
-                      currentServerId === server.id
-                        ? "h-[40px] opacity-100"
-                        : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
+                    ${currentServerId === server.id
+                      ? "h-[40px] opacity-100"
+                      : "h-[8px] opacity-0 group-hover:opacity-100 group-hover:h-[20px]"
                     }
                   `}
                 />
@@ -96,10 +95,9 @@ const ServerSidebar = ({
                     transition-all duration-300 overflow-hidden
                     group-hover:rounded-[16px] group-hover:bg-[#5865f2] group-hover:scale-110
                     active:scale-95
-                    ${
-                      currentServerId === server.id
-                        ? "rounded-[16px] bg-[#5865f2] shadow-lg scale-105"
-                        : "bg-[#1a1b1e] hover:shadow-2xl"
+                    ${currentServerId === server.id
+                      ? "rounded-[16px] bg-[#5865f2] shadow-lg scale-105"
+                      : "bg-[#1a1b1e] hover:shadow-2xl"
                     }
                   `}
                 >
@@ -138,6 +136,24 @@ const ServerSidebar = ({
           </TooltipTrigger>
           <TooltipContent side="right">
             <p>Add a Server</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Discovery Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => navigate("/discovery/servers")}
+              className={`flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-300 hover:scale-110 active:scale-95 group mt-2 shadow-md hover:shadow-xl ${isDiscoveryPage ? "bg-[#5865f2] rounded-[16px] scale-105" : "bg-[#1a1b1e] hover:bg-[#5865f2]"}`}
+            >
+              <Globe
+                size={24}
+                className="text-white group-hover:text-white transition-all duration-300"
+              />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>Discovery</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

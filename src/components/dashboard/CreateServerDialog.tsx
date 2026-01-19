@@ -27,6 +27,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
+import { uploadToCloudinary } from "@/lib/upload";
 
 interface CreateServerDialogProps {
   open: boolean;
@@ -112,9 +113,18 @@ const CreateServerDialog = ({
     setSubmitLoading(true);
     try {
       // Use provided image or fallback to a generated avatar
-      const finalImage =
+      let finalImage =
         image ||
         `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+
+      if (file) {
+        const uploadedImage = await uploadToCloudinary(file!);
+        if (!uploadedImage?.secure_url) {
+          toast.error("Failed to upload image");
+          return;
+        }
+        finalImage = uploadedImage?.secure_url ?? "";
+      }
 
       const newServer = await dispatch(
         createNewServer({
