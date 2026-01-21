@@ -13,10 +13,8 @@ const AuthSuccessPage = () => {
   useEffect(() => {
     const token = searchParams.get("token");
     if (token) {
-      // First, store the token in localStorage
       localStorage.setItem("token", token);
 
-      // Then fetch the user profile using the token
       dispatch(fetchMe(token))
         .unwrap()
         .then(() => {

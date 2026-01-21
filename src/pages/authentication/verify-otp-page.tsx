@@ -30,7 +30,6 @@ export function VerifyOtpPage({
   const [resendCooldown, setResendCooldown] = useState(0);
   const email = location.state?.email;
 
-  // Redirect if no email provided
   useEffect(() => {
     if (!email) {
       toast.error("Email not found. Please signup again.");
@@ -38,7 +37,6 @@ export function VerifyOtpPage({
     }
   }, [email, navigate]);
 
-  // Cooldown timer
   useEffect(() => {
     if (resendCooldown > 0) {
       const timer = setTimeout(() => {
@@ -48,7 +46,6 @@ export function VerifyOtpPage({
     }
   }, [resendCooldown]);
 
-  // Auto-submit when OTP is complete
   useEffect(() => {
     if (otp.length === 6) {
       handleVerify();

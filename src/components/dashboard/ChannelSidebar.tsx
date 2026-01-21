@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
-import { clearGroupCall, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
+import { createGroupCallToken } from "@/store/slices/mediaChannelSlice";
 
 interface Channel {
   id: string;
@@ -56,10 +56,7 @@ interface ChannelSidebarProps {
   selectedChannelId: string | null;
 }
 
-const ChannelSidebar = ({
-  server,
-  selectedChannelId,
-}: ChannelSidebarProps) => {
+const ChannelSidebar = ({ server, selectedChannelId }: ChannelSidebarProps) => {
   const [showChannels, setShowChannels] = useState(true);
   const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
@@ -93,15 +90,15 @@ const ChannelSidebar = ({
   const isAdmin = userMember?.role === "ADMIN";
 
   const handleJoinChannelGroupCall = (channelId: string) => {
-    dispatch(clearGroupCall());
-
-    dispatch(createGroupCallToken({
-      channelId: channelId,
-      participantIdentity: user?.id || "",
-      participantName: user?.username || "",
-      roomName: channelId || "",
-      serverId: server?.id || "",
-    }));
+    dispatch(
+      createGroupCallToken({
+        channelId: channelId,
+        participantIdentity: user?.id || "",
+        participantName: user?.username || "",
+        roomName: channelId || "",
+        serverId: server?.id || "",
+      }),
+    );
 
     navigate(`/server/${server.id}/${channelId}`);
   };
@@ -113,7 +110,7 @@ const ChannelSidebar = ({
         <ServerDropdown
           serverName={server.name}
           isAdmin={isAdmin}
-          onSettings={() => console.log("Settings")}
+          onSettings={() => {}}
         />
       </div>
 
@@ -128,8 +125,9 @@ const ChannelSidebar = ({
             <div className="flex items-center gap-0.5">
               <ChevronDown
                 size={12}
-                className={`transition-transform duration-200 ${showChannels ? "" : "-rotate-90"
-                  }`}
+                className={`transition-transform duration-200 ${
+                  showChannels ? "" : "-rotate-90"
+                }`}
               />
               <span>TEXT CHANNELS</span>
             </div>
@@ -144,10 +142,11 @@ const ChannelSidebar = ({
                 className={`
               w-full flex items-center gap-1.5 px-2 py-[6px] mb-[2px] rounded-[4px]
               transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
-              ${selectedChannelId === channel.id
-                    ? "bg-[#404249] text-white scale-105 translate-x-1"
-                    : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
-                  }
+              ${
+                selectedChannelId === channel.id
+                  ? "bg-[#404249] text-white scale-105 translate-x-1"
+                  : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
+              }
             `}
               >
                 <div
@@ -160,10 +159,11 @@ const ChannelSidebar = ({
                   {getChannelIcon(channel.type)}
                 </div>
                 <span
-                  className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
-                    ? "text-white"
-                    : "text-[#949ba4] group-hover:text-[#dbdee1]"
-                    }`}
+                  className={`text-[15px] font-medium leading-5 ${
+                    selectedChannelId === channel.id
+                      ? "text-white"
+                      : "text-[#949ba4] group-hover:text-[#dbdee1]"
+                  }`}
                 >
                   {channel.name}
                 </span>
@@ -184,7 +184,7 @@ const ChannelSidebar = ({
 
             {voiceChannels.map((channel) => {
               const activeMembers = (server.members || []).filter(
-                (m) => m.user?.streamChannelId === channel.id
+                (m) => m.user.streamChannelId === channel.id,
               );
 
               return (
@@ -194,10 +194,11 @@ const ChannelSidebar = ({
                     className={`
                   w-full flex items-center gap-1.5 px-2 py-[6px] rounded-[4px]
                   transition-all duration-200 group hover:scale-105 hover:translate-x-1 active:scale-95
-                  ${selectedChannelId === channel.id
-                        ? "bg-[#404249] text-white scale-105 translate-x-1"
-                        : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
-                      }
+                  ${
+                    selectedChannelId === channel.id
+                      ? "bg-[#404249] text-white scale-105 translate-x-1"
+                      : "text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]"
+                  }
                 `}
                   >
                     <div
@@ -210,10 +211,11 @@ const ChannelSidebar = ({
                       {getChannelIcon(channel.type)}
                     </div>
                     <span
-                      className={`text-[15px] font-medium leading-5 ${selectedChannelId === channel.id
-                        ? "text-white"
-                        : "text-[#949ba4] group-hover:text-[#dbdee1]"
-                        }`}
+                      className={`text-[15px] font-medium leading-5 ${
+                        selectedChannelId === channel.id
+                          ? "text-white"
+                          : "text-[#949ba4] group-hover:text-[#dbdee1]"
+                      }`}
                     >
                       {channel.name}
                     </span>
@@ -228,7 +230,7 @@ const ChannelSidebar = ({
                           className="flex items-center gap-2 px-2 py-1 rounded hover:bg-[#35373c] cursor-pointer"
                         >
                           <div className="w-6 h-6 rounded-full bg-[#5865f2] flex items-center justify-center overflow-hidden">
-                            {member.user?.imageUrl ? (
+                            {member.user.imageUrl ? (
                               <img
                                 src={member.user.imageUrl}
                                 alt={member.user.username}
@@ -236,12 +238,12 @@ const ChannelSidebar = ({
                               />
                             ) : (
                               <span className="text-white text-[10px] font-semibold">
-                                {member.user?.username?.charAt(0).toUpperCase() || "U"}
+                                {member.user.username.charAt(0).toUpperCase()}
                               </span>
                             )}
                           </div>
                           <span className="text-[#949ba4] text-xs font-medium truncate">
-                            {member.user?.username || "Unknown"}
+                            {member.user.username}
                           </span>
                         </div>
                       ))}
@@ -266,12 +268,10 @@ const ChannelSidebar = ({
               />
             ) : (
               <span className="text-white text-xs font-semibold">
-                {user?.firstName?.charAt(0) ||
-                  user?.username?.charAt(0) ||
-                  "U"}
+                {user?.firstName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </span>
             )}
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-2 border-[#0b0c0e] rounded-full animate-pulse" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#23a559] border-[2px] border-[#0b0c0e] rounded-full animate-pulse" />
           </div>
 
           <div className="flex flex-col">
@@ -324,7 +324,6 @@ const ChannelSidebar = ({
         </div>
       </div>
     </div>
-
   );
 };
 

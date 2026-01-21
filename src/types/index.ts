@@ -1,123 +1,124 @@
+import React from "react";
 
-import React from "react"
+export * from "./models.js";
 
 export interface LanguageDropdownProps {
-    initialLanguage?: string
-    onChange?: (language: string) => void
-    className?: string
+  initialLanguage?: string;
+  onChange?: (language: string) => void;
+  className?: string;
 }
-export type LogoType = "full" | "small" | "icon"
-export type LogoFormatType = "svg" | "png"
-export type LogoColorType = "white" | "black" | "blurple"
+export type LogoType = "full" | "small" | "icon";
+export type LogoFormatType = "svg" | "png";
+export type LogoColorType = "white" | "black" | "blurple";
 export interface LogoProps {
-    type?: LogoType
-    color?: LogoColorType
-    format?: LogoFormatType
-    width?: number
-    height?: number
-    showText?: boolean
-    href?: string
-    className?: string
-    linkClassName?: string
+  type?: LogoType;
+  color?: LogoColorType;
+  format?: LogoFormatType;
+  width?: number;
+  height?: number;
+  showText?: boolean;
+  href?: string;
+  className?: string;
+  linkClassName?: string;
 }
 export type socialLinkType = {
-    label?: string
-    href: string
-    icon: string
-}
+  label?: string;
+  href: string;
+  icon: string;
+};
 export interface HeaderProps {
-    variant?: "transparent" | "solid" | "light"
-    container?: "fluid" | "normal"
-    position?: "fixed" | "static"
-    logoType?: "full" | "small" | "icon"
-    className?: string
-    showNav?: boolean
-    navStyle?: NavigationMenuCustomProps["navStyle"]
+  variant?: "transparent" | "solid" | "light";
+  container?: "fluid" | "normal";
+  position?: "fixed" | "static";
+  logoType?: "full" | "small" | "icon";
+  className?: string;
+  showNav?: boolean;
+  navStyle?: NavigationMenuCustomProps["navStyle"];
 }
 export interface FooterProps {
-    footerStyle?: "basic" | "advanced"
-    className?: string
+  footerStyle?: "basic" | "advanced";
+  className?: string;
 }
 export interface NavigationMenuCustomProps {
-    variant?: "transparent" | "solid" | "light"
-    navStyle?: "basic" | "advanced"
+  variant?: "transparent" | "solid" | "light";
+  navStyle?: "basic" | "advanced";
 }
 export interface NavigationMenuItemContentProps {
-    decorImage?: string
-    decorImageClass?: string
-    links?: NavigationMenuItemContentLinkProps[]
+  decorImage?: string;
+  decorImageClass?: string;
+  links?: NavigationMenuItemContentLinkProps[];
 }
 export interface NavigationMenuItemContentLinkProps {
-    title: string
-    href?: string
-    isExternal?: boolean
-    subMenu?: NavigationMenuItemContentLinkProps[]
+  title: string;
+  href?: string;
+  isExternal?: boolean;
+  subMenu?: NavigationMenuItemContentLinkProps[];
 }
 export interface NavigationMenuItemProps {
-    label: string
-    href: string
-    variant?: NavigationMenuCustomProps["variant"]
-    dropdownContent?: NavigationMenuItemContentProps
+  label: string;
+  href: string;
+  variant?: NavigationMenuCustomProps["variant"];
+  dropdownContent?: NavigationMenuItemContentProps;
 }
 export type FooterMenuLinkType = {
-    label: string
-    href: string
-    isExternal?: boolean
-}
+  label: string;
+  href: string;
+  isExternal?: boolean;
+};
 export type FooterMenuSectionType = {
-    title: string
-    links: FooterMenuLinkType[]
-}
+  title: string;
+  links: FooterMenuLinkType[];
+};
 
 /* Nitro Page */
 export type nitroBannerType = {
-    image: string
-    imageClassName?: string
-    buttonText?: string
-    buttonHref?: string
-    className?: string
-    featureList?: Array<{ image: string; label: string }>
-}
+  image: string;
+  imageClassName?: string;
+  buttonText?: string;
+  buttonHref?: string;
+  className?: string;
+  featureList?: Array<{ image: string; label: string }>;
+};
 export type nitroPerkType = {
-    image?: { url?: string; alt?: string }
-    title: string
-    titleClassName?: string
-    description?: string
-}
+  image?: { url?: string; alt?: string };
+  title: string;
+  titleClassName?: string;
+  description?: string;
+};
 
 // Mock ImageProps
-export type ImageProps = React.ImgHTMLAttributes<HTMLImageElement> & { 
-    src?: string; 
-    width?: number; 
-    height?: number; 
-    alt?: string; 
-    priority?: boolean;
-    fill?: boolean;
-    unoptimized?: boolean;
-}
+export type ImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+  src?: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+  priority?: boolean;
+  fill?: boolean;
+  unoptimized?: boolean;
+};
 
 export interface nitroPlanProps {
-    id: string
-    name: string
-    images?: Array<Partial<ImageProps>>
-    button?: { url: string; text: string; className?: string }
-    divClassName?: string
-    highlight?: { className?: string; image?: Partial<ImageProps> }
+  id: string;
+  name: string;
+  images?: Array<Partial<ImageProps>>;
+  button?: { url: string; text: string; className?: string };
+  divClassName?: string;
+  highlight?: { className?: string; image?: Partial<ImageProps> };
 }
 export interface nitroPlanFeatureProps {
-    id: string
-    name: string
-    planValues?: Record<string, boolean | string> // plan.id -> true/false/string
+  id: string;
+  name: string;
+  planValues?: Record<string, boolean | string>; // plan.id -> true/false/string
 }
 export type nitroFAQCategoryType = {
-    id?: string | number
-    title: string
-    value: string
-    className?: string
-}
+  id?: string | number;
+  title: string;
+  value: string;
+  className?: string;
+};
 export type nitroFAQType = {
-    categoryId?: nitroFAQCategoryType["id"]
-    question: string
-    answer: string
-    className?: string
-}
+  categoryId?: nitroFAQCategoryType["id"];
+  question: string;
+  answer: string;
+  className?: string;
+};

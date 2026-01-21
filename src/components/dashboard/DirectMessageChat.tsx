@@ -192,7 +192,6 @@ const DirectMessageChat = ({
         participantName: currentUser?.username!,
         participantIdentity: currentUser?.id!,
         friendId: userId,
-        channelType: "AUDIO",
       })).unwrap();
 
       navigate(`/call/${userId}/${roomId}`);
@@ -210,7 +209,6 @@ const DirectMessageChat = ({
         participantName: currentUser?.username!,
         participantIdentity: currentUser?.id!,
         friendId: userId,
-        channelType: "VIDEO",
       })).unwrap();
 
       navigate(`/video/${userId}/${roomId}`);

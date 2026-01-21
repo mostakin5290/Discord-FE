@@ -11,7 +11,6 @@ const IncomingCallModal = () => {
     const { incomingCall } = useSelector((state: RootState) => state.call);
     const { friends } = useSelector((state: RootState) => state.friends);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const channelType = useSelector((state: RootState) => state.call.channelType);
 
     const friend = friends.find((f) => f.friendId === incomingCall?.fromFriendId);
     const friendData = friend?.friend;
@@ -36,7 +35,8 @@ const IncomingCallModal = () => {
 
     const handleAccept = () => {
         dispatch(acceptIncomingCall());
-        navigate(`/${channelType === "AUDIO" ? "call" : "video"}/${incomingCall.fromFriendId}/${incomingCall.roomName}`);
+        // Default to video call
+        navigate(`/video/${incomingCall.fromFriendId}/${incomingCall.roomName}`);
     };
 
     const handleDecline = () => {

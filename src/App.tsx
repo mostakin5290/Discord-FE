@@ -30,7 +30,7 @@ import { fetchMe } from "@/store/slices/authSlice";
 import { handleIncomingMessage, updateMessage } from "@/store/slices/dmSlice";
 import type { RootState, AppDispatch } from "@/store/types";
 import DirectCallPage from "./pages/dashboard/direct-call-page";
-import { setChannelType, setIncomingCall } from "./store/slices/callSlice";
+import { setIncomingCall } from "./store/slices/callSlice";
 import IncomingCallModal from "./components/calls/IncomingCallModal";
 import DiscoveryPage from "./pages/discover/discovery-dashboard";
 
@@ -123,11 +123,9 @@ const AppComponent = () => {
             roomName: payload.roomName,
             fromFriendId: payload.fromFriendId,
             fromFriendName: payload.fromFriendName,
-            channelType: payload.channelType,
           }));
-          dispatch(setChannelType(payload.channelType as "VIDEO" | "AUDIO"));
 
-          console.log("App.tsx", payload.channelType);
+          console.log("App.tsx - incoming call", payload);
         });
 
         // Listeners for User Status

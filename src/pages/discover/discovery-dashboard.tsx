@@ -1,10 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/types";
-import {
-  fetchUserServers,
-  fetchServerById,
-} from "@/store/slices/serverSlice";
+import { fetchUserServers, fetchServerById } from "@/store/slices/serverSlice";
 import ServerSidebar from "@/components/dashboard/ServerSidebar";
 import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -22,18 +19,20 @@ const DiscoveryPage = () => {
 
   const discoveryTab = useLocation().pathname.split("/").pop();
 
-  console.log(discoveryTab);
-
   const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
-  const { serverId: serverIdFromUrl, channelId: channelIdFromUrl } = useParams<{ serverId: string; channelId?: string }>();
+  const { serverId: serverIdFromUrl, channelId: channelIdFromUrl } = useParams<{
+    serverId: string;
+    channelId?: string;
+  }>();
   const navigate = useNavigate();
 
   const { servers, currentServer, isLoading } = useSelector(
-    (state: RootState) => state.server
+    (state: RootState) => state.server,
   );
 
   const [showCreateServer, setShowCreateServer] = useState(false);
-  const [accessStatus, setAccessStatus] = useState<ServerAccessStatus>("loading");
+  const [accessStatus, setAccessStatus] =
+    useState<ServerAccessStatus>("loading");
 
   // Track which server ID we've validated to avoid re-running
   const validatedServerIdRef = useRef<string | null>(null);
@@ -44,14 +43,16 @@ const DiscoveryPage = () => {
     dispatch(fetchUserServers());
   }, [dispatch]);
 
-  const handleServerSelect = useCallback((serverId: string) => {
-    navigate(`/server/${serverId}`);
-  }, [navigate]);
+  const handleServerSelect = useCallback(
+    (serverId: string) => {
+      navigate(`/server/${serverId}`);
+    },
+    [navigate],
+  );
 
   const handleCreateServer = useCallback(() => {
     setShowCreateServer(true);
   }, []);
-
 
   // Error states
   // if (accessStatus === "not_found") {
@@ -112,17 +113,9 @@ const DiscoveryPage = () => {
         onOpenChange={setShowCreateServer}
       />
 
-      {currentServer &&
-        <InvitecodeModal
-          serverId={serverIdFromUrl || ""}
-        />
-      }
+      {currentServer && <InvitecodeModal serverId={serverIdFromUrl || ""} />}
 
-      {currentServer &&
-        <CreateChannelModal
-          serverId={serverIdFromUrl || ""}
-        />
-      }
+      {currentServer && <CreateChannelModal serverId={serverIdFromUrl || ""} />}
 
       <SettingsModal
         open={settingsModalOpen}
