@@ -118,12 +118,14 @@ const AppComponent = () => {
 
         // Listener for Incoming Calls
         socket.on("incoming_call", (payload) => {
-          dispatch(setIncomingCall({
-            token: payload.token,
-            roomName: payload.roomName,
-            fromFriendId: payload.fromFriendId,
-            fromFriendName: payload.fromFriendName,
-          }));
+          dispatch(
+            setIncomingCall({
+              token: payload.token,
+              roomName: payload.roomName,
+              fromFriendId: payload.fromFriendId,
+              fromFriendName: payload.fromFriendName,
+            }),
+          );
 
           console.log("App.tsx - incoming call", payload);
         });
@@ -132,7 +134,7 @@ const AppComponent = () => {
         socket.on("user_connected", (payload) => {
           if (payload.userId) {
             dispatch(
-              updateFriendStatus({ userId: payload.userId, status: "online" })
+              updateFriendStatus({ userId: payload.userId, status: "online" }),
             );
           }
         });
@@ -140,7 +142,7 @@ const AppComponent = () => {
         socket.on("user_disconnected", (payload) => {
           if (payload.userId) {
             dispatch(
-              updateFriendStatus({ userId: payload.userId, status: "offline" })
+              updateFriendStatus({ userId: payload.userId, status: "offline" }),
             );
           }
         });
@@ -176,7 +178,10 @@ const AppComponent = () => {
           {/* Protected Routes (Accessible only if logged in) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/server/:serverId" element={<DashboardPage />} />
-            <Route path="/server/:serverId/:channelId" element={<DashboardPage />} />
+            <Route
+              path="/server/:serverId/:channelId"
+              element={<DashboardPage />}
+            />
             <Route
               path="/server/:serverId/invite/:invitecode"
               element={<InvitePage />}
@@ -186,7 +191,10 @@ const AppComponent = () => {
             <Route path="/dm/:userId" element={<DirectMessagesPage />} />
 
             {/* Discovery */}
-            <Route path="/discovery/:discoveryTab" element={<DiscoveryPage />} />
+            <Route
+              path="/discovery/:discoveryTab"
+              element={<DiscoveryPage />}
+            />
 
             {/* One on One Call */}
             <Route path="/call/:userId/:roomId" element={<DirectCallPage />} />

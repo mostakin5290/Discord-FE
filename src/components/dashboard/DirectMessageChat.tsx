@@ -187,12 +187,14 @@ const DirectMessageChat = ({
     const roomId = crypto.randomUUID();
 
     try {
-      await dispatch(createDirectCallToken({
-        roomName: roomId,
-        participantName: currentUser?.username!,
-        participantIdentity: currentUser?.id!,
-        friendId: userId,
-      })).unwrap();
+      await dispatch(
+        createDirectCallToken({
+          roomName: roomId,
+          participantName: currentUser?.username!,
+          participantIdentity: currentUser?.id!,
+          friendId: userId,
+        }),
+      ).unwrap();
 
       navigate(`/call/${userId}/${roomId}`);
     } catch (error) {
@@ -204,12 +206,14 @@ const DirectMessageChat = ({
     const roomId = crypto.randomUUID();
 
     try {
-      await dispatch(createDirectCallToken({
-        roomName: roomId,
-        participantName: currentUser?.username!,
-        participantIdentity: currentUser?.id!,
-        friendId: userId,
-      })).unwrap();
+      await dispatch(
+        createDirectCallToken({
+          roomName: roomId,
+          participantName: currentUser?.username!,
+          participantIdentity: currentUser?.id!,
+          friendId: userId,
+        }),
+      ).unwrap();
 
       navigate(`/video/${userId}/${roomId}`);
     } catch (error) {
@@ -283,7 +287,10 @@ const DirectMessageChat = ({
           <button className="text-[#b5bac1] hover:text-white transition-colors">
             <Phone onClick={handleAudioCall} size={24} />
           </button>
-          <button onClick={handleVideoCall} className="text-[#b5bac1] hover:text-white transition-colors">
+          <button
+            onClick={handleVideoCall}
+            className="text-[#b5bac1] hover:text-white transition-colors"
+          >
             <Video size={24} />
           </button>
           <button className="text-[#b5bac1] hover:text-white transition-colors">
