@@ -150,7 +150,10 @@ const DMSidebar = ({
             <h3 className="text-xs font-semibold text-[#949ba4] uppercase">
               Direct Messages
             </h3>
-            <button className="text-[#949ba4] hover:text-white transition-colors">
+            <button 
+                className="text-[#949ba4] hover:text-white transition-colors"
+                aria-label="Create DM"
+            >
               <Plus size={16} />
             </button>
           </div>
@@ -207,7 +210,10 @@ const DMSidebar = ({
                   </button>
 
                   {hoveredDM === conv.participantId && (
-                    <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#949ba4] hover:text-white bg-[#2b2d31] rounded transition-colors">
+                    <button 
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#949ba4] hover:text-white bg-[#2b2d31] rounded transition-colors"
+                        aria-label="Close DM"
+                    >
                       <X size={16} />
                     </button>
                   )}
@@ -245,15 +251,24 @@ const DMSidebar = ({
           </div>
         </div>
         <div className="flex items-center">
-          <button className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5">
+          <button 
+              className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5"
+              aria-label="Mute Microphone"
+          >
             <Mic size={20} />
           </button>
-          <button className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5">
+          <button 
+              className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5"
+              aria-label="Deafen"
+          >
             <Headphones size={20} />
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5 focus:outline-none">
+              <button 
+                  className="text-[#949ba4] hover:text-white hover:bg-[#1e1f22] rounded transition-all p-1.5 focus:outline-none"
+                  aria-label="User Settings"
+              >
                 <Settings size={20} />
               </button>
             </DropdownMenuTrigger>

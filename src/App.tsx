@@ -27,7 +27,11 @@ import {
   updateFriendStatus,
 } from "@/store/slices/friendSlice";
 import { fetchMe } from "@/store/slices/authSlice";
-import { handleIncomingMessage, updateMessage } from "@/store/slices/dmSlice";
+import {
+  handleIncomingMessage,
+  updateMessage,
+  updateParticipantStatus,
+} from "@/store/slices/dmSlice";
 import type { RootState, AppDispatch } from "@/store/types";
 import DirectCallPage from "./pages/dashboard/direct-call-page";
 import { setChannelType, setIncomingCall } from "./store/slices/callSlice";
@@ -118,13 +122,15 @@ const AppComponent = () => {
 
         // Listener for Incoming Calls
         socket.on("incoming_call", (payload) => {
-          dispatch(setIncomingCall({
-            token: payload.token,
-            roomName: payload.roomName,
-            fromFriendId: payload.fromFriendId,
-            fromFriendName: payload.fromFriendName,
-            channelType: payload.channelType,
-          }));
+          dispatch(
+            setIncomingCall({
+              token: payload.token,
+              roomName: payload.roomName,
+              fromFriendId: payload.fromFriendId,
+              fromFriendName: payload.fromFriendName,
+              channelType: payload.channelType,
+            }),
+          );
           dispatch(setChannelType(payload.channelType as "VIDEO" | "AUDIO"));
 
           console.log("App.tsx", payload.channelType);
@@ -134,7 +140,14 @@ const AppComponent = () => {
         socket.on("user_connected", (payload) => {
           if (payload.userId) {
             dispatch(
-              updateFriendStatus({ userId: payload.userId, status: "online" })
+              updateFriendStatus({ userId: payload.userId, status: "online" }),
+            );
+            // Also update DM participants
+            dispatch(
+              updateParticipantStatus({
+                userId: payload.userId,
+                status: "online",
+              }),
             );
           }
         });
@@ -142,8 +155,25 @@ const AppComponent = () => {
         socket.on("user_disconnected", (payload) => {
           if (payload.userId) {
             dispatch(
-              updateFriendStatus({ userId: payload.userId, status: "offline" })
+              updateFriendStatus({ userId: payload.userId, status: "offline" }),
             );
+            // Also update DM participants
+            dispatch(
+              updateParticipantStatus({
+                userId: payload.userId,
+                status: "offline",
+              }),
+            );
+          }
+        });
+
+        // Handle initial online friends list
+        socket.on("online_friends", (payload) => {
+          if (payload.userIds && Array.isArray(payload.userIds)) {
+            payload.userIds.forEach((userId: string) => {
+              dispatch(updateFriendStatus({ userId, status: "online" }));
+              dispatch(updateParticipantStatus({ userId, status: "online" }));
+            });
           }
         });
       }
@@ -178,7 +208,10 @@ const AppComponent = () => {
           {/* Protected Routes (Accessible only if logged in) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/server/:serverId" element={<DashboardPage />} />
-            <Route path="/server/:serverId/:channelId" element={<DashboardPage />} />
+            <Route
+              path="/server/:serverId/:channelId"
+              element={<DashboardPage />}
+            />
             <Route
               path="/server/:serverId/invite/:invitecode"
               element={<InvitePage />}
@@ -188,7 +221,10 @@ const AppComponent = () => {
             <Route path="/dm/:userId" element={<DirectMessagesPage />} />
 
             {/* Discovery */}
-            <Route path="/discovery/:discoveryTab" element={<DiscoveryPage />} />
+            <Route
+              path="/discovery/:discoveryTab"
+              element={<DiscoveryPage />}
+            />
 
             {/* One on One Call */}
             <Route path="/call/:userId/:roomId" element={<DirectCallPage />} />

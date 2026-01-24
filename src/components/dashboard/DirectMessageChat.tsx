@@ -9,6 +9,7 @@ import {
   Inbox,
   HelpCircle,
 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/types";
 import {
@@ -256,10 +257,10 @@ const DirectMessageChat = ({
   return (
     <div className="flex-1 flex flex-col bg-[#1e1f22]">
       {/* Header */}
-      <div className="h-12 px-4 flex items-center justify-between border-b border-[#111214] shadow-sm">
+      <div className="h-14 px-4 flex items-center justify-between border-b border-[#111214] shadow-md bg-[#1e1f22]/95 backdrop-blur-md sticky top-0 z-10 transition-all duration-300">
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-6 h-6 rounded-full bg-[#5865f2] flex items-center justify-center">
+          <div className="relative hover:scale-105 transition-transform duration-200 cursor-pointer">
+            <div className="w-8 h-8 rounded-full bg-[#5865f2] flex items-center justify-center ring-2 ring-[#1e1f22]">
               {recipientUser?.imageUrl ? (
                 <img
                   src={recipientUser?.imageUrl}
@@ -273,52 +274,87 @@ const DirectMessageChat = ({
               )}
             </div>
             <div
-              className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 ${getStatusColor(
+              className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 ${getStatusColor(
                 recipientUser.status,
-              )} border-2 border-[#313338] rounded-full`}
+              )} border-2 border-[#1e1f22] rounded-full`}
             />
           </div>
-          <h3 className="font-semibold text-white">{recipientUser.username}</h3>
+          <div>
+             <h3 className="font-semibold text-white text-base leading-tight hover:underline cursor-pointer">{recipientUser.username}</h3>
+             <div className="text-xs text-[#949ba4] font-medium flex items-center gap-1">
+                {recipientUser.status === 'online' ? <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"/> : null}
+                {recipientUser.status || "Offline"}
+             </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="text-[#b5bac1] hover:text-white transition-colors">
-            <Phone onClick={handleAudioCall} size={24} />
+          <button 
+              onClick={handleAudioCall} 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+              aria-label="Start Audio Call"
+              title="Start Audio Call"
+          >
+            <Phone size={22} />
           </button>
-          <button onClick={handleVideoCall} className="text-[#b5bac1] hover:text-white transition-colors">
-            <Video size={24} />
+          <button 
+              onClick={handleVideoCall} 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+              aria-label="Start Video Call"
+              title="Start Video Call"
+          >
+            <Video size={22} />
           </button>
-          <button className="text-[#b5bac1] hover:text-white transition-colors">
-            <Pin size={24} />
+          <button 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
+              aria-label="Pinned Messages"
+              title="Pinned Messages"
+          >
+            <Pin size={22} />
           </button>
-          <button className="text-[#b5bac1] hover:text-white transition-colors">
-            <UserPlus size={24} />
+          <button 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
+              aria-label="Add Friend to DM"
+              title="Add Friend to DM"
+          >
+            <UserPlus size={22} />
           </button>
 
           {/* Use Users icon for Toggle Member List */}
           <button
             onClick={onToggleProfile}
-            className="text-[#b5bac1] hover:text-white transition-colors md:block hidden"
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full md:block hidden"
+            aria-label="Toggle Member Profile"
+            title="Toggle Member Profile"
           >
-            <Users size={24} />
+            <Users size={22} />
           </button>
 
-          <div className="relative hidden md:block">
+          <div className="relative hidden lg:block group">
             <input
               type="text"
               placeholder="Search"
-              className="w-36 px-2 py-1 bg-[#1e1f22] rounded text-sm text-white placeholder-[#949ba4] outline-none transition-all duration-300 focus:w-60 focus:ring-2 focus:ring-[#5865f2]/30 focus:bg-[#0b0c0e]"
+              className="w-36 px-2 py-1 bg-[#1e1f22] rounded text-sm text-white placeholder-[#949ba4] outline-none transition-all duration-300 focus:w-60 focus:ring-2 focus:ring-[#5865f2]/50 group-hover:bg-[#111214]"
+              aria-label="Search Messages"
             />
             <Search
               size={16}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-[#949ba4]"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[#949ba4] group-hover:text-white transition-colors"
             />
           </div>
-          <button className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:scale-110 active:scale-95">
-            <Inbox size={24} />
+          <button 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+              aria-label="Inbox"
+              title="Inbox"
+          >
+            <Inbox size={22} />
           </button>
-          <button className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:scale-110 active:scale-95">
-            <HelpCircle size={24} />
+          <button 
+              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+              aria-label="Help"
+              title="Help"
+          >
+            <HelpCircle size={22} />
           </button>
         </div>
       </div>
@@ -329,29 +365,38 @@ const DirectMessageChat = ({
 
         {/* Messages List */}
         <div className="space-y-0 pb-4">
-          {messages
-            .filter(
-              (m) =>
-                !m.deletedBy || !m.deletedBy.includes(currentUser?.id || ""),
-            )
-            .map((message, index, arr) => {
-              const prevMessage = index > 0 ? arr[index - 1] : null;
-              const showGrouping = shouldGroupMessage(message, prevMessage);
+          <AnimatePresence initial={false}>
+            {messages
+              .filter(
+                (m) =>
+                  !m.deletedBy || !m.deletedBy.includes(currentUser?.id || ""),
+              )
+              .map((message, index, arr) => {
+                const prevMessage = index > 0 ? arr[index - 1] : null;
+                const showGrouping = shouldGroupMessage(message, prevMessage);
 
-              return (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  currentUserId={currentUser?.id || ""}
-                  onReply={(msg) => setReplyingTo(msg)}
-                  onPin={handlePin}
-                  onDelete={handleDelete}
-                  onReaction={handleReaction}
-                  showGrouping={showGrouping}
-                  isDM={true}
-                />
-              );
-            })}
+                return (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <MessageItem
+                      message={message}
+                      currentUserId={currentUser?.id || ""}
+                      onReply={(msg) => setReplyingTo(msg)}
+                      onPin={handlePin}
+                      onDelete={handleDelete}
+                      onReaction={handleReaction}
+                      showGrouping={showGrouping}
+                      isDM={true}
+                    />
+                  </motion.div>
+                );
+              })}
+          </AnimatePresence>
         </div>
         <div ref={messagesEndRef} />
       </div>

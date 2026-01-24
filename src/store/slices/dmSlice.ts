@@ -271,6 +271,18 @@ const dmSlice = createSlice({
     setActiveConversation: (state, action: PayloadAction<string | null>) => {
       state.activeConversationId = action.payload;
     },
+    updateParticipantStatus: (
+      state,
+      action: PayloadAction<{ userId: string; status: "online" | "idle" | "dnd" | "offline" }>
+    ) => {
+      const { userId, status } = action.payload;
+      // Update status in all conversations where this user is the participant
+      state.conversations.forEach((conv) => {
+        if (conv.participantId === userId && conv.participant) {
+            conv.participant.status = status;
+        }
+      });
+    },
     addConversation: (state, action: PayloadAction<Conversation>) => {
         state.conversations.unshift(action.payload);
     },
@@ -572,6 +584,6 @@ const dmSlice = createSlice({
   },
 });
 
-export const { setActiveConversation, clearError, addMessageToConversation, updateMessage } =
+export const { setActiveConversation, clearError, addMessageToConversation, updateMessage, updateParticipantStatus } =
   dmSlice.actions;
 export default dmSlice.reducer;

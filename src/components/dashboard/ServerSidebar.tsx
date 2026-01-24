@@ -57,6 +57,7 @@ const ServerSidebar = ({
                   }
                 `}
                 onClick={() => navigate("/channels/@me")}
+                aria-label="Direct Messages"
               >
                 <Home
                   size={28}
@@ -100,6 +101,7 @@ const ServerSidebar = ({
                       : "bg-[#1a1b1e] hover:shadow-2xl"
                     }
                   `}
+                  aria-label={`Select server ${server.name}`}
                 >
                   {server.imageUrl ? (
                     <img
@@ -127,6 +129,7 @@ const ServerSidebar = ({
             <button
               onClick={onCreateServer}
               className="flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#23a559] hover:rounded-[16px] transition-all duration-300 hover:scale-110 active:scale-95 group mt-2 shadow-md hover:shadow-xl"
+              aria-label="Add a Server"
             >
               <Plus
                 size={24}
@@ -145,6 +148,7 @@ const ServerSidebar = ({
             <button
               onClick={() => navigate("/discovery/servers")}
               className={`flex items-center justify-center w-12 h-12 rounded-[24px] bg-[#1a1b1e] hover:bg-[#5865f2] hover:rounded-[16px] transition-all duration-300 hover:scale-110 active:scale-95 group mt-2 shadow-md hover:shadow-xl ${isDiscoveryPage ? "bg-[#5865f2] rounded-[16px] scale-105" : "bg-[#1a1b1e] hover:bg-[#5865f2]"}`}
+              aria-label="Explore Discoverable Servers"
             >
               <Globe
                 size={24}
