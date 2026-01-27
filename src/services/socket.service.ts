@@ -21,7 +21,7 @@ class SocketService {
       socketUrl = "http://localhost:3000";
     }
 
-    console.log("Socket: Connecting to", socketUrl);
+    // console.log("Socket: Connecting to", socketUrl);
 
     this.socket = io(socketUrl, {
       auth: {
@@ -34,7 +34,7 @@ class SocketService {
     });
 
     this.socket.on("connect", () => {
-      console.log("Socket: Connected to server", this.socket?.id);
+      // console.log("Socket: Connected to server", this.socket?.id);
     });
 
     this.socket.on("connect_error", (err) => {
@@ -42,11 +42,11 @@ class SocketService {
     });
 
     this.socket.on("disconnect", (reason) => {
-      console.log("Socket: Disconnected", reason);
+      // console.log("Socket: Disconnected", reason);
     });
 
     this.socket.on("reconnect", (attemptNumber) => {
-      console.log("Socket: Reconnected after", attemptNumber, "attempts");
+      // console.log("Socket: Reconnected after", attemptNumber, "attempts");
     });
   }
 

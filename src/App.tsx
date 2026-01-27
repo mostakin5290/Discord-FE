@@ -133,7 +133,7 @@ const AppComponent = () => {
           );
           dispatch(setChannelType(payload.channelType as "VIDEO" | "AUDIO"));
 
-          console.log("App.tsx", payload.channelType);
+          // console.log("App.tsx", payload.channelType);
         });
 
         // Listeners for User Status
