@@ -5,6 +5,7 @@ interface ModalState {
     leaveServerModalOpen: boolean;
     createChannelModalOpen: boolean;
     settingsModalOpen: boolean;
+    serverSettingsModalOpen: boolean;
 };
 
 const initialState: ModalState = {
@@ -12,6 +13,7 @@ const initialState: ModalState = {
     leaveServerModalOpen: false,
     createChannelModalOpen: false,
     settingsModalOpen: false,
+    serverSettingsModalOpen: false,
 };
 
 const modalSlice = createSlice({
@@ -29,9 +31,12 @@ const modalSlice = createSlice({
         },
         setSettingsModalOpen: (state) => {
             state.settingsModalOpen = !state.settingsModalOpen;
+        },
+        setServerSettingsModalOpen: (state) => {
+            state.serverSettingsModalOpen = !state.serverSettingsModalOpen;
         }
     }
 });
 
-export const { setInvitecodeModalOpen, setLeaveServerModelOpen, setCreateChannelModelOpen, setSettingsModalOpen } = modalSlice.actions;
+export const { setInvitecodeModalOpen, setLeaveServerModelOpen, setCreateChannelModelOpen, setSettingsModalOpen, setServerSettingsModalOpen } = modalSlice.actions;
 export default modalSlice.reducer;

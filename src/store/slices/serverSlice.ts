@@ -26,10 +26,13 @@ interface Server {
   id: string;
   name: string;
   imageUrl: string;
+  bannerUrl?: string;
   bio?: string;
   inviteCode?: string;
   channels: Channel[];
   members: Member[];
+  systemChannelId?: string;
+  systemMessageFlags?: any;
 }
 
 interface ServerState {
@@ -134,6 +137,66 @@ export const createChannel = createAsyncThunk(
   }
 );
 
+export const updateServerDetails = createAsyncThunk(
+  "server/updateServerDetails",
+  async (
+    { serverId, data }: { serverId: string; data: { name: string; bio: string; imageUrl: string; bannerUrl?: string; systemChannelId?: string; systemMessageFlags?: any } },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosClient.put(`/server/update/${serverId}`, data);
+      return response.data.server;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update server"
+      );
+    }
+  }
+);
+
+export const regenerateInviteCode = createAsyncThunk(
+  "server/regenerateInviteCode",
+  async (serverId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.patch(`/server/${serverId}/invite`);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to regenerate invite code"
+      );
+    }
+  }
+);
+
+export const kickMember = createAsyncThunk(
+  "server/kickMember",
+  async ({ serverId, memberId }: { serverId: string; memberId: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/server/kick/${serverId}/${memberId}`);
+      return response.data; // { success: true, memberId }
+    } catch (err: any) {
+       return rejectWithValue(
+        err.response?.data?.message || "Failed to kick member"
+      );
+    }
+  }
+);
+
+export const banMember = createAsyncThunk(
+  "server/banMember",
+  async ({ serverId, memberId }: { serverId: string; memberId: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/server/ban/${serverId}/${memberId}`);
+      return response.data; // { success: true, memberId }
+    } catch (err: any) {
+       return rejectWithValue(
+        err.response?.data?.message || "Failed to ban member"
+      );
+    }
+  }
+);
+
+
 const serverSlice = createSlice({
   name: "server",
   initialState,
@@ -231,6 +294,46 @@ const serverSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
+      // Update Server
+      .addCase(updateServerDetails.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateServerDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentServer = action.payload;
+        // Update server in list
+        const index = state.servers.findIndex(s => s.id === action.payload.id);
+        if (index !== -1) {
+          state.servers[index] = action.payload;
+        }
+      })
+      .addCase(updateServerDetails.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      // Regenerate Invite Code
+      .addCase(regenerateInviteCode.fulfilled, (state, action) => {
+        if (state.currentServer && state.currentServer.id === action.payload.serverId) {
+          state.currentServer.inviteCode = action.payload.inviteCode;
+        }
+      })
+      // Kick Member
+      .addCase(kickMember.fulfilled, (state, action) => {
+         if (state.currentServer) {
+           state.currentServer.members = state.currentServer.members.filter(
+             m => m.id !== action.payload.memberId
+           );
+         }
+      })
+      // Ban Member
+      .addCase(banMember.fulfilled, (state, action) => {
+         if (state.currentServer) {
+           state.currentServer.members = state.currentServer.members.filter(
+             m => m.id !== action.payload.memberId
+           );
+         }
+      });
   },
 });
 

@@ -113,7 +113,6 @@ const ChannelSidebar = ({
         <ServerDropdown
           serverName={server.name}
           isAdmin={isAdmin}
-          onSettings={() => console.log("Settings")}
         />
       </div>
 

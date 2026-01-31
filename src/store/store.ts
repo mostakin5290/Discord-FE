@@ -8,6 +8,7 @@ import dmReducer from "./slices/dmSlice";
 import callReducer from "./slices/callSlice";
 import groupCallReducer from "./slices/mediaChannelSlice";
 import discoveryReducer from "./slices/discoverySlice";
+import roleReducer from "./slices/roleSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,9 +21,6 @@ export const store = configureStore({
     call: callReducer,
     groupCall: groupCallReducer,
     discovery: discoveryReducer,
+    role: roleReducer,
   },
 });
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-// export type RootState = ReturnType<typeof store.getState>;
-// export type AppDispatch = typeof store.dispatch;

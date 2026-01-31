@@ -17,6 +17,7 @@ import { InvitecodeModal } from "@/components/dashboard/Invitecode-modal";
 import { LeaveServerModal } from "@/components/dashboard/leave-server-modal";
 import { CreateChannelModal } from "@/components/dashboard/create-channel-modal";
 import SettingsModal from "@/components/dashboard/settings/SettingsModal";
+import ServerSettingsDialog from "@/components/dashboard/settings/ServerSettingsDialog";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 import { CallGroupComponent } from "@/components/calls/call-group-component";
 import { clearGroupCall, removeUserFromChannel, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
@@ -370,6 +371,8 @@ const DashboardPage = () => {
         open={settingsModalOpen}
         onOpenChange={() => dispatch(setSettingsModalOpen())}
       />
+      
+      <ServerSettingsDialog />
     </div>
   );
 };

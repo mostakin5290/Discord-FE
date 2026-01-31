@@ -5,7 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { setCreateChannelModelOpen, setInvitecodeModalOpen, setLeaveServerModelOpen } from "@/store/slices/modalSlice";
+import { setCreateChannelModelOpen, setInvitecodeModalOpen, setLeaveServerModelOpen, setServerSettingsModalOpen } from "@/store/slices/modalSlice";
 
 import {
   ChevronDown,
@@ -21,13 +21,11 @@ import { useDispatch } from "react-redux";
 interface ServerDropdownProps {
   serverName: string;
   isAdmin: boolean;
-  onSettings: () => void;
 }
 
 const ServerDropdown = ({
   serverName,
   isAdmin,
-  onSettings,
 }: ServerDropdownProps) => {
 
   const dispatch = useDispatch();
@@ -42,6 +40,10 @@ const ServerDropdown = ({
 
   const handleCreateChannel = () => {
     dispatch(setCreateChannelModelOpen());
+  };
+
+  const handleServerSettings = () => {
+    dispatch(setServerSettingsModalOpen());
   };
 
   return (
@@ -78,7 +80,7 @@ const ServerDropdown = ({
 
             <DropdownMenuItem
               className="text-gray-300 hover:text-white hover:bg-indigo-600 focus:bg-indigo-600 focus:text-white rounded px-2 py-2 cursor-pointer"
-              onClick={onSettings}
+              onClick={handleServerSettings}
             >
               <Settings className="mr-2 h-4 w-4" />
               <span>Server Settings</span>
