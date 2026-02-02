@@ -11,6 +11,7 @@ import DashboardPage from "./pages/dashboard/NewDashboardPage";
 import DirectMessagesPage from "./pages/dashboard/DirectMessagesPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
+import ArchitecturePage from "./pages/ArchitecturePage";
 
 import InvitePage from "./pages/server/invite-page";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -196,6 +197,7 @@ const AppComponent = () => {
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/arc" element={<ArchitecturePage />} />
 
           {/* Public Routes (Accessible only if NOT logged in) */}
           <Route element={<PublicRoute />}>
