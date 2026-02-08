@@ -22,6 +22,7 @@ import axiosClient from "@/lib/axios";
 import { SearchModal } from "@/components/search/SearchModal";
 
 import { useChatSocket } from "@/hooks/useChatSocket";
+import InboxNofification from "./inbox-notification";
 
 interface ChatAreaProps {
   channelId: string;
@@ -159,10 +160,7 @@ const ChatArea = ({ channelId, channelName, serverId }: ChatAreaProps) => {
             <span className="text-xs text-[#949ba4]">Search</span>
           </button>
 
-          <Inbox
-            size={24}
-            className="cursor-pointer hover:text-[#dbdee1] transition-all duration-200 hover:scale-110 active:scale-95"
-          />
+          <InboxNofification />
           <HelpCircle
             size={24}
             className="cursor-pointer hover:text-[#dbdee1] transition-all duration-200 hover:scale-110 active:scale-95"

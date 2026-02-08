@@ -128,6 +128,7 @@ export const createChannel = createAsyncThunk(
   async ({ serverId, name, type }: { serverId: string; name: string; type: string }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(`/server/${serverId}/channels`, { name, type });
+      console.log(response);
       return response.data;
     } catch (err: any) {
       return rejectWithValue(
@@ -175,7 +176,7 @@ export const kickMember = createAsyncThunk(
       const response = await axiosClient.post(`/server/kick/${serverId}/${memberId}`);
       return response.data; // { success: true, memberId }
     } catch (err: any) {
-       return rejectWithValue(
+      return rejectWithValue(
         err.response?.data?.message || "Failed to kick member"
       );
     }
@@ -189,7 +190,7 @@ export const banMember = createAsyncThunk(
       const response = await axiosClient.post(`/server/ban/${serverId}/${memberId}`);
       return response.data; // { success: true, memberId }
     } catch (err: any) {
-       return rejectWithValue(
+      return rejectWithValue(
         err.response?.data?.message || "Failed to ban member"
       );
     }
@@ -320,19 +321,19 @@ const serverSlice = createSlice({
       })
       // Kick Member
       .addCase(kickMember.fulfilled, (state, action) => {
-         if (state.currentServer) {
-           state.currentServer.members = state.currentServer.members.filter(
-             m => m.id !== action.payload.memberId
-           );
-         }
+        if (state.currentServer) {
+          state.currentServer.members = state.currentServer.members.filter(
+            m => m.id !== action.payload.memberId
+          );
+        }
       })
       // Ban Member
       .addCase(banMember.fulfilled, (state, action) => {
-         if (state.currentServer) {
-           state.currentServer.members = state.currentServer.members.filter(
-             m => m.id !== action.payload.memberId
-           );
-         }
+        if (state.currentServer) {
+          state.currentServer.members = state.currentServer.members.filter(
+            m => m.id !== action.payload.memberId
+          );
+        }
       });
   },
 });

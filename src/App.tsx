@@ -38,6 +38,7 @@ import DirectCallPage from "./pages/dashboard/direct-call-page";
 import { setChannelType, setIncomingCall } from "./store/slices/callSlice";
 import IncomingCallModal from "./components/calls/IncomingCallModal";
 import DiscoveryPage from "./pages/discover/discovery-dashboard";
+import { setNewNotification } from "./store/slices/notificationSlice";
 
 const AppComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -119,6 +120,11 @@ const AppComponent = () => {
 
         socket.on("reaction_removed", (message) => {
           dispatch(updateMessage(message));
+        });
+
+        socket.on("notification_received", (data) => {
+          // console.log("notification_received", data);
+          dispatch(setNewNotification(data));
         });
 
         // Listener for Incoming Calls

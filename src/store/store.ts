@@ -9,6 +9,7 @@ import callReducer from "./slices/callSlice";
 import groupCallReducer from "./slices/mediaChannelSlice";
 import discoveryReducer from "./slices/discoverySlice";
 import roleReducer from "./slices/roleSlice";
+import notificationReducer from "./slices/notificationSlice"
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     groupCall: groupCallReducer,
     discovery: discoveryReducer,
     role: roleReducer,
+    notification: notificationReducer,
   },
 });
