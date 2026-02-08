@@ -6,7 +6,6 @@ import {
   Pin,
   Users,
   Search,
-  Inbox,
   HelpCircle,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,6 +32,7 @@ import {
 } from "@/utils/messageUtils";
 import { useNavigate } from "react-router";
 import { createDirectCallToken } from "@/store/slices/callSlice";
+import InboxNofification from "./inbox-notification";
 
 interface DirectMessageChatProps {
   userId: string;
@@ -347,7 +347,7 @@ const DirectMessageChat = ({
               aria-label="Inbox"
               title="Inbox"
           >
-            <Inbox size={22} />
+            <InboxNofification />
           </button>
           <button 
               className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"

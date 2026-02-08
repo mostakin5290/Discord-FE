@@ -121,3 +121,18 @@ export type nitroFAQType = {
     answer: string
     className?: string
 }
+
+export type NotificationType = "SYSTEM_NOTIFICATION" | "FRIEND_REQUEST_NOTIFICATION" | "SERVER_NOTIFICATION" | "CHANNEL_NOTIFICATION" | "DM_NOTIFICATION";
+
+export interface Notification {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    read: boolean;
+    userId: string;
+    message: string | null;
+    topic: string | null;
+    notifyLink: string | null;
+    type: NotificationType;
+    readAt: Date | null;
+}
