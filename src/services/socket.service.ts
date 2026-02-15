@@ -84,6 +84,12 @@ class SocketService {
       this.socket.emit("typing", { channelId, isTyping });
     }
   }
+
+  updateLastSeen(channelId: string, messageId: string) {
+    if (this.socket) {
+      this.socket.emit("update_last_seen", { channelId, messageId });
+    }
+  }
 }
 
 export default new SocketService();
