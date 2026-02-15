@@ -3,8 +3,8 @@ import { Link } from "react-router"
 import { cn } from "@/lib/utils"
 import type { NavigationMenuItemProps } from "@/types"
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import NavigationBurgerMenuListItem from "@/components/main/navigation-menu/navigation-burger-menu-list-item"
-import NavigationBurgerMenuListItemTitle from "@/components/main/navigation-menu/navigation-burger-menu-list-item-title"
+import NavigationBurgerMenuListItem from "@/components/landing/navigation-menu/navigation-burger-menu-list-item"
+import NavigationBurgerMenuListItemTitle from "@/components/landing/navigation-menu/navigation-burger-menu-list-item-title"
 
 const NavigationBurgerMenuItem = ({ item }: { item: NavigationMenuItemProps }) => {
     if (item?.dropdownContent) {

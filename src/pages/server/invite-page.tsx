@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/dashboard/LoadingSpinner";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { joinServerWithCode } from "@/store/slices/serverSlice";
 import type { AppDispatch, RootState } from "@/store/types";
 import { useEffect } from "react";
@@ -22,7 +22,6 @@ const InvitePage = () => {
                     navigate(`/server/${serverId}`);
                 })
                 .catch((error) => {
-                    console.log(error)
                     toast.error(error);
                 });
         }

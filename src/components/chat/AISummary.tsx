@@ -36,15 +36,10 @@ export const AISummary = ({ channelId, channelName }: AISummaryProps) => {
 
   const fetchSummary = async () => {
     setLoading(true);
-    console.log("🤖 [FRONTEND] Fetching AI summary for channel:", channelId);
     try {
       const response = await axiosClient.get(
         `/summary/channels/${channelId}/summary`
       );
-      console.log("✅ [FRONTEND] Summary received:", response.data);
-      console.log("📝 [SUMMARY TEXT]:", response.data.summary);
-      console.log("📊 [MESSAGE COUNT]:", response.data.messageCount);
-      console.log("📊 [IS OPEN BEFORE]:", isOpen);
       
       const summaryText = response.data.summary;
       const count = response.data.messageCount;
@@ -55,12 +50,9 @@ export const AISummary = ({ channelId, channelName }: AISummaryProps) => {
       
       // Force modal open with slight delay
       setTimeout(() => {
-        console.log("👁️ [MODAL] Opening modal NOW...");
         setIsOpen(true);
-        console.log("📊 [IS OPEN AFTER]:", true);
       }, 100);
       
-      console.log("✅ [FRONTEND] Unread count reset to 0 after summary");
     } catch (error: any) {
       console.error("❌ [FRONTEND] Summary fetch error:", error);
       toast.error(error?.response?.data?.message || "Failed to fetch summary");
@@ -69,12 +61,6 @@ export const AISummary = ({ channelId, channelName }: AISummaryProps) => {
     }
   };
 
-  // Debug: Log when isOpen changes
-  useEffect(() => {
-    console.log("🔄 [STATE CHANGE] isOpen:", isOpen, "summary:", summary ? "exists" : "null");
-  }, [isOpen, summary]);
-
-  console.log("🔍 [RENDER] unreadCount:", unreadCount, "isOpen:", isOpen, "loading:", loading);
 
   return (
     <>

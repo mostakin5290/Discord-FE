@@ -12,7 +12,7 @@ import type { RootState, AppDispatch } from "@/store/types";
 import { fetchConversations } from "@/store/slices/dmSlice";
 import FindConversationDialog from "./FindConversationDialog";
 import { useNavigate } from "react-router";
-import SidebarUserPanel from "./SidebarUserPanel";
+import SidebarUserPanel from "@/components/notifications/SidebarUserPanel";
 
 interface DMSidebarProps {
   onSelectFriends: () => void;

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/types";
 import { useEffect, useState } from "react";
 import { logout } from "@/store/slices/authSlice";
-import LoadingSpinner from "../dashboard/LoadingSpinner";
 import { isTokenValid, clearAuthData } from "@/utils/authGuard";
+import LoadingSpinner from "../shared/LoadingSpinner";
 
 const PublicRoute = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -121,6 +121,5 @@ const groupCallSlice = createSlice({
     },
 });
 
-// export type RootState = ReturnType<typeof store.getState>;
 export const { setGroupCall, clearGroupCall } = groupCallSlice.actions;
 export default groupCallSlice.reducer;

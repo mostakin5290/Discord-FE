@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { clearGroupCall, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
-import SidebarUserPanel from "./SidebarUserPanel";
+import SidebarUserPanel from "@/components/notifications/SidebarUserPanel";
 
 interface Channel {
   id: string;

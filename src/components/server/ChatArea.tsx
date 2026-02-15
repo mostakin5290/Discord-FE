@@ -20,11 +20,11 @@ import MessageInput from "@/components/chat/MessageInput";
 import { AISummary } from "@/components/chat/AISummary";
 import { shouldGroupMessage } from "@/utils/messageUtils";
 import axiosClient from "@/lib/axios";
-import { SearchModal } from "@/components/search/SearchModal";
+import { SearchModal } from "@/components/shared/SearchModal";
 import socketService from "@/services/socket.service";
 
 import { useChatSocket } from "@/hooks/useChatSocket";
-import InboxNofification from "./inbox-notification";
+import InboxNofification from "@/components/notifications/inbox-notification";
 
 interface ChatAreaProps {
   channelId: string;

@@ -12,16 +12,14 @@ class SocketService {
       return;
     }
     
-    // Derive socket URL from API URL (remove /api/v1 if present)
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
     let socketUrl = apiUrl.replace(/\/api\/v1\/?$/, "").replace(/\/$/, "");
     
-    // If no protocol specified or empty, default to http://localhost:3000
     if (!socketUrl || socketUrl === "" || !socketUrl.startsWith("http")) {
       socketUrl = "http://localhost:3000";
     }
 
-    // console.log("Socket: Connecting to", socketUrl);
+
 
     this.socket = io(socketUrl, {
       auth: {
@@ -34,19 +32,16 @@ class SocketService {
     });
 
     this.socket.on("connect", () => {
-      // console.log("Socket: Connected to server", this.socket?.id);
     });
 
     this.socket.on("connect_error", (err) => {
       console.error("Socket: Connection error", err);
     });
 
-    this.socket.on("disconnect", (reason) => {
-      // console.log("Socket: Disconnected", reason);
+    this.socket.on("disconnect", (_reason) => {
     });
 
-    this.socket.on("reconnect", (attemptNumber) => {
-      // console.log("Socket: Reconnected after", attemptNumber, "attempts");
+    this.socket.on("reconnect", (_attemptNumber) => {
     });
   }
 

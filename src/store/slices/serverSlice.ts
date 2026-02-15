@@ -129,7 +129,6 @@ export const createChannel = createAsyncThunk(
   async ({ serverId, name, type }: { serverId: string; name: string; type: string }, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post(`/server/${serverId}/channels`, { name, type });
-      console.log(response);
       return response.data;
     } catch (err: any) {
       return rejectWithValue(

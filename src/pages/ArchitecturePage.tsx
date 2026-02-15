@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Server,
   Database,
-  Globe,
-  MessageSquare,
   Zap,
   Box,
   Layers,
@@ -15,25 +13,9 @@ import {
   ChevronRight,
   ChevronLeft,
   Users,
-  HardDrive,
   Cpu,
   Video,
-  ArrowLeftRight,
-  Router,
 } from "lucide-react";
-
-// --- Styles & UI Components ---
-// Using a darker, more sophisticated color palette
-const COLORS = {
-  background: "#0f172a",
-  primary: "#6366f1",
-  secondary: "#ec4899",
-  accent: "#10b981",
-  glass: "rgba(255, 255, 255, 0.05)",
-  glassBorder: "rgba(255, 255, 255, 0.1)",
-  textMain: "#f8fafc",
-  textMuted: "#94a3b8",
-};
 
 const SlideContainer = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full h-screen bg-slate-950 text-slate-50 overflow-hidden flex flex-col items-center justify-center p-8 relative selection:bg-indigo-500/30 font-sans">
@@ -433,8 +415,6 @@ const Slide2 = () => {
         </div>
     )
 }
-
-// --- Old Slide 3 Removed (Merged into Slide 2) ---
 
 // --- Slide 4: AI Vectorization (Push) ---
 const Slide4 = () => {

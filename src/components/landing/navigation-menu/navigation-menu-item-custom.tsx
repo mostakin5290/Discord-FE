@@ -14,9 +14,9 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import NavigationMenuListItemTitle from "@/components/main/navigation-menu/navigation-menu-list-item-title";
-import NavigationMenuListItem from "@/components/main/navigation-menu/navigation-menu-list-item";
-import NavigationMenuDivider from "@/components/main/navigation-menu/navigation-menu-divider";
+import NavigationMenuListItemTitle from "@/components/landing/navigation-menu/navigation-menu-list-item-title";
+import NavigationMenuListItem from "@/components/landing/navigation-menu/navigation-menu-list-item";
+import NavigationMenuDivider from "@/components/landing/navigation-menu/navigation-menu-divider";
 
 const NavigationMenuItemCustom = forwardRef<
   React.ElementRef<typeof NavigationMenuItem>,

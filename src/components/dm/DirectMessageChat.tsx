@@ -32,7 +32,7 @@ import {
 } from "@/utils/messageUtils";
 import { useNavigate } from "react-router";
 import { createDirectCallToken } from "@/store/slices/callSlice";
-import InboxNofification from "./inbox-notification";
+import InboxNofification from "@/components/notifications/inbox-notification";
 
 interface DirectMessageChatProps {
   userId: string;

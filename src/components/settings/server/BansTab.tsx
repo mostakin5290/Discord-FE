@@ -40,16 +40,13 @@ const BansTab = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchBannedUsers = async () => {
-      console.log("Fetching bans for server:", currentServer?.id, "Token available:", !!token);
       if (!currentServer?.id || !token) return;
       try {
           setLoading(true);
           const response = await api.get(`/server/${currentServer.id}/bans`, token);
-          console.log("Bans API response:", response);
           setBannedUsers(response.bannedUsers);
       } catch (error) {
           console.error("Fetch bans error:", error);
-          // toast.error("Failed to fetch banned users"); 
       } finally {
           setLoading(false);
       }

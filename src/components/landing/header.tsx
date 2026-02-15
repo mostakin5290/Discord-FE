@@ -3,9 +3,9 @@ import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 import type { HeaderProps } from "@/types";
 import { afterSignInUrl } from "@/constants/data";
-import { AppLogo } from "@/components/main/app-logo";
-import { NavigationMenuCustom } from "@/components/main/navigation-menu/navigation-menu-custom";
-import NavigationBurgerMenu from "@/components/main/navigation-menu/navigation-burger-menu";
+import { AppLogo } from "@/components/landing/app-logo";
+import { NavigationMenuCustom } from "@/components/landing/navigation-menu/navigation-menu-custom";
+import NavigationBurgerMenu from "@/components/landing/navigation-menu/navigation-burger-menu";
 
 export function Header({
   variant = "transparent",

@@ -2,8 +2,8 @@
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import type { FooterProps, HeaderProps } from "@/types"
-import { Header } from "@/components/main/header"
-import { Footer } from "@/components/main/footer"
+import { Header } from "@/components/landing/header"
+import Footer from "@/components/landing/footer"
 
 interface PageLayoutProps {
     children: ReactNode

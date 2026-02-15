@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/types";
 import { fetchUserServers } from "@/store/slices/serverSlice";
 import { setSettingsModalOpen } from "@/store/slices/modalSlice";
-import ServerSidebar from "@/components/dashboard/ServerSidebar";
-import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
-import SettingsModal from "@/components/dashboard/settings/SettingsModal";
+import ServerSidebar from "@/components/server/ServerSidebar";
+import CreateServerDialog from "@/components/server/CreateServerDialog";
+import SettingsModal from "@/components/settings/user/SettingsModal";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch<AppDispatch>();
