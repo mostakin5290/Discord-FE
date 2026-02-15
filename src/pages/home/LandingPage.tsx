@@ -10,9 +10,9 @@ import {
     createLineTextAnimation
 } from "@/lib/animations"
 import { useMedia } from "@/context/media-query-context"
-import { PageLayout } from "@/components/main/page-layout"
-import CustomVideo from "@/components/main/custom-video"
-import { AppLogo } from "@/components/main/app-logo"
+import { PageLayout } from "@/components/landing/page-layout"
+import CustomVideo from "@/components/landing/custom-video"
+import { AppLogo } from "@/components/landing/app-logo"
 
 export default function LandingPage() {
     // Refs for animated elements

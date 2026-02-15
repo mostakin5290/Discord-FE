@@ -5,15 +5,15 @@ import {
   fetchServerById,
 } from "@/store/slices/serverSlice";
 import { fetchChannelMessages } from "@/store/slices/messageSlice";
-import ChannelSidebar from "@/components/dashboard/ChannelSidebar";
-import ChatArea from "@/components/dashboard/ChatArea";
-import MemberList from "@/components/dashboard/MemberList";
-import ServerErrorScreen from "@/components/dashboard/ServerErrorScreen";
+import ChannelSidebar from "@/components/server/ChannelSidebar";
+import ChatArea from "@/components/server/ChatArea";
+import MemberList from "@/components/server/MemberList";
+import ServerErrorScreen from "@/components/server/ServerErrorScreen";
 import { useNavigate, useParams } from "react-router";
-import { InvitecodeModal } from "@/components/dashboard/Invitecode-modal";
-import { LeaveServerModal } from "@/components/dashboard/leave-server-modal";
-import { CreateChannelModal } from "@/components/dashboard/create-channel-modal";
-import ServerSettingsDialog from "@/components/dashboard/settings/ServerSettingsDialog";
+import { InvitecodeModal } from "@/components/server/Invitecode-modal";
+import { LeaveServerModal } from "@/components/server/leave-server-modal";
+import { CreateChannelModal } from "@/components/server/create-channel-modal";
+import ServerSettingsDialog from "@/components/settings/server/ServerSettingsDialog";
 import { CallGroupComponent } from "@/components/calls/call-group-component";
 import { clearGroupCall, removeUserFromChannel, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
 

@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import type { AppDispatch, RootState } from "@/store/types";
 import { fetchUserServers } from "@/store/slices/serverSlice";
-import ServerSidebar from "@/components/dashboard/ServerSidebar";
-import DMSidebar from "@/components/dashboard/DMSidebar";
-import FriendsPanel from "@/components/dashboard/FriendsPanel";
-import ActiveNow from "@/components/dashboard/ActiveNow";
-import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
-import UserProfileSidebar from "@/components/dashboard/UserProfileSidebar";
-import DirectCallFriend from "@/components/dashboard/direct-call-friend";
+import ServerSidebar from "@/components/server/ServerSidebar";
+import DMSidebar from "@/components/dm/DMSidebar";
+import FriendsPanel from "@/components/friends/FriendsPanel";
+import ActiveNow from "@/components/friends/ActiveNow";
+import CreateServerDialog from "@/components/server/CreateServerDialog";
+import UserProfileSidebar from "@/components/friends/UserProfileSidebar";
+import DirectCallFriend from "@/components/dm/direct-call-friend";
 
 const DirectCallPage = () => {
     const dispatch = useDispatch<AppDispatch>();

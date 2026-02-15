@@ -5,7 +5,7 @@ import {
   NavigationMenu,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import NavigationMenuItemCustom from "@/components/main/navigation-menu/navigation-menu-item-custom";
+import NavigationMenuItemCustom from "@/components/landing/navigation-menu/navigation-menu-item-custom";
 
 export function NavigationMenuCustom({
   variant = "transparent",

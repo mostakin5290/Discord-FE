@@ -38,7 +38,6 @@ export const loginUser = createAsyncThunk(
   async (credentials: any, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post("/auth/login", credentials);
-      // console.log(response);
       return response.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
@@ -186,7 +185,7 @@ const authSlice = createSlice({
       state,
       action: PayloadAction<{ user: User; token: string }>,
     ) => {
-      // console.log(action)
+
       state.user = action.payload.user;
       state.token = action.payload.token;
       localStorage.setItem("user", JSON.stringify(action.payload.user));
@@ -201,7 +200,6 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        // console.log(action)
         state.isLoading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;

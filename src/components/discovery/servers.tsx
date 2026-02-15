@@ -56,7 +56,6 @@ const Servers = () => {
     const { featuredServers, isLoading, error, isSearching, searchResults, searchQuery } = useSelector((state: RootState) => state.discovery);
     const [category, setCategory] = useState<string>("Home");
 
-    console.log(searchResults, isSearching);
 
     useEffect(() => {
         dispatch(fetchAllServers());

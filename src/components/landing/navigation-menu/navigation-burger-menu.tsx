@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/sheet";
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { AppLogo } from "@/components/main/app-logo";
-import NavigationBurgerMenuItem from "@/components/main/navigation-menu/navigation-burger-menu-item";
+import { AppLogo } from "@/components/landing/app-logo";
+import NavigationBurgerMenuItem from "@/components/landing/navigation-menu/navigation-burger-menu-item";
 
 interface NavigationBurgerMenuProps {
   authButtonText: string;

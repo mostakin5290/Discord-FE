@@ -57,7 +57,6 @@ const AppComponent = () => {
       const socket = socketService.getSocket();
 
       if (socket) {
-        // Listeners for Real-time Friend Updates
         socket.on("friend_request_sent", (request) => {
           dispatch(addSentRequest(request));
         });
@@ -93,7 +92,6 @@ const AppComponent = () => {
             dispatch(removeFriendFromList(payload.friendId));
         });
 
-        // Listeners for Real-time Direct Messages
         socket.on("direct_message_received", (message) => {
           dispatch(handleIncomingMessage(message));
         });
@@ -102,7 +100,6 @@ const AppComponent = () => {
           dispatch(handleIncomingMessage(message));
         });
 
-        // Listeners for Message Actions
         socket.on("message_pinned", (message) => {
           dispatch(updateMessage(message));
         });
@@ -124,11 +121,9 @@ const AppComponent = () => {
         });
 
         socket.on("notification_received", (data) => {
-          // console.log("notification_received", data);
           dispatch(setNewNotification(data));
         });
 
-        // Listener for Incoming Calls
         socket.on("incoming_call", (payload) => {
           dispatch(
             setIncomingCall({
@@ -141,10 +136,8 @@ const AppComponent = () => {
           );
           dispatch(setChannelType(payload.channelType as "VIDEO" | "AUDIO"));
 
-          // console.log("App.tsx", payload.channelType);
         });
 
-        // Listeners for User Status
         socket.on("user_connected", (payload) => {
           if (payload.userId) {
             dispatch(
@@ -175,7 +168,6 @@ const AppComponent = () => {
           }
         });
 
-        // Handle initial online friends list
         socket.on("online_friends", (payload) => {
           if (payload.userIds && Array.isArray(payload.userIds)) {
             payload.userIds.forEach((userId: string) => {
@@ -188,9 +180,6 @@ const AppComponent = () => {
     }
 
     return () => {
-      // socketService.disconnect(); // We might not want to fully disconnect if just navigating?
-      // Actually strictly disconnect is good for cleanup.
-      // But let's explicit remove listeners too if possible, but disconnect is enough.
       socketService.disconnect();
     };
   }, [user?.id, dispatch]);
