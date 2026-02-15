@@ -139,7 +139,7 @@ const DashboardPage = () => {
       channelIdFromUrl &&
       user
     ) {
-      const channel = currentServer?.channels.find((c) => c.id === channelIdFromUrl);
+      const channel = currentServer?.channels?.find((c) => c.id === channelIdFromUrl);
       const isMedia = channel?.type === "AUDIO" || channel?.type === "VIDEO";
 
       if (isMedia) {

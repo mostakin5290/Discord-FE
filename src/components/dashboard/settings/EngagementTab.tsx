@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 import type { AppDispatch, RootState } from "@/store/types";
 import { updateServerDetails } from "@/store/slices/serverSlice";
 import { toast } from "sonner";
@@ -78,20 +84,29 @@ const EngagementTab = () => {
             {/* System Channel Selection */}
             <div className="space-y-2">
                  <Label className="text-[#dbdee1] font-medium">System Messages Channel</Label>
-                 <Select value={systemChannelId} onValueChange={changeSystemChannel}>
-                      <SelectTrigger className="bg-[#1e1f22] border-none text-[#dbdee1]">
-                          <SelectValue placeholder="Select a channel" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#1e1f22] border-[#2b2d31] text-[#dbdee1]">
+                 <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm bg-[#1e1f22] border-none text-[#dbdee1] focus:outline-none focus:ring-2 focus:ring-[#5865f2]">
+                          <span>
+                            {currentServer?.channels?.find(c => c.id === systemChannelId)?.name 
+                                ? `# ${currentServer.channels.find(c => c.id === systemChannelId)?.name}` 
+                                : "Select a channel"}
+                          </span>
+                          <ChevronDown className="h-4 w-4 opacity-50" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-[#1e1f22] border-[#2b2d31] text-[#dbdee1] w-[var(--radix-dropdown-menu-trigger-width)]">
                           {currentServer?.channels
                              ?.filter(c => c.type === 'TEXT')
                              .map(channel => (
-                                <SelectItem key={channel.id} value={channel.id} className="focus:bg-[#35373c] focus:text-white">
+                                <DropdownMenuItem 
+                                    key={channel.id} 
+                                    onClick={() => changeSystemChannel(channel.id)} 
+                                    className="focus:bg-[#35373c] focus:text-white cursor-pointer"
+                                >
                                      # {channel.name}
-                                </SelectItem>
+                                </DropdownMenuItem>
                              ))}
-                      </SelectContent>
-                 </Select>
+                      </DropdownMenuContent>
+                 </DropdownMenu>
                  <p className="text-xs text-[#949ba4]">This is the channel where we send system event messages.</p>
             </div>
 

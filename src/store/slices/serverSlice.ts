@@ -13,6 +13,7 @@ interface Channel {
 interface Member {
   id: string;
   role: string;
+  roles: { id: string }[];
   user: {
     id: string;
     username: string;
@@ -198,6 +199,35 @@ export const banMember = createAsyncThunk(
 );
 
 
+export const deleteServer = createAsyncThunk(
+  "server/deleteServer",
+  async (serverId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.delete(`/server/${serverId}`);
+      return response.data; // { success: true, message: "Server deleted successfully" }
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete server"
+      );
+    }
+  }
+);
+
+export const updateMemberRole = createAsyncThunk(
+  "server/updateMemberRole",
+  async ({ serverId, memberId, role, roleIds }: { serverId: string; memberId: string; role?: string; roleIds?: string[] }, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.patch(`/server/${serverId}/members/${memberId}/role`, { role, roleIds });
+      return response.data; // { success: true, memberId, role, roleIds }
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update member role"
+      );
+    }
+  }
+);
+
+
 const serverSlice = createSlice({
   name: "server",
   initialState,
@@ -334,6 +364,27 @@ const serverSlice = createSlice({
             m => m.id !== action.payload.memberId
           );
         }
+      })
+      // Delete Server
+      .addCase(deleteServer.fulfilled, (state, action) => {
+        state.servers = state.servers.filter(s => s.id !== state.currentServer?.id); // Optimistic cleanup or based on ID if payload had it
+        state.currentServer = null;
+      })
+      // Update Member Role
+      .addCase(updateMemberRole.fulfilled, (state, action) => {
+         if (state.currentServer) {
+             const memberIndex = state.currentServer.members.findIndex(m => m.id === action.payload.memberId);
+             if (memberIndex !== -1) {
+                 if (action.payload.role) {
+                    state.currentServer.members[memberIndex].role = action.payload.role;
+                 }
+                 if (action.payload.roleIds) {
+                     // Assuming backend returns roleIds or we just update local state
+                     // Ideally backend returns full role objects if we need name/color, but for now just IDs
+                     state.currentServer.members[memberIndex].roles = action.payload.roleIds.map((id: string) => ({ id }));
+                 }
+             }
+         }
       });
   },
 });

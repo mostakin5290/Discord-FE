@@ -5,6 +5,18 @@ import { X, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AppDispatch, RootState } from "@/store/types";
 import { setServerSettingsModalOpen } from "@/store/slices/modalSlice";
+import { deleteServer } from "@/store/slices/serverSlice";
+import { toast } from "sonner";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Tabs
 import OverviewTab from "./OverviewTab";
@@ -19,9 +31,28 @@ const ServerSettingsDialog = () => {
   const { currentServer } = useSelector((state: RootState) => state.server);
 
   const [activeTab, setActiveTab] = useState("overview");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [serverNameConfirm, setServerNameConfirm] = useState("");
 
   const handleClose = () => {
     dispatch(setServerSettingsModalOpen());
+  };
+
+  const handleDeleteServer = async () => {
+      if (!currentServer) return;
+      if (serverNameConfirm !== currentServer.name) {
+          toast.error("Server name does not match");
+          return;
+      }
+
+      try {
+          await dispatch(deleteServer(currentServer.id)).unwrap();
+          dispatch(setServerSettingsModalOpen());
+          toast.success("Server deleted successfully");
+          // Navigation handled by state change or parent component
+      } catch (error) {
+          toast.error(error as string || "Failed to delete server");
+      }
   };
 
   if (!currentServer) return null;
@@ -44,7 +75,7 @@ const ServerSettingsDialog = () => {
 
   return (
     <Dialog open={serverSettingsModalOpen} onOpenChange={handleClose}>
-      <DialogContent className=" bg-red-500 max-w-[1000px] h-[85vh] max-h-[800px] bg-[#313338] text-white   flex border-none shadow-2xl rounded-lg">
+      <DialogContent className="bg-[#313338] max-w-[1000px] h-[85vh] max-h-[800px] text-white flex border-none shadow-2xl rounded-lg [&>button]:hidden">
         <DialogTitle className="hidden ">Server Settings</DialogTitle>
         <DialogDescription className="hidden ">Manage your server settings, roles, members, and more.</DialogDescription>
         {/* Sidebar */}
@@ -78,6 +109,7 @@ const ServerSettingsDialog = () => {
              <div className="h-[1px] bg-[#3f4147] my-2 mx-2" />
              
              <button
+                onClick={() => setDeleteConfirmOpen(true)}
                 className="text-left px-2 py-1.5 rounded-[4px] text-[15px] font-medium transition-colors mx-2 text-red-400 hover:bg-[#35373C]"
              >
                  Delete Server
@@ -118,6 +150,40 @@ const ServerSettingsDialog = () => {
           </div>
         </div>
       </DialogContent>
+
+
+      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <AlertDialogContent className="bg-[#313338] border-none text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete '{currentServer.name}'</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#b5bac1]">
+              Are you sure you want to delete <span className="font-bold text-white">{currentServer.name}</span>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="my-4">
+              <label className="text-xs font-bold text-[#b5bac1] uppercase mb-2 block">
+                  Enter Server Name
+              </label>
+              <input
+                value={serverNameConfirm}
+                onChange={(e) => setServerNameConfirm(e.target.value)}
+                placeholder={currentServer.name}
+                className="w-full bg-[#1e1f22] p-2 rounded text-white focus:outline-none"
+              />
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-[#474a50] hover:bg-[#474a50]/80 text-white border-none">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+                onClick={handleDeleteServer}
+                className="bg-[#da373c] hover:bg-[#da373c]/80 text-white"
+            >
+                Delete Server
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 };
