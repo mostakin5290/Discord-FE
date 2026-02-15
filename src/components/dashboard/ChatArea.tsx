@@ -17,9 +17,11 @@ import {
 import { toast } from "sonner";
 import MessageItem from "@/components/chat/MessageItem";
 import MessageInput from "@/components/chat/MessageInput";
+import { AISummary } from "@/components/chat/AISummary";
 import { shouldGroupMessage } from "@/utils/messageUtils";
 import axiosClient from "@/lib/axios";
 import { SearchModal } from "@/components/search/SearchModal";
+import socketService from "@/services/socket.service";
 
 import { useChatSocket } from "@/hooks/useChatSocket";
 import InboxNofification from "./inbox-notification";
@@ -47,7 +49,19 @@ const ChatArea = ({ channelId, channelName, serverId }: ChatAreaProps) => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typingUsers]); // Scroll when typing changes too
+  }, [messages, typingUsers]);
+
+  // Separate effect for last seen - only on scroll/view, not on send
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      // Small delay to ensure message is visible
+      const timer = setTimeout(() => {
+        socketService.updateLastSeen(channelId, lastMessage.id);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [messages.length, channelId]); // Only when message count changes
 
   const handleSendMessage = async (content: string, file?: File) => {
     try {
@@ -138,6 +152,9 @@ const ChatArea = ({ channelId, channelName, serverId }: ChatAreaProps) => {
 
         {/* Header Toolbar */}
         <div className="flex items-center gap-4 text-[#b5bac1]">
+          {/* AI Summary Component */}
+          <AISummary channelId={channelId} channelName={channelName} />
+
           <Bell
             size={24}
             className="cursor-pointer hover:text-[#dbdee1] transition-all duration-200 hover:scale-110 active:scale-95"

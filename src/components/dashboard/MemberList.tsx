@@ -1,4 +1,6 @@
 import { Crown, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
+import socketService from "@/services/socket.service";
 
 interface Member {
   id: string;
@@ -17,6 +19,38 @@ interface MemberListProps {
 }
 
 const MemberList = ({ members = [] }: MemberListProps) => {
+  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const socket = socketService.getSocket();
+    if (!socket) return;
+
+    // Listen for online friends list
+    socket.on("online_friends", (data: { userIds: string[] }) => {
+      setOnlineUsers(new Set(data.userIds));
+    });
+
+    // Listen for user connected
+    socket.on("user_connected", (data: { userId: string }) => {
+      setOnlineUsers(prev => new Set([...prev, data.userId]));
+    });
+
+    // Listen for user disconnected
+    socket.on("user_disconnected", (data: { userId: string }) => {
+      setOnlineUsers(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(data.userId);
+        return newSet;
+      });
+    });
+
+    return () => {
+      socket.off("online_friends");
+      socket.off("user_connected");
+      socket.off("user_disconnected");
+    };
+  }, []);
+
   // Filter out members with undefined user data
   const validMembers = members.filter((m) => m.user);
 
@@ -75,8 +109,10 @@ const MemberList = ({ members = [] }: MemberListProps) => {
                   </span>
                 )}
               </div>
-              {/* Online Status Indicator */}
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#2b2d31]" />
+              {/* Online Status Indicator - Only show if user is online */}
+              {onlineUsers.has(member.user.id) && (
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#2b2d31]" />
+              )}
             </div>
 
             {/* Username */}
