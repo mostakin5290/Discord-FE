@@ -164,7 +164,7 @@ const CreateServerDialog = ({
               </DialogHeader>
             </div>
 
-            <div className="px-4 pb-4 space-y-2 max-h-[420px] overflow-y-auto custom-scrollbar">
+            <div className="px-4 pb-4 space-y-2 max-h-[420px] overflow-y-auto">
               <Button
                 onClick={() => setStep("customize")}
                 className="w-full h-[64px] px-4 bg-[#2B2D31] hover:bg-[#3F4147] text-white border-[1px] border-[#2B2D31] hover:border-gray-500 rounded-lg justify-between group transition-all shadow-sm hover:shadow-md"

@@ -1,32 +1,23 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import type { AppDispatch, RootState } from "@/store/types";
-import { fetchUserServers } from "@/store/slices/serverSlice";
-import ServerSidebar from "@/components/dashboard/ServerSidebar";
+import type { AppDispatch } from "@/store/types";
 import DMSidebar from "@/components/dashboard/DMSidebar";
 import FriendsPanel from "@/components/dashboard/FriendsPanel";
 import ActiveNow from "@/components/dashboard/ActiveNow";
 import DirectMessageChat from "@/components/dashboard/DirectMessageChat";
-import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
 import UserProfileSidebar from "@/components/dashboard/UserProfileSidebar";
-import SettingsModal from "@/components/dashboard/settings/SettingsModal";
-import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 
 const DirectMessagesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { userId } = useParams<{ userId?: string }>();
-  const { servers } = useSelector((state: RootState) => state.server);
-  const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
+  // const { servers } = useSelector((state: RootState) => state.server); // Handled by Layout
   const [selectedView, setSelectedView] = useState<"friends" | "dm">("friends");
   const [selectedDMUserId, setSelectedDMUserId] = useState<string | null>(null);
-  const [showCreateServer, setShowCreateServer] = useState(false);
   const [showProfile, setShowProfile] = useState(true);
 
-  useEffect(() => {
-    dispatch(fetchUserServers());
-  }, [dispatch]);
+  // Server fetching logic moved to Layout
 
   useEffect(() => {
     if (userId) {
@@ -50,24 +41,8 @@ const DirectMessagesPage = () => {
     navigate(`/dm/${dmUserId}`);
   };
 
-  const handleServerSelect = (serverId: string) => {
-    navigate(`/server/${serverId}`);
-  };
-
-  const handleCreateServer = () => {
-    setShowCreateServer(true);
-  };
-
   return (
-    <div className="flex h-screen bg-[#313338] text-white overflow-hidden">
-      {/* Server List Sidebar (Left) */}
-      <ServerSidebar
-        servers={servers}
-        currentServerId={null}
-        onServerSelect={handleServerSelect}
-        onCreateServer={handleCreateServer}
-      />
-
+    <div className="flex h-screen bg-[#313338] text-white overflow-hidden w-full">
       {/* Left Sidebar - Friends & DM List */}
       <DMSidebar
         onSelectFriends={handleSelectFriends}
@@ -95,17 +70,6 @@ const DirectMessagesPage = () => {
         selectedDMUserId &&
         showProfile && <UserProfileSidebar userId={selectedDMUserId} />
       )}
-
-      {/* Create Server Dialog */}
-      <CreateServerDialog
-        open={showCreateServer}
-        onOpenChange={setShowCreateServer}
-      />
-      
-      <SettingsModal 
-        open={settingsModalOpen} 
-        onOpenChange={() => dispatch(setSettingsModalOpen())} 
-      />
     </div>
   );
 };

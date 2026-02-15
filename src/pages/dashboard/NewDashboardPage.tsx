@@ -2,23 +2,18 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/types";
 import {
-  fetchUserServers,
   fetchServerById,
 } from "@/store/slices/serverSlice";
 import { fetchChannelMessages } from "@/store/slices/messageSlice";
-import ServerSidebar from "@/components/dashboard/ServerSidebar";
 import ChannelSidebar from "@/components/dashboard/ChannelSidebar";
 import ChatArea from "@/components/dashboard/ChatArea";
 import MemberList from "@/components/dashboard/MemberList";
-import CreateServerDialog from "@/components/dashboard/CreateServerDialog";
 import ServerErrorScreen from "@/components/dashboard/ServerErrorScreen";
 import { useNavigate, useParams } from "react-router";
 import { InvitecodeModal } from "@/components/dashboard/Invitecode-modal";
 import { LeaveServerModal } from "@/components/dashboard/leave-server-modal";
 import { CreateChannelModal } from "@/components/dashboard/create-channel-modal";
-import SettingsModal from "@/components/dashboard/settings/SettingsModal";
 import ServerSettingsDialog from "@/components/dashboard/settings/ServerSettingsDialog";
-import { setSettingsModalOpen } from "@/store/slices/modalSlice";
 import { CallGroupComponent } from "@/components/calls/call-group-component";
 import { clearGroupCall, removeUserFromChannel, createGroupCallToken } from "@/store/slices/mediaChannelSlice";
 
@@ -28,7 +23,6 @@ const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const { settingsModalOpen } = useSelector((state: RootState) => state.modal);
   const { serverId: serverIdFromUrl, channelId: channelIdFromUrl } = useParams<{ serverId: string; channelId?: string }>();
   const navigate = useNavigate();
 
@@ -44,17 +38,11 @@ const DashboardPage = () => {
 
   const userMember = currentServer?.members?.find((m) => m.user?.id === user?.id);
 
-  const [showCreateServer, setShowCreateServer] = useState(false);
   const [accessStatus, setAccessStatus] = useState<ServerAccessStatus>("loading");
 
   // Track which server ID we've validated to avoid re-running
   const validatedServerIdRef = useRef<string | null>(null);
   const initialLoadRef = useRef(true);
-
-  // Fetch user's servers on mount
-  useEffect(() => {
-    dispatch(fetchUserServers());
-  }, [dispatch]);
 
   // Reset access status when server ID changes
   useEffect(() => {
@@ -182,14 +170,6 @@ const DashboardPage = () => {
     }
   }, [channelIdFromUrl, dispatch]);
 
-  const handleServerSelect = useCallback((serverId: string) => {
-    navigate(`/server/${serverId}`);
-  }, [navigate]);
-
-  const handleCreateServer = useCallback(() => {
-    setShowCreateServer(true);
-  }, []);
-
   const handleLeaveGroupCall = useCallback(() => {
     dispatch(clearGroupCall());
     dispatch(removeUserFromChannel({ channelId: channelIdFromUrl || "", serverId: serverIdFromUrl || "" }));
@@ -198,82 +178,54 @@ const DashboardPage = () => {
 
   // Show loading state - also check if currentServer matches URL to handle navigation race conditions
   const isServerMismatch = currentServer && currentServer.id !== serverIdFromUrl;
-  if ((initialLoadRef.current && isLoading) || accessStatus === "loading" || isServerMismatch) {
-    return (
-      <div className="flex h-screen bg-[#0b0c0e] overflow-hidden">
-        {/* Render Sidebar if we have servers, otherwise skeleton? */}
-        <ServerSidebar
-          servers={servers}
-          currentServerId={serverIdFromUrl || null}
-          onServerSelect={handleServerSelect}
-          onCreateServer={handleCreateServer}
-        />
-        {/* Loading Content Area */}
-        <div className="flex-1 flex flex-col relative bg-[#1a1b1e]">
-          {/* Fake Header */}
-          <div className="h-12 border-b border-[#202225] bg-[#1a1b1e] w-full" />
-
-          <div className="flex-1 flex items-center justify-center flex-col gap-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2]" />
-            <p className="text-[#949ba4] text-sm font-medium animate-pulse">Loading Discord...</p>
-          </div>
-        </div>
-
-        <CreateServerDialog
-          open={showCreateServer}
-          onOpenChange={setShowCreateServer}
-        />
-      </div>
-    );
-  }
+  
+  // NOTE: We don't block render with a full page loader anymore to prevent sidebar from disappearing
+  // Instead we render skeletons/loading states inside the content areas
 
   // Error states
   if (accessStatus === "not_found") {
     return (
-      <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
-        <ServerSidebar
-          servers={servers}
-          currentServerId={null}
-          onServerSelect={handleServerSelect}
-          onCreateServer={handleCreateServer}
-        />
+      <div className="flex h-full w-full bg-[#0b0c0e] text-white overflow-hidden">
         <ServerErrorScreen type="not_found" serverId={serverIdFromUrl} />
-        <CreateServerDialog
-          open={showCreateServer}
-          onOpenChange={setShowCreateServer}
-        />
       </div>
     );
   }
 
   if (accessStatus === "not_member") {
     return (
-      <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
-        <ServerSidebar
-          servers={servers}
-          currentServerId={null}
-          onServerSelect={handleServerSelect}
-          onCreateServer={handleCreateServer}
-        />
+      <div className="flex h-full w-full bg-[#0b0c0e] text-white overflow-hidden">
         <ServerErrorScreen type="not_member" serverId={serverIdFromUrl} />
-        <CreateServerDialog
-          open={showCreateServer}
-          onOpenChange={setShowCreateServer}
-        />
       </div>
     );
   }
 
-  return (
-    <div className="flex h-screen bg-[#0b0c0e] text-white overflow-hidden">
-      {/* Server List Sidebar (Left) */}
-      <ServerSidebar
-        servers={servers}
-        currentServerId={currentServer?.id || null}
-        onServerSelect={handleServerSelect}
-        onCreateServer={handleCreateServer}
-      />
+  // Loading state content
+  if ((initialLoadRef.current && isLoading) || accessStatus === "loading" || isServerMismatch || !currentServer) {
+     return (
+        <div className="flex h-full w-full bg-[#0b0c0e] overflow-hidden">
+             <div className="hidden md:flex flex-col w-60 bg-[#2b2d31] h-full border-r border-[#1e1f22]">
+                <div className="h-12 border-b border-[#1e1f22]" />
+                <div className="flex-1 p-2 space-y-2">
+                    <div className="h-4 bg-[#3f4147] rounded w-3/4" />
+                    <div className="h-4 bg-[#3f4147] rounded w-1/2" />
+                    <div className="h-4 bg-[#3f4147] rounded w-2/3" />
+                </div>
+             </div>
+             
+             {/* Loading Content Area */}
+             <div className="flex-1 flex flex-col relative bg-[#313338]">
+                <div className="h-12 border-b border-[#202225] bg-[#313338] w-full" />
+                <div className="flex-1 flex items-center justify-center flex-col gap-4">
+                  {/* <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2]" /> */}
+                  <p className="text-[#949ba4] text-sm font-medium">Loading...</p>
+                </div>
+             </div>
+        </div>
+     );
+  }
 
+  return (
+    <div className="flex h-full w-full bg-[#0b0c0e] text-white overflow-hidden">
       {/* Channel List Sidebar (Middle-Left) */}
       {currentServer && (
         <ChannelSidebar
@@ -294,7 +246,7 @@ const DashboardPage = () => {
             }
           />
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400 bg-[#1a1b1e]">
+          <div className="flex-1 flex items-center justify-center text-gray-400 bg-[#313338]">
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-2">
                 Welcome to {currentServer.name}!
@@ -305,7 +257,7 @@ const DashboardPage = () => {
         )
       ) : (
         !isMediaChannel && (
-          <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+          <div className="flex-1 flex flex-col items-center justify-center bg-[#313338]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
             <p className="text-[#949ba4] text-sm font-medium">Loading server data...</p>
           </div>
@@ -315,7 +267,7 @@ const DashboardPage = () => {
       {currentServer ? (
         channelIdFromUrl && isMediaChannel ? (
           isGroupCallLoading || !groupCall || !groupCall.token || groupCall.channelId !== channelIdFromUrl ? (
-            <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+            <div className="flex-1 flex flex-col items-center justify-center bg-[#313338]">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
               <p className="text-[#949ba4] text-sm font-medium">Connecting to channel...</p>
             </div>
@@ -330,7 +282,7 @@ const DashboardPage = () => {
           )
         ) : null
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#1a1b1e]">
+        <div className="flex-1 flex flex-col items-center justify-center bg-[#313338]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5865f2] mb-4" />
           <p className="text-[#949ba4] text-sm font-medium">Loading server data...</p>
         </div>
@@ -341,12 +293,6 @@ const DashboardPage = () => {
       {currentServer && channelIdFromUrl && (
         <MemberList members={currentServer.members || []} />
       )}
-
-      {/* Create Server Dialog */}
-      <CreateServerDialog
-        open={showCreateServer}
-        onOpenChange={setShowCreateServer}
-      />
 
       {currentServer &&
         <InvitecodeModal
@@ -366,11 +312,6 @@ const DashboardPage = () => {
           serverId={serverIdFromUrl || ""}
         />
       }
-
-      <SettingsModal
-        open={settingsModalOpen}
-        onOpenChange={() => dispatch(setSettingsModalOpen())}
-      />
       
       <ServerSettingsDialog />
     </div>

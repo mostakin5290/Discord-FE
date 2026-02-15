@@ -38,7 +38,7 @@ export function CustomDropdown<T>({
         <ChevronDown className="w-6 h-6 ml-auto" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className={`mt-2 p-2 pr-[6px] w-full block bg-[#5b62c7] text-app-text-normal text-base border-none rounded-3xl custom-scrollbar !overflow-y-scroll z-[900] ${contentClassName}`}
+        className={`mt-2 p-2 pr-[6px] w-full block bg-[#5b62c7] text-app-text-normal text-base border-none rounded-3xl !overflow-y-scroll z-[900] ${contentClassName}`}
         style={{ maxHeight: `${maxHeightContent}px`, minWidth: 'var(--radix-dropdown-menu-trigger-width)' }}
       >
         {options.map((option, index) => (

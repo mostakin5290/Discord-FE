@@ -12,6 +12,7 @@ import DirectMessagesPage from "./pages/dashboard/DirectMessagesPage";
 import PublicRoute from "./components/routes/PublicRoute";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import ArchitecturePage from "./pages/ArchitecturePage";
+import DashboardLayout from "./layouts/DashboardLayout";
 
 import InvitePage from "./pages/server/invite-page";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -215,18 +216,20 @@ const AppComponent = () => {
 
           {/* Protected Routes (Accessible only if logged in) */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/server/:serverId" element={<DashboardPage />} />
-            <Route
-              path="/server/:serverId/:channelId"
-              element={<DashboardPage />}
-            />
+             <Route element={<DashboardLayout />}>
+              <Route path="/server/:serverId" element={<DashboardPage />} />
+              <Route
+                path="/server/:serverId/:channelId"
+                element={<DashboardPage />}
+              />
+              <Route path="/channels/@me" element={<DirectMessagesPage />} />
+              <Route path="/dm/:userId" element={<DirectMessagesPage />} />
+             </Route>
+
             <Route
               path="/server/:serverId/invite/:invitecode"
               element={<InvitePage />}
             />
-
-            <Route path="/channels/@me" element={<DirectMessagesPage />} />
-            <Route path="/dm/:userId" element={<DirectMessagesPage />} />
 
             {/* Discovery */}
             <Route

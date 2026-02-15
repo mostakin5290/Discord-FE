@@ -376,12 +376,8 @@ const DirectMessageChat = ({
                 const showGrouping = shouldGroupMessage(message, prevMessage);
 
                 return (
-                  <motion.div
+                  <div
                     key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
                   >
                     <MessageItem
                       message={message}
@@ -393,7 +389,7 @@ const DirectMessageChat = ({
                       showGrouping={showGrouping}
                       isDM={true}
                     />
-                  </motion.div>
+                  </div>
                 );
               })}
           </AnimatePresence>

@@ -95,34 +95,39 @@ const MembersTab = () => {
           </p>
       </div>
 
-      <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-[#949ba4]" />
+      <div className="relative mb-4">
           <Input
             placeholder="Search members"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 bg-[#1e1f22] border-none text-white focus-visible:ring-0"
+            className="bg-[#1e1f22] border-none text-white focus-visible:ring-0 h-10 pl-2 pr-8"
           />
+          <Search className="absolute right-2 top-2.5 h-5 w-5 text-[#949ba4]" />
       </div>
 
       <div className="flex-1 bg-[#2b2d31] rounded-md border border-[#1e1f22] overflow-hidden flex flex-col">
           <ScrollArea className="flex-1">
               <div className="divide-y divide-[#1e1f22]">
                   {filteredMembers.map((member) => (
-                      <div key={member.id} className="flex items-center justify-between p-3 hover:bg-[#35373c] group">
+                      <div key={member.id} className="flex items-center justify-between p-2.5 hover:bg-[#35373c] rounded group transition-colors">
                           <div className="flex items-center gap-3">
-                              <Avatar>
+                              <Avatar className="w-8 h-8">
                                   <AvatarImage src={member.user.imageUrl} />
                                   <AvatarFallback>{member.user.username[0]}</AvatarFallback>
                               </Avatar>
                               <div className="flex flex-col">
                                   <div className="flex items-center gap-2">
-                                      <span className="font-semibold text-white">{member.user.username}</span>
-                                      {member.role === 'ADMIN' && <Shield className="w-3 h-3 text-red-400" />}
+                                      <span className="font-semibold text-white text-sm">{member.user.username}</span>
+                                      {member.role === 'ADMIN' && <Shield className="w-3 h-3 text-red-500 fill-red-500/20" />}
                                       {member.roles?.map(r => {
                                           const roleObj = roles.find(ro => ro.id === r.id);
                                           return roleObj ? (
-                                              <div key={r.id} className="w-3 h-3 rounded-full" style={{ backgroundColor: roleObj.color }} title={roleObj.name} />
+                                              <div 
+                                                key={r.id} 
+                                                className="w-3 h-3 rounded-full border border-[#2b2d31]" 
+                                                style={{ backgroundColor: roleObj.color }} 
+                                                title={roleObj.name} 
+                                              />
                                           ) : null;
                                       })}
                                   </div>

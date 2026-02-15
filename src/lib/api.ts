@@ -43,4 +43,25 @@ export const api = {
 
     return response.json();
   },
+
+  delete: async (endpoint: string, token?: string) => {
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      headers,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Something went wrong");
+    }
+
+    return response.json();
+  },
 };

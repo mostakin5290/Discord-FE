@@ -148,7 +148,7 @@ const MessageItem = ({
 
   return (
     <div
-      className={`group flex flex-col hover:bg-[#26272d] -mx-4 px-4 py-0.5 rounded-[4px] relative transition-all duration-150 animate-in fade-in slide-in-from-bottom-2 ${
+      className={`group flex flex-col hover:bg-[#26272d] -mx-4 px-4 py-0.5 rounded-[4px] relative transition-all duration-150 ${
         isHovered ? "bg-[#26272d]" : ""
       } ${message.pinned ? "bg-[#33353b] border-l-4 border-[#5865f2] pl-3.5" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
