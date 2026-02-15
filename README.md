@@ -10,18 +10,53 @@
 
 ---
 
-## 🎨 UI & Features
+## 🛠️ Complete Tech Stack
 
-The frontend is a single-page application (SPA) optimized for speed and interactivity.
+| Category | Technologies |
+| :--- | :--- |
+| **Framework** | React 19, Vite 7, TypeScript |
+| **State Management** | Redux Toolkit (RTK), React-Redux |
+| **Styling** | TailwindCSS v4, Class Variance Authority (CVA), Tailwind Merge |
+| **UI Components** | Radix UI Primitives (Dialog, Popover, Tooltip, etc.), Lucide React (Icons) |
+| **Animations** | Framer Motion, GSAP, Tailwind Animate |
+| **Real-time** | Socket.io-client, LiveKit Client (WebRTC) |
+| **Forms & Validation** | React Hook Form, Zod |
+| **Utils** | Date-fns, Input-OTP, Sonner (Toasts) |
 
-### Key Components
-| Component | Functionality | Key Libraries |
-| :--- | :--- | :--- |
-| **Chat Interface** | Infinite scrolling messages, Typing indicators, Media uploads. | Framer Motion, Radix UI |
-| **Server Navigation** | Sidebar for servers/channels, Context menus. | Lucide React |
-| **Voice/Video** | Group calls, Screen sharing, participant management. | LiveKit React SDK |
-| **Settings** | User profile, Theme switcher, Privacy controls. | React Hook Form, Zod |
-| **Modals** | Create Server check, Invite Friends, Popups. | Radix Dialog |
+---
+
+## 🌟 Client Features & UX
+
+### 🎨 Modern UI/UX
+-   **Responsive Design**: Fully adaptive layouts for Desktop and Tablet.
+-   **Dark Mode**: Native dark theme support using `next-themes`.
+-   **Smooth Animations**: Entrance animations and micro-interactions powered by Framer Motion.
+-   **Accessible**: Built on Radix UI primitives for WAI-ARIA compliance.
+
+### 💬 Chat Experience
+-   **Optimistic UI**: Instant message rendering before server confirmation.
+-   **Infinite Scroll**: Seamless loading of chat history using Intersection Observer.
+-   **Rich Input**: Emoji picker, file attachments (Drag & Drop), and formatting support.
+-   **Real-time Typing**: "User is typing..." indicators synced via Socket.io.
+
+### 📹 Media & Calls
+-   **Video/Voice Channels**: One-click join/leave for voice rooms.
+-   **Control Bar**: Mute, Deafen, Camera, and Screen Share toggles.
+-   **Grid Layout**: Auto-adjusting video grid for participants.
+
+### 🧩 Component Architecture
+-   **Atomic Design**: Components split into `ui` (primitive) and feature-based folders.
+-   **Modals Provider**: Centralized modal management for "Create Server", "Invite", "Edit Profile".
+
+## 🖼️ UI Showcase
+
+| Light Mode | Dark Mode |
+| :---: | :---: |
+| ![Light Mode](../assets/screenshots/mobile-light.png) | ![Dark Mode](../assets/screenshots/mobile-dark.png) |
+
+> *Screenshots coming soon...*
+
+
 
 ### Client Architecture
 ```mermaid
