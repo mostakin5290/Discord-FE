@@ -52,7 +52,7 @@
 
 | Light Mode | Dark Mode |
 | :---: | :---: |
-| ![Light Mode](../assets/screenshots/mobile-light.png) | ![Dark Mode](../assets/screenshots/mobile-dark.png) |
+| ![Light Mode](./assets/screenshots/mobile-light.png) | ![Dark Mode](./assets/screenshots/mobile-dark.png) |
 
 > *Screenshots coming soon...*
 
