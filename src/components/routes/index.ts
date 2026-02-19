@@ -1,3 +1,3 @@
 // Route guards barrel export
-export { ProtectedRoute } from "./ProtectedRoute";
-export { PublicRoute } from "./PublicRoute";
+export { default as ProtectedRoute } from "./ProtectedRoute";
+export { default as PublicRoute } from "./PublicRoute";
