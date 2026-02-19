@@ -33,6 +33,7 @@ import {
 import { useNavigate } from "react-router";
 import { createDirectCallToken } from "@/store/slices/callSlice";
 import InboxNofification from "@/components/notifications/inbox-notification";
+import { uploadToCloudinary } from "@/lib/upload";
 
 interface DirectMessageChatProps {
   userId: string;
@@ -113,8 +114,16 @@ const DirectMessageChat = ({
     }
   }, [messages.length, conversation?.id]);
 
-  const handleSendMessage = async (content: string, fileUrl?: string) => {
+  const handleSendMessage = async (content: string, file?: File) => {
     try {
+      let fileUrl: string | undefined;
+
+      // Upload file if provided
+      if (file) {
+        const uploadResult = await uploadToCloudinary(file);
+        fileUrl = uploadResult.secure_url;
+      }
+
       if (replyingTo) {
         await dispatch(
           replyToMessage({
@@ -188,13 +197,15 @@ const DirectMessageChat = ({
     const roomId = crypto.randomUUID();
 
     try {
-      await dispatch(createDirectCallToken({
-        roomName: roomId,
-        participantName: currentUser?.username!,
-        participantIdentity: currentUser?.id!,
-        friendId: userId,
-        channelType: "AUDIO",
-      })).unwrap();
+      await dispatch(
+        createDirectCallToken({
+          roomName: roomId,
+          participantName: currentUser?.username!,
+          participantIdentity: currentUser?.id!,
+          friendId: userId,
+          channelType: "AUDIO",
+        }),
+      ).unwrap();
 
       navigate(`/call/${userId}/${roomId}`);
     } catch (error) {
@@ -206,13 +217,15 @@ const DirectMessageChat = ({
     const roomId = crypto.randomUUID();
 
     try {
-      await dispatch(createDirectCallToken({
-        roomName: roomId,
-        participantName: currentUser?.username!,
-        participantIdentity: currentUser?.id!,
-        friendId: userId,
-        channelType: "VIDEO",
-      })).unwrap();
+      await dispatch(
+        createDirectCallToken({
+          roomName: roomId,
+          participantName: currentUser?.username!,
+          participantIdentity: currentUser?.id!,
+          friendId: userId,
+          channelType: "VIDEO",
+        }),
+      ).unwrap();
 
       navigate(`/video/${userId}/${roomId}`);
     } catch (error) {
@@ -280,42 +293,46 @@ const DirectMessageChat = ({
             />
           </div>
           <div>
-             <h3 className="font-semibold text-white text-base leading-tight hover:underline cursor-pointer">{recipientUser.username}</h3>
-             <div className="text-xs text-[#949ba4] font-medium flex items-center gap-1">
-                {recipientUser.status === 'online' ? <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"/> : null}
-                {recipientUser.status || "Offline"}
-             </div>
+            <h3 className="font-semibold text-white text-base leading-tight hover:underline cursor-pointer">
+              {recipientUser.username}
+            </h3>
+            <div className="text-xs text-[#949ba4] font-medium flex items-center gap-1">
+              {recipientUser.status === "online" ? (
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+              ) : null}
+              {recipientUser.status || "Offline"}
+            </div>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <button 
-              onClick={handleAudioCall} 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
-              aria-label="Start Audio Call"
-              title="Start Audio Call"
+          <button
+            onClick={handleAudioCall}
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+            aria-label="Start Audio Call"
+            title="Start Audio Call"
           >
             <Phone size={22} />
           </button>
-          <button 
-              onClick={handleVideoCall} 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
-              aria-label="Start Video Call"
-              title="Start Video Call"
+          <button
+            onClick={handleVideoCall}
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+            aria-label="Start Video Call"
+            title="Start Video Call"
           >
             <Video size={22} />
           </button>
-          <button 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
-              aria-label="Pinned Messages"
-              title="Pinned Messages"
+          <button
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
+            aria-label="Pinned Messages"
+            title="Pinned Messages"
           >
             <Pin size={22} />
           </button>
-          <button 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
-              aria-label="Add Friend to DM"
-              title="Add Friend to DM"
+          <button
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full hidden sm:block"
+            aria-label="Add Friend to DM"
+            title="Add Friend to DM"
           >
             <UserPlus size={22} />
           </button>
@@ -342,17 +359,17 @@ const DirectMessageChat = ({
               className="absolute right-2 top-1/2 -translate-y-1/2 text-[#949ba4] group-hover:text-white transition-colors"
             />
           </div>
-          <button 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
-              aria-label="Inbox"
-              title="Inbox"
+          <button
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+            aria-label="Inbox"
+            title="Inbox"
           >
             <InboxNofification />
           </button>
-          <button 
-              className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
-              aria-label="Help"
-              title="Help"
+          <button
+            className="text-[#b5bac1] hover:text-white transition-all duration-200 hover:bg-white/10 p-2 rounded-full"
+            aria-label="Help"
+            title="Help"
           >
             <HelpCircle size={22} />
           </button>
@@ -376,9 +393,7 @@ const DirectMessageChat = ({
                 const showGrouping = shouldGroupMessage(message, prevMessage);
 
                 return (
-                  <div
-                    key={message.id}
-                  >
+                  <div key={message.id}>
                     <MessageItem
                       message={message}
                       currentUserId={currentUser?.id || ""}

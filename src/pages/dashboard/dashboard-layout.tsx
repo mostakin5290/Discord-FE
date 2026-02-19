@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router";
-import { DashboardSidebar } from "./dashboard-sidebar";
+// import { DashboardSidebar } from "./dashboard-sidebar";
 import DashboardHeader from "./dashboard-header";
 
 const DashboardLayout = () => {
@@ -13,7 +13,7 @@ const DashboardLayout = () => {
         } as CSSProperties
       }
     >
-      <DashboardSidebar />
+      {/* <DashboardSidebar /> */}
       <SidebarInset className="animate-in fade-in duration-500">
         <DashboardHeader />
 

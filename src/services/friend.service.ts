@@ -10,6 +10,8 @@ export interface Friend {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
     status?: "online" | "idle" | "dnd" | "offline";
   };
   createdAt: string;
