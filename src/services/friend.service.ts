@@ -29,6 +29,8 @@ export interface FriendRequest {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
   };
   receiver?: {
     id: string;
@@ -37,6 +39,8 @@ export interface FriendRequest {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
   };
   createdAt: string;
 }

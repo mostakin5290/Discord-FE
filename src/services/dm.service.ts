@@ -13,6 +13,8 @@ export interface Conversation {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
     status?: "online" | "idle" | "dnd" | "offline";
   };
   lastMessage?: {
@@ -48,6 +50,8 @@ export interface DirectMessage {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
   };
   receiver: {
     id: string;
@@ -56,14 +60,16 @@ export interface DirectMessage {
     firstName?: string;
     lastName?: string;
     imageUrl?: string;
+    bannerUrl?: string;
+    bio?: string;
   };
   replyTo?: {
     id: string;
     content?: string;
     sender: {
-        username: string;
-    }
-  }
+      username: string;
+    };
+  };
 }
 
 // Get all conversations
@@ -76,14 +82,14 @@ export const getConversations = async (): Promise<Conversation[]> => {
 export const getConversationMessages = async (
   conversationId: string,
   cursor?: string,
-  limit: number = 50
+  limit: number = 50,
 ): Promise<{ messages: DirectMessage[]; nextCursor?: string }> => {
   const params = new URLSearchParams();
   if (cursor) params.append("cursor", cursor);
   params.append("limit", limit.toString());
 
   const response = await axiosClient.get(
-    `/dm/conversations/${conversationId}/messages?${params.toString()}`
+    `/dm/conversations/${conversationId}/messages?${params.toString()}`,
   );
   return response.data;
 };
@@ -92,7 +98,7 @@ export const getConversationMessages = async (
 export const sendDirectMessage = async (
   friendId: string,
   content?: string,
-  fileUrl?: string
+  fileUrl?: string,
 ): Promise<DirectMessage> => {
   const response = await axiosClient.post(`/dm/${friendId}`, {
     content,
@@ -103,7 +109,7 @@ export const sendDirectMessage = async (
 
 // Mark messages as read
 export const markMessagesAsRead = async (
-  conversationId: string
+  conversationId: string,
 ): Promise<void> => {
   await axiosClient.patch(`/dm/conversations/${conversationId}/read`);
 };
@@ -116,37 +122,62 @@ export const deleteDirectMessage = async (messageId: string): Promise<void> => {
 // --- Message Actions ---
 
 export const pinMessage = async (messageId: string): Promise<DirectMessage> => {
-    // PATCH /dm-actions/messages/:messageId/pin
-    const response = await axiosClient.patch(`/dm-actions/messages/${messageId}/pin`);
-    return response.data.data;
+  // PATCH /dm-actions/messages/:messageId/pin
+  const response = await axiosClient.patch(
+    `/dm-actions/messages/${messageId}/pin`,
+  );
+  return response.data.data;
 };
 
-export const deleteMessageAction = async (messageId: string, deleteType: 'forMe' | 'forEveryone'): Promise<DirectMessage> => {
-    // DELETE /dm-actions/messages/:messageId?deleteType=...
-    const response = await axiosClient.delete(`/dm-actions/messages/${messageId}`, {
-        params: { deleteType }
-    });
-    return response.data.data;
+export const deleteMessageAction = async (
+  messageId: string,
+  deleteType: "forMe" | "forEveryone",
+): Promise<DirectMessage> => {
+  // DELETE /dm-actions/messages/:messageId?deleteType=...
+  const response = await axiosClient.delete(
+    `/dm-actions/messages/${messageId}`,
+    {
+      params: { deleteType },
+    },
+  );
+  return response.data.data;
 };
 
-export const addReaction = async (messageId: string, emoji: string): Promise<DirectMessage> => {
-    // POST /dm-actions/messages/:messageId/reactions
-    const response = await axiosClient.post(`/dm-actions/messages/${messageId}/reactions`, { emoji });
-    return response.data.data;
+export const addReaction = async (
+  messageId: string,
+  emoji: string,
+): Promise<DirectMessage> => {
+  // POST /dm-actions/messages/:messageId/reactions
+  const response = await axiosClient.post(
+    `/dm-actions/messages/${messageId}/reactions`,
+    { emoji },
+  );
+  return response.data.data;
 };
 
-export const removeReaction = async (messageId: string, emoji: string): Promise<DirectMessage> => {
-    // DELETE /dm-actions/messages/:messageId/reactions/:emoji
-    const response = await axiosClient.delete(`/dm-actions/messages/${messageId}/reactions/${encodeURIComponent(emoji)}`);
-    return response.data.data;
+export const removeReaction = async (
+  messageId: string,
+  emoji: string,
+): Promise<DirectMessage> => {
+  // DELETE /dm-actions/messages/:messageId/reactions/:emoji
+  const response = await axiosClient.delete(
+    `/dm-actions/messages/${messageId}/reactions/${encodeURIComponent(emoji)}`,
+  );
+  return response.data.data;
 };
 
-export const replyToMessage = async (messageId: string, content: string, fileUrl?: string): Promise<DirectMessage> => {
-    // POST /dm-actions/messages/:messageId/reply
-    const response = await axiosClient.post(`/dm-actions/messages/${messageId}/reply`, { content, fileUrl });
-    return response.data.message;
-}
-
+export const replyToMessage = async (
+  messageId: string,
+  content: string,
+  fileUrl?: string,
+): Promise<DirectMessage> => {
+  // POST /dm-actions/messages/:messageId/reply
+  const response = await axiosClient.post(
+    `/dm-actions/messages/${messageId}/reply`,
+    { content, fileUrl },
+  );
+  return response.data.message;
+};
 
 // Get unread message count
 export const getUnreadCount = async (): Promise<number> => {
